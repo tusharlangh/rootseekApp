@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.rootseek"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,6 +32,6 @@
       {
         "Grand-hotel": "./assets/fonts/GrandHotel-Regular.ttf"
       }
-    ]  
+    ]
   }
 }

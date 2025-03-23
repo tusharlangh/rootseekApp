@@ -49,14 +49,14 @@ const LoginPage = ({ navigation }) => {
             placeholderTextColor="#808080"
             value={password}
             onChange={(el) => setPassword(el.target.value)}
-            secureTextEntry={seePassword}
+            secureTextEntry={!seePassword}
           />
           <View style={{ position: "absolute", right: 10, top: 9 }}>
             <Pressable onPress={() => setSeePassword(!seePassword)}>
               {seePassword ? (
-                <EyeIconClosed size={20} color="black" />
-              ) : (
                 <EyeIconOpen size={20} color="black" />
+              ) : (
+                <EyeIconClosed size={20} color="black" />
               )}
             </Pressable>
           </View>

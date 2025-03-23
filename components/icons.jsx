@@ -45,3 +45,64 @@ export const EyeIconClosed = ({ size = 24, color = "black" }) => (
     />
   </Svg>
 );
+
+export const HomeIconSolid = ({ size = 24, color = "black" }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 -960 960 960"
+    fill={color}
+    width={size}
+    height={size}
+  >
+    <Path d="M160-120v-480l320-240 320 240v480H560v-280H400v280H160Z" />
+  </Svg>
+);
+
+export const HomeIconOutline = ({ size = 24, color = "black" }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 -960 960 960"
+    fill={color}
+    width={size}
+    height={size}
+  >
+    <Path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
+  </Svg>
+);
+
+export const SearchIconSolid = ({ size = 24, color = "black" }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    strokeWidth={3}
+    fill="none"
+    width={size}
+    height={size}
+  >
+    <Path
+      stroke={color}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+    />
+  </Svg>
+);
+
+export const SearchIconOutline = ({ size = 24, color = "black" }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    width={size}
+    height={size}
+    color={color}
+    fill="none"
+  >
+    <Path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+    />
+  </Svg>
+);
