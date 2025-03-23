@@ -14,7 +14,7 @@ import { useState } from "react";
 import tw from "tailwind-react-native-classnames";
 import { EyeIconClosed, EyeIconOpen } from "../icons";
 
-const LoginPage = ({ navigation }) => {
+const SigninPage = ({ navigation }) => {
   let [fontsLoaded] = useFonts({
     GrandHotel_400Regular,
   });
@@ -35,10 +35,45 @@ const LoginPage = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text style={styles.logo}>RootSeek</Text>
+      <Text style={styles.slogan}>
+        Every day is a new story. Let's write yours.{" "}
+      </Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="E-mail address"
+          placeholder="example@gmail.com"
+          placeholderTextColor="#808080"
+          value={email}
+          onChange={(el) => setEmail(el.target.value)}
+        />
+
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            gap: 10,
+          }}
+        >
+          <TextInput
+            style={[styles.input, { flex: 1 }]}
+            placeholder="First name"
+            placeholderTextColor="#808080"
+            value={email}
+            onChange={(el) => setEmail(el.target.value)}
+          />
+          <TextInput
+            style={[styles.input, { flex: 1 }]}
+            placeholder="Last name"
+            placeholderTextColor="#808080"
+            value={email}
+            onChange={(el) => setEmail(el.target.value)}
+          />
+        </View>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
           placeholderTextColor="#808080"
           value={email}
           onChange={(el) => setEmail(el.target.value)}
@@ -62,16 +97,14 @@ const LoginPage = ({ navigation }) => {
           </View>
         </View>
 
-        <Text style={styles.forgotText}>Forgot your password?</Text>
         <TouchableOpacity style={styles.loginBtn}>
-          <Text style={styles.loginBtnText}>Log in to your account</Text>
+          <Text style={styles.loginBtnText}>Sign in to your account</Text>
         </TouchableOpacity>
         <View style={styles.orSection}>
           <View style={styles.line}></View>
           <Text>OR</Text>
           <View style={styles.line}></View>
         </View>
-
         <View
           style={{
             display: "flex",
@@ -80,10 +113,10 @@ const LoginPage = ({ navigation }) => {
             justifyContent: "center",
           }}
         >
-          <Text style={styles.linkSignUp}>Don't have an account? </Text>
+          <Text style={styles.linkSignUp}>Have an account? </Text>
 
-          <Pressable onPress={() => navigation.navigate("Sigin")}>
-            <Text style={{ textDecorationLine: "underline" }}>Sign in</Text>
+          <Pressable onPress={() => navigation.navigate("Login")}>
+            <Text style={{ textDecorationLine: "underline" }}>Login</Text>
           </Pressable>
         </View>
       </View>
@@ -103,6 +136,13 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 20,
     marginTop: 10,
+  },
+  slogan: {
+    color: "black",
+    fontSize: 10,
+    fontWeight: 800,
+    marginBottom: 4,
+    marginTop: -8,
   },
   logo: {
     color: "black",
@@ -133,6 +173,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     borderRadius: 6,
     padding: 14,
+    marginTop: 10,
   },
   loginBtnText: {
     color: "white",
@@ -157,4 +198,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginPage;
+export default SigninPage;

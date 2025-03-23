@@ -1,23 +1,28 @@
-import { StyleSheet, View } from 'react-native';
 import LoginPage from './components/login-section/login';
+import SigninPage from './components/login-section/signin';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
+const LoginStack = createNativeStackNavigator();
+
+const LoginNavigator = () => {
+  return (
+    <LoginStack.Navigator screenOptions={{ headerShown: false }}>
+      <LoginStack.Screen name="Login" component={LoginPage} />
+      <LoginStack.Screen name="Sigin" component={SigninPage} />
+    </LoginStack.Navigator>
+  );
+};
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <LoginPage/>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="User" component={LoginNavigator} />
+      </Stack.Navigator>
+    </NavigationContainer>
+    
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontSize: 20,
-    color: "black"
-  }
-});
