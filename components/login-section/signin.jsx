@@ -13,6 +13,7 @@ import { GrandHotel_400Regular } from "@expo-google-fonts/grand-hotel";
 import { useState } from "react";
 import tw from "tailwind-react-native-classnames";
 import { EyeIconClosed, EyeIconOpen } from "../icons";
+import axios from "axios";
 
 const SigninPage = ({ navigation }) => {
   let [fontsLoaded] = useFonts({
@@ -20,8 +21,14 @@ const SigninPage = ({ navigation }) => {
   });
 
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
   const [seePassword, setSeePassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   if (!fontsLoaded) {
     return (
@@ -31,6 +38,30 @@ const SigninPage = ({ navigation }) => {
       </View>
     );
   }
+
+  const onSignin = async () => {
+    setIsLoading(true);
+
+    try {
+      const DataToSend = {
+        email,
+        firstName,
+        lastName,
+        username,
+        password,
+      };
+
+      const response = await axios.post(
+        "http://localhost:5002/user/signin",
+        DataToSend
+      );
+      navigation.navigate("Verify", { extrEmail: email });
+    } catch (error) {
+      const message = error.response.data.message;
+      setTimeout(() => setIsLoading(false), 2000);
+      setTimeout(() => setMessage(message), 2000);
+    }
+  };
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -44,7 +75,7 @@ const SigninPage = ({ navigation }) => {
           placeholder="example@gmail.com"
           placeholderTextColor="#808080"
           value={email}
-          onChange={(el) => setEmail(el.target.value)}
+          onChangeText={setEmail}
         />
 
         <View
@@ -59,15 +90,15 @@ const SigninPage = ({ navigation }) => {
             style={[styles.input, { flex: 1 }]}
             placeholder="First name"
             placeholderTextColor="#808080"
-            value={email}
-            onChange={(el) => setEmail(el.target.value)}
+            value={firstName}
+            onChangeText={setFirstName}
           />
           <TextInput
             style={[styles.input, { flex: 1 }]}
             placeholder="Last name"
             placeholderTextColor="#808080"
-            value={email}
-            onChange={(el) => setEmail(el.target.value)}
+            value={lastName}
+            onChangeText={setLastName}
           />
         </View>
 
@@ -75,15 +106,15 @@ const SigninPage = ({ navigation }) => {
           style={styles.input}
           placeholder="Username"
           placeholderTextColor="#808080"
-          value={email}
-          onChange={(el) => setEmail(el.target.value)}
+          value={username}
+          onChangeText={setUsername}
         />
         <View style={styles.input}>
           <TextInput
             placeholder="Password"
             placeholderTextColor="#808080"
             value={password}
-            onChange={(el) => setPassword(el.target.value)}
+            onChangeText={setPassword}
             secureTextEntry={!seePassword}
           />
           <View style={{ position: "absolute", right: 10, top: 9 }}>
@@ -97,9 +128,16 @@ const SigninPage = ({ navigation }) => {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.loginBtn}>
-          <Text style={styles.loginBtnText}>Sign in to your account</Text>
+        <TouchableOpacity style={styles.loginBtn} onPress={onSignin}>
+          {isLoading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text style={styles.loginBtnText}>Sign in to your account</Text>
+          )}
         </TouchableOpacity>
+
+        <Text style={{ color: "red" }}>{message}</Text>
+
         <View style={styles.orSection}>
           <View style={styles.line}></View>
           <Text>OR</Text>

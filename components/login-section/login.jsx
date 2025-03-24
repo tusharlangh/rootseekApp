@@ -34,11 +34,6 @@ const LoginPage = ({ navigation }) => {
   }
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      alert("Please enter both email and password.");
-      return;
-    }
-
     setIsLoading(true);
     const DataToSend = {
       email: email,
