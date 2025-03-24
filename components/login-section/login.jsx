@@ -4,24 +4,25 @@ import {
   Text,
   ActivityIndicator,
   TextInput,
-  Button,
   TouchableOpacity,
   Pressable,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { GrandHotel_400Regular } from "@expo-google-fonts/grand-hotel";
-import { useState } from "react";
-import tw from "tailwind-react-native-classnames";
+import { useEffect, useState } from "react";
 import { EyeIconClosed, EyeIconOpen } from "../icons";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginPage = ({ navigation }) => {
   let [fontsLoaded] = useFonts({
     GrandHotel_400Regular,
   });
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [seePassword, setSeePassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   if (!fontsLoaded) {
     return (
@@ -32,6 +33,36 @@ const LoginPage = ({ navigation }) => {
     );
   }
 
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert("Please enter both email and password.");
+      return;
+    }
+
+    setIsLoading(true);
+    const DataToSend = {
+      email: email,
+      password: password,
+    };
+
+    axios
+      .post("http://localhost:5002/user/login", DataToSend)
+      .then((response) => {
+        if (response.data && response.data.token) {
+          AsyncStorage.setItem("token", response.data.token);
+          navigation.navigate("Home");
+        } else {
+          console.log("Invalid response from server");
+        }
+      })
+      .catch((error) => {
+        const message = error.response.data.message;
+
+        setTimeout(() => setIsLoading(false), 2000);
+        setTimeout(() => setError(message), 2000);
+      });
+  };
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text style={styles.logo}>RootSeek</Text>
@@ -41,15 +72,18 @@ const LoginPage = ({ navigation }) => {
           placeholder="E-mail address"
           placeholderTextColor="#808080"
           value={email}
-          onChange={(el) => setEmail(el.target.value)}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
         <View style={styles.input}>
           <TextInput
             placeholder="Password"
             placeholderTextColor="#808080"
             value={password}
-            onChange={(el) => setPassword(el.target.value)}
+            onChangeText={setPassword} // Fixed: changed from onChange to onChangeText
             secureTextEntry={!seePassword}
+            autoCapitalize="none"
           />
           <View style={{ position: "absolute", right: 10, top: 9 }}>
             <Pressable onPress={() => setSeePassword(!seePassword)}>
@@ -63,9 +97,21 @@ const LoginPage = ({ navigation }) => {
         </View>
 
         <Text style={styles.forgotText}>Forgot your password?</Text>
-        <TouchableOpacity style={styles.loginBtn}>
-          <Text style={styles.loginBtnText}>Log in to your account</Text>
+
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={handleLogin}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text style={styles.loginBtnText}>Log in to your account</Text>
+          )}
         </TouchableOpacity>
+
+        <Text style={{ color: "red" }}>{error}</Text>
+
         <View style={styles.orSection}>
           <View style={styles.line}></View>
           <Text>OR</Text>

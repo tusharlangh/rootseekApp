@@ -19,7 +19,7 @@ const Navbar = () => {
         headerShown: false,
         tabBarLabel: "",
         tabBarStyle: {
-          height: 70, // Adjust height as needed
+          height: 70,
           backgroundColor: "transparent",
           borderColor: "transparent",
         },

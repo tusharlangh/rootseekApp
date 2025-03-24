@@ -10,11 +10,40 @@ import {
   ScrollView,
 } from "react-native";
 import DisplayPosts from "./display-posts";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { SearchIconOutline } from "./icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 const Search = () => {
   const [search, setSearch] = useState("");
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        if (!token) {
+          console.error("No token found");
+          return;
+        }
+
+        const response = await axios.get(
+          `http://localhost:5002/search/posts?q=${encodeURIComponent(search)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setPosts(response.data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+    fetchPosts();
+  }, [search]);
+
   return (
     <View style={styles.container}>
       <View style={styles.nestedContainer}>
@@ -24,14 +53,15 @@ const Search = () => {
             placeholder="Search root"
             placeholderTextColor="#898989"
             value={search}
-            onChange={(el) => setSearch(el.target.value)}
+            onChangeText={setSearch}
           />
           <View style={{ position: "absolute", top: 11.5, left: 12 }}>
             <SearchIconOutline size={22} color="black" />
           </View>
         </View>
-
-        <DisplayPosts />
+        <View>
+          <DisplayPosts posts={posts} />
+        </View>
       </View>
     </View>
   );

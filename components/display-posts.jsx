@@ -1,16 +1,44 @@
-import {
-  StyleSheet,
-  View,
-  Text,
-  ActivityIndicator,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, View, Text, ScrollView } from "react-native";
 
-const DisplayPosts = () => {
+const DisplayPosts = ({ posts }) => {
+  if (!posts) {
+    return <Text>Loading...</Text>;
+  }
+
+  const FormatTime = (post) => {
+    const formattedTime = new Date(post.date).toLocaleTimeString("en-US", {
+      //manipulating the post.date object into a new object that is easier to read.
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+    return formattedTime;
+  };
+
+  const getHashTags = (hashTags) => {
+    const ht = hashTags.split("#").filter((h) => h.length > 0);
+    return ht;
+  };
+
+  if (posts.length === 0) {
+    return (
+      <View
+        style={{
+          height: "96%",
+          width: "auto",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ fontWeight: "700", fontSize: 24 }}>No roots found.</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -20,79 +48,37 @@ const DisplayPosts = () => {
         display: "flex",
         flexDirection: "column",
         gap: 10,
-        marginBottom: 100,
+        marginBottom: 150,
       }}
     >
-      <View style={styles.postContainer}>
-        <Text style={styles.postTitle} numberOfLines={2}>
-          okay so now I should be able to extract songs test 1
-        </Text>
-        <View>
-          <Text style={styles.postContent} numberOfLines={5}>
-            Reduce the Frequency of Requests If you're sending too many requests
-            at once, try to reduce the frequency by adding a delay between
-            requests, for example using setTimeout() or using a queue mechanism
-            to limit the requests sent within a certain time. In short, the
-            error you're seeing is due to too many requests being made in a
-            short time. Try using a custom CORS proxy or consider a solution to
-            manage the rate limits (like retrying after a delay).
+      {posts.map((post, index) => (
+        <View key={index} style={styles.postContainer}>
+          <Text style={styles.postTitle} numberOfLines={2}>
+            {post.title}
           </Text>
-          <Text style={styles.postHashTags}>#RootSeek#Life</Text>
+          <View>
+            <Text style={styles.postContent} numberOfLines={5}>
+              {post.content}
+            </Text>
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              {post.hashTags &&
+                getHashTags(post.hashTags).map((hashTag, index) => (
+                  <Text key={index} style={styles.postHashTags}>
+                    #{hashTag}
+                  </Text>
+                ))}
+            </View>
+            <Text style={styles.postTime}>{FormatTime(post)}</Text>
+          </View>
         </View>
-      </View>
-
-      <View style={styles.postContainer}>
-        <Text style={styles.postTitle} numberOfLines={2}>
-          So made it so that it can send
-        </Text>
-        <View>
-          <Text style={styles.postContent} numberOfLines={5}>
-            Lets see if it works #1
-          </Text>
-          <Text style={styles.postHashTags}>#RootSeek#Life</Text>
-        </View>
-      </View>
-
-      <View style={styles.postContainer}>
-        <Text style={styles.postTitle} numberOfLines={2}>
-          Cinderella
-        </Text>
-        <Text style={styles.postContent} numberOfLines={5}>
-          cindrella by metro boomin and future ft. travis and carti
-        </Text>
-      </View>
-
-      <View style={styles.postContainer}>
-        <Text style={styles.postTitle} numberOfLines={2}>
-          A lot of things happened today.
-        </Text>
-        <Text style={styles.postContent} numberOfLines={5}>
-          first of all carti dropping the album tomorrow. Been waiting for
-          almost 2 years. And second thing added a single root view. the user
-          can click on any root and view it in full. Also added so that they can
-          delete the post too.
-        </Text>
-      </View>
-
-      <View style={styles.postContainer}>
-        <Text style={styles.postTitle} numberOfLines={2}>
-          I learned to today something new of useStates
-        </Text>
-        <Text style={styles.postContent} numberOfLines={5}>
-          I learned today that states do not change based on any changes inside
-          the object for example dictionary. It would not cause any re renders.
-          For a re render to occur you will have to create a new object each
-          time. You can do that for dictionary by using ...dictionary, which
-          will make a copy of the current dictionary and the nafter that you can
-          add whatever you want.
-        </Text>
-      </View>
+      ))}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   postContainer: {
+    position: "relative",
     display: "flex",
     flexDirection: "column",
     gap: 10,
@@ -106,19 +92,27 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
     elevation: 5,
   },
-
   postTitle: {
     fontWeight: "700",
     fontSize: 28,
   },
   postContent: {
     fontWeight: "400",
-    fontSize: 12,
+    fontSize: 14,
+    color: "#5C5C5C",
   },
   postHashTags: {
     marginTop: 4,
     fontWeight: "700",
+    fontSize: 14,
+    color: "#393939",
+  },
+  postTime: {
+    marginTop: 4,
+    fontWeight: "700",
     fontSize: 12,
+    textAlign: "right",
+    color: "#5C5C5C",
   },
 });
 
