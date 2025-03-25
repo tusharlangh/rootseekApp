@@ -14,6 +14,7 @@ import { useState } from "react";
 import tw from "tailwind-react-native-classnames";
 import { EyeIconClosed, EyeIconOpen } from "../icons";
 import axios from "axios";
+import { Box, useColorMode } from "native-base";
 
 const SigninPage = ({ navigation }) => {
   let [fontsLoaded] = useFonts({
@@ -30,6 +31,10 @@ const SigninPage = ({ navigation }) => {
   const [seePassword, setSeePassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const { colorMode } = useColorMode();
+  const textColor = colorMode === "light" ? "black" : "white";
+  const bgColor = colorMode === "light" ? "white" : "#121212";
+  const borderColor = colorMode === "light" ? "#DFDFDF" : "#4A4A44";
   if (!fontsLoaded) {
     return (
       <View style={styles.loadingContainer}>
@@ -64,14 +69,14 @@ const SigninPage = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text style={styles.logo}>RootSeek</Text>
-      <Text style={styles.slogan}>
+    <Box flex={1} justifyContent="center" alignItems="center" bg={bgColor}>
+      <Text style={[styles.logo, { color: textColor }]}>RootSeek</Text>
+      <Text style={[styles.slogan, { color: textColor }]}>
         Every day is a new story. Let's write yours.{" "}
       </Text>
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: textColor, borderColor: borderColor }]}
           placeholder="example@gmail.com"
           placeholderTextColor="#808080"
           value={email}
@@ -87,14 +92,20 @@ const SigninPage = ({ navigation }) => {
           }}
         >
           <TextInput
-            style={[styles.input, { flex: 1 }]}
+            style={[
+              styles.input,
+              { color: textColor, flex: 1, borderColor: borderColor },
+            ]}
             placeholder="First name"
             placeholderTextColor="#808080"
             value={firstName}
             onChangeText={setFirstName}
           />
           <TextInput
-            style={[styles.input, { flex: 1 }]}
+            style={[
+              styles.input,
+              { color: textColor, flex: 1, borderColor: borderColor },
+            ]}
             placeholder="Last name"
             placeholderTextColor="#808080"
             value={lastName}
@@ -103,14 +114,18 @@ const SigninPage = ({ navigation }) => {
         </View>
 
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: textColor, borderColor: borderColor }]}
           placeholder="Username"
           placeholderTextColor="#808080"
           value={username}
           onChangeText={setUsername}
         />
-        <View style={styles.input}>
+        <View>
           <TextInput
+            style={[
+              styles.input,
+              { color: textColor, borderColor: borderColor },
+            ]}
             placeholder="Password"
             placeholderTextColor="#808080"
             value={password}
@@ -120,29 +135,35 @@ const SigninPage = ({ navigation }) => {
           <View style={{ position: "absolute", right: 10, top: 9 }}>
             <Pressable onPress={() => setSeePassword(!seePassword)}>
               {seePassword ? (
-                <EyeIconOpen size={20} color="black" />
+                <EyeIconOpen size={20} color={textColor} />
               ) : (
-                <EyeIconClosed size={20} color="black" />
+                <EyeIconClosed size={20} color={textColor} />
               )}
             </Pressable>
           </View>
         </View>
 
-        <TouchableOpacity style={styles.loginBtn} onPress={onSignin}>
+        <TouchableOpacity
+          style={[styles.loginBtn, { backgroundColor: textColor }]}
+          onPress={onSignin}
+        >
           {isLoading ? (
-            <ActivityIndicator color="white" />
+            <ActivityIndicator color={bgColor} />
           ) : (
-            <Text style={styles.loginBtnText}>Sign in to your account</Text>
+            <Text style={[styles.loginBtnText, { color: bgColor }]}>
+              Sign in to your account
+            </Text>
           )}
         </TouchableOpacity>
 
         <Text style={{ color: "red" }}>{message}</Text>
 
         <View style={styles.orSection}>
-          <View style={styles.line}></View>
-          <Text>OR</Text>
-          <View style={styles.line}></View>
+          <View style={[styles.line, { backgroundColor: textColor }]}></View>
+          <Text style={{ color: textColor }}>OR</Text>
+          <View style={[styles.line, { backgroundColor: textColor }]}></View>
         </View>
+
         <View
           style={{
             display: "flex",
@@ -151,14 +172,18 @@ const SigninPage = ({ navigation }) => {
             justifyContent: "center",
           }}
         >
-          <Text style={styles.linkSignUp}>Have an account? </Text>
+          <Text style={[styles.linkSignUp, { color: textColor }]}>
+            Have an account?{" "}
+          </Text>
 
           <Pressable onPress={() => navigation.navigate("Login")}>
-            <Text style={{ textDecorationLine: "underline" }}>Login</Text>
+            <Text style={{ textDecorationLine: "underline", color: textColor }}>
+              Login
+            </Text>
           </Pressable>
         </View>
       </View>
-    </View>
+    </Box>
   );
 };
 
@@ -198,7 +223,6 @@ const styles = StyleSheet.create({
   input: {
     padding: 10,
     borderWidth: 1,
-    borderColor: "#DFDFDF",
     borderRadius: 6,
     color: "black",
   },

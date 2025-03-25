@@ -24,9 +24,10 @@ const LoginPage = ({ navigation }) => {
   const [seePassword, setSeePassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
-  const bgColor = colorMode === "light" ? "white" : "black";
+  const bgColor = colorMode === "light" ? "white" : "#121212";
+  const borderColor = colorMode === "light" ? "#DFDFDF" : "#4A4A44";
 
   if (!fontsLoaded) {
     return (
@@ -68,7 +69,7 @@ const LoginPage = ({ navigation }) => {
 
       <View style={styles.inputContainer}>
         <TextInput
-          style={[styles.input, { color: textColor }]}
+          style={[styles.input, { color: textColor, borderColor: borderColor }]}
           placeholder="E-mail address"
           placeholderTextColor="#808080"
           value={email}
@@ -78,7 +79,10 @@ const LoginPage = ({ navigation }) => {
         />
         <View>
           <TextInput
-            style={[styles.input, { color: textColor }]}
+            style={[
+              styles.input,
+              { color: textColor, borderColor: borderColor },
+            ]}
             placeholder="Password"
             placeholderTextColor="#808080"
             value={password}
@@ -97,7 +101,9 @@ const LoginPage = ({ navigation }) => {
           </View>
         </View>
 
-        <Text style={styles.forgotText}>Forgot your password?</Text>
+        <Text style={[styles.forgotText, { color: textColor }]}>
+          Forgot your password?
+        </Text>
 
         <TouchableOpacity
           style={[
@@ -110,7 +116,7 @@ const LoginPage = ({ navigation }) => {
           disabled={isLoading}
         >
           {isLoading ? (
-            <ActivityIndicator color="white" />
+            <ActivityIndicator color={bgColor} />
           ) : (
             <Text
               style={[
@@ -180,7 +186,6 @@ const styles = StyleSheet.create({
   input: {
     padding: 10,
     borderWidth: 1,
-    borderColor: "#DFDFDF",
     borderRadius: 6,
   },
   forgotText: {

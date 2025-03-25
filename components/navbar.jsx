@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useColorMode } from "native-base";
 import {
   HomeIconOutline,
   HomeIconSolid,
@@ -9,10 +9,15 @@ import {
 } from "./icons";
 import Home from "./home";
 import Search from "./search";
+import { View } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
 const Navbar = () => {
+  const { colorMode } = useColorMode();
+  const textColor = colorMode === "light" ? "black" : "white";
+  const bgColor = colorMode === "light" ? "white" : "#121212";
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -20,8 +25,8 @@ const Navbar = () => {
         tabBarLabel: "",
         tabBarStyle: {
           height: 70,
-          backgroundColor: "transparent",
-          borderColor: "transparent",
+          backgroundColor: bgColor,
+          borderColor: bgColor,
         },
       }}
     >
@@ -31,9 +36,9 @@ const Navbar = () => {
         options={{
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <HomeIconSolid size={30} color="black" />
+              <HomeIconSolid size={30} color={textColor} />
             ) : (
-              <HomeIconOutline size={30} color="black" />
+              <HomeIconOutline size={30} color={textColor} />
             ),
         }}
       />
@@ -43,9 +48,9 @@ const Navbar = () => {
         options={{
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <SearchIconSolid size={30} color="black" />
+              <SearchIconSolid size={30} color={textColor} />
             ) : (
-              <SearchIconOutline size={30} color="black" />
+              <SearchIconOutline size={30} color={textColor} />
             ),
         }}
       />

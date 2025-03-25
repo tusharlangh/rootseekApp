@@ -5,12 +5,17 @@ import { GrandHotel_400Regular } from "@expo-google-fonts/grand-hotel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useColorMode } from "native-base";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   let [fontsLoaded] = useFonts({
     GrandHotel_400Regular,
   });
+  const { colorMode } = useColorMode();
+  const textColor = colorMode === "light" ? "black" : "white";
+  const bgColor = colorMode === "light" ? "white" : "#121212";
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -47,9 +52,11 @@ const Home = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: bgColor }]}>
       <View style={styles.nestedContainer}>
-        <Text style={styles.dailyText}>Your daily log</Text>
+        <Text style={[styles.dailyText, { color: textColor }]}>
+          Your daily log
+        </Text>
 
         <View>
           <DisplayPosts posts={posts} />
@@ -68,7 +75,7 @@ const styles = StyleSheet.create({
     marginTop: -10,
   },
   container: {
-    marginTop: 60,
+    paddingTop: 60,
     paddingHorizontal: 5,
   },
   nestedContainer: {

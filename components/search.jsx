@@ -14,10 +14,14 @@ import { use, useEffect, useState } from "react";
 import { SearchIconOutline } from "./icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { useColorMode } from "native-base";
 
 const Search = () => {
   const [search, setSearch] = useState("");
   const [posts, setPosts] = useState([]);
+  const { colorMode } = useColorMode();
+  const textColor = colorMode === "light" ? "black" : "white";
+  const bgColor = colorMode === "light" ? "white" : "#121212";
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -45,18 +49,25 @@ const Search = () => {
   }, [search]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: bgColor }]}>
       <View style={styles.nestedContainer}>
         <View style={{ position: "relative" }}>
           <TextInput
-            style={styles.searchBar}
+            style={[
+              styles.searchBar,
+              {
+                backgroundColor: colorMode === "light" ? "#F9F9F9" : "#181818",
+                color: textColor,
+                borderColor: colorMode === "light" ? "#F0F0F0" : "#121212",
+              },
+            ]}
             placeholder="Search root"
-            placeholderTextColor="#898989"
+            placeholderTextColor={textColor}
             value={search}
             onChangeText={setSearch}
           />
           <View style={{ position: "absolute", top: 11.5, left: 12 }}>
-            <SearchIconOutline size={22} color="black" />
+            <SearchIconOutline size={22} color={textColor} />
           </View>
         </View>
         <View>
@@ -69,7 +80,7 @@ const Search = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 60,
+    paddingTop: 60,
     paddingHorizontal: 5,
   },
   nestedContainer: {
@@ -78,10 +89,9 @@ const styles = StyleSheet.create({
   searchBar: {
     padding: 12,
     backgroundColor: "#F8F8F8",
-    borderRadius: 60,
-    fontWeight: 400,
+    borderRadius: 10,
+    fontWeight: 500,
     borderWidth: 1,
-    borderColor: "#E8E8E8",
     fontSize: 16,
     paddingLeft: 36,
   },
