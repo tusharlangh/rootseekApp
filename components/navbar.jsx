@@ -19,7 +19,7 @@ const Tab = createBottomTabNavigator();
 const Navbar = () => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
-  const bgColor = colorMode === "light" ? "white" : "#121212";
+  const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
 
   return (
     <Tab.Navigator
@@ -27,9 +27,10 @@ const Navbar = () => {
         headerShown: false,
         tabBarLabel: "",
         tabBarStyle: {
-          height: 70,
+          height: 80,
+          borderColor: colorMode === "light" ? "#D1D1D1" : "#2E2E36",
+          paddingTop: 10,
           backgroundColor: bgColor,
-          borderColor: bgColor,
         },
       }}
     >

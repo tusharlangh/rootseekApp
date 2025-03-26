@@ -21,7 +21,7 @@ const Search = () => {
   const [posts, setPosts] = useState([]);
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
-  const bgColor = colorMode === "light" ? "white" : "#121212";
+  const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -51,26 +51,29 @@ const Search = () => {
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
       <View style={styles.nestedContainer}>
-        <View style={{ position: "relative" }}>
+        <View style={{ position: "relative", paddingHorizontal: 2 }}>
           <TextInput
             style={[
               styles.searchBar,
               {
-                backgroundColor: colorMode === "light" ? "#F9F9F9" : "#181818",
+                backgroundColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
                 color: textColor,
                 borderColor: colorMode === "light" ? "#F0F0F0" : "#121212",
               },
             ]}
             placeholder="Search root"
-            placeholderTextColor={textColor}
+            placeholderTextColor={colorMode === "light" ? "#848388" : "#97989F"}
             value={search}
             onChangeText={setSearch}
           />
-          <View style={{ position: "absolute", top: 11.5, left: 12 }}>
-            <SearchIconOutline size={22} color={textColor} />
+          <View style={{ position: "absolute", top: 9, left: 12 }}>
+            <SearchIconOutline
+              size={22}
+              color={colorMode === "light" ? "#848388" : "#97989F"}
+            />
           </View>
         </View>
-        <View>
+        <View style={{ flex: 1 }}>
           <DisplayPosts posts={posts} />
         </View>
       </View>
@@ -82,18 +85,19 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 60,
     paddingHorizontal: 5,
+    height: "100%",
   },
   nestedContainer: {
+    height: "100%",
     paddingHorizontal: 4,
   },
   searchBar: {
-    padding: 12,
-    backgroundColor: "#F8F8F8",
+    padding: 8,
     borderRadius: 10,
-    fontWeight: 500,
+    fontWeight: 400,
     borderWidth: 1,
-    fontSize: 16,
-    paddingLeft: 36,
+    fontSize: 18,
+    paddingLeft: 32,
   },
 });
 

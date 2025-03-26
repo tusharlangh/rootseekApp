@@ -33,7 +33,7 @@ const SigninPage = ({ navigation }) => {
 
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
-  const bgColor = colorMode === "light" ? "white" : "#121212";
+  const bgColor = colorMode === "light" ? "white" : "black";
   const borderColor = colorMode === "light" ? "#DFDFDF" : "#4A4A44";
   if (!fontsLoaded) {
     return (

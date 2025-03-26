@@ -14,7 +14,7 @@ const Home = () => {
   });
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
-  const bgColor = colorMode === "light" ? "white" : "#121212";
+  const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -54,11 +54,13 @@ const Home = () => {
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
       <View style={styles.nestedContainer}>
-        <Text style={[styles.dailyText, { color: textColor }]}>
-          Your daily log
-        </Text>
-
         <View>
+          <Text style={[styles.dailyText, { color: textColor }]}>
+            Daily log
+          </Text>
+        </View>
+
+        <View style={{ flex: 1 }}>
           <DisplayPosts posts={posts} />
         </View>
       </View>
@@ -75,16 +77,18 @@ const styles = StyleSheet.create({
     marginTop: -10,
   },
   container: {
+    height: "100%",
     paddingTop: 60,
     paddingHorizontal: 5,
   },
   nestedContainer: {
+    height: "100%",
     paddingHorizontal: 4,
   },
   dailyText: {
-    marginLeft: 4,
-    fontSize: 24,
-    fontWeight: "800",
+    marginLeft: 8,
+    fontSize: 32,
+    fontWeight: "bold",
   },
 });
 

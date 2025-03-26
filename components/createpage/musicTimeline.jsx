@@ -12,7 +12,6 @@ import {
 import { PlayIcon, PauseIcon, SearchIconOutline } from "../icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import PlayMusic from "./play-music";
 import { Audio } from "expo-av";
 
 const MusicTimeline = ({ onSelectSong }) => {
@@ -111,8 +110,11 @@ const MusicTimeline = ({ onSelectSong }) => {
 
   if (!results || results.length === 0) {
     return (
-      <View style={{ height: "100%" }}>
-        <ActivityIndicator size="small" />
+      <View style={{ height: "100%", width: "100%" }}>
+        <ActivityIndicator
+          size="small"
+          style={{ height: "100%", width: "100%" }}
+        />
       </View>
     );
   }
