@@ -2,6 +2,8 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useColorMode } from "native-base";
 import {
+  CreateIconOutline,
+  CreateIconSolid,
   HomeIconOutline,
   HomeIconSolid,
   SearchIconOutline,
@@ -10,6 +12,7 @@ import {
 import Home from "./home";
 import Search from "./search";
 import { View } from "react-native";
+import Create from "./createpage/create";
 
 const Tab = createBottomTabNavigator();
 
@@ -51,6 +54,18 @@ const Navbar = () => {
               <SearchIconSolid size={30} color={textColor} />
             ) : (
               <SearchIconOutline size={30} color={textColor} />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Creatpage"
+        component={Create}
+        options={{
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <CreateIconSolid size={30} color={textColor} />
+            ) : (
+              <CreateIconOutline size={30} color={textColor} />
             ),
         }}
       />
