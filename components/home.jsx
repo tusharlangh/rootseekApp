@@ -51,7 +51,7 @@ const Home = () => {
   if (!fontsLoaded) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="white" />
+        <ActivityIndicator size="large" color={textColor} />
       </View>
     );
   }
@@ -81,7 +81,7 @@ const Home = () => {
             </Text>
           </View>
 
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, height: "100%" }}>
             <DisplayPosts posts={posts} />
           </View>
         </ScrollView>
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   dailyText: {
     marginLeft: 8,
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "bold",
   },
 });

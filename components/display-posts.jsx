@@ -43,19 +43,17 @@ const DisplayPosts = ({ posts }) => {
       <View
         style={{
           height: "100%",
-          width: "auto",
+          width: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: bgColor,
         }}
       >
         <Text
           style={{
             fontWeight: "700",
-            fontSize: 24,
+            fontSize: 20,
             color: colorMode === "light" ? "black" : "white",
-            marginBottom: 92,
           }}
         >
           No roots found

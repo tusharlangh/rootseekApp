@@ -8,14 +8,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
+  PanResponder,
 } from "react-native";
 import { useColorMode } from "native-base";
 import { Hashtag, Music, PictureIcon, RightArrow, SmileIcon } from "../icons";
 import { useEffect, useRef, useState } from "react";
 import pickImage from "./ImagePicker";
 import MusicTimeline from "./musicTimeline";
-
-const { height } = Dimensions.get("window");
+import BottomPage from "../bottom-page";
 
 const ContentPage = ({
   title,
@@ -31,34 +31,8 @@ const ContentPage = ({
 }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
-  const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
   const [countChar, setCountChar] = useState(content.length);
-
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
-  const animation = useRef(new Animated.Value(0)).current;
-
-  const toggleMusicModal = () => {
-    if (isMusicModalVisible) {
-      Animated.timing(animation, {
-        toValue: 0,
-        duration: 600,
-        useNativeDriver: true,
-      }).start(() => setIsMusicModalVisible(false));
-    } else {
-      setIsMusicModalVisible(true);
-      Animated.timing(animation, {
-        toValue: 1,
-        duration: 600,
-        useNativeDriver: true,
-      }).start();
-    }
-  };
-
-  const translateY = animation.interpolate({
-    //changes the range of 0-1 to height-0
-    inputRange: [0, 1],
-    outputRange: [height, 0],
-  });
 
   useEffect(() => {
     setCountChar(content.length);
@@ -66,13 +40,7 @@ const ContentPage = ({
 
   return (
     <View style={{ marginTop: 20 }}>
-      <View
-        style={{
-          padding: 4,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <View style={{ padding: 4, display: "flex", flexDirection: "column" }}>
         <View
           style={{
             padding: 4,
@@ -88,7 +56,7 @@ const ContentPage = ({
               backgroundColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
               padding: 10,
               borderRadius: 10,
-              fontWeight: 400,
+              fontWeight: "400",
             }}
             value={title}
             onChangeText={setTitle}
@@ -102,13 +70,13 @@ const ContentPage = ({
               backgroundColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
               padding: 10,
               borderRadius: 10,
-              fontWeight: 400,
+              fontWeight: "400",
               height: "60%",
             }}
             value={content}
             onChangeText={setContent}
             placeholder="Content"
-            multiline={true}
+            multiline
             placeholderTextColor={colorMode === "light" ? "#494949" : "#97989F"}
           />
           <Text
@@ -138,19 +106,10 @@ const ContentPage = ({
             }}
             onPress={() => pickImage(setPicture)}
           >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                gap: 14,
-                alignItems: "center",
-              }}
-              onPress={pickImage}
-            >
+            <View style={styles.optionContent}>
               <PictureIcon size={28} color={textColor} />
               <Text style={{ fontSize: 18, color: textColor }}>Add Image</Text>
             </View>
-
             <RightArrow size={24} color={textColor} />
           </Pressable>
 
@@ -164,16 +123,9 @@ const ContentPage = ({
               padding: 10,
               borderColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
             }}
-            onPress={toggleMusicModal}
+            onPress={() => setIsMusicModalVisible(true)}
           >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                gap: 14,
-                alignItems: "center",
-              }}
-            >
+            <View style={styles.optionContent}>
               <Music size={28} color={textColor} />
               <Text style={{ fontSize: 18, color: textColor }}>Add music</Text>
             </View>
@@ -236,33 +188,12 @@ const ContentPage = ({
         </View>
       </View>
 
-      <Modal
-        transparent
-        visible={isMusicModalVisible}
-        onRequestClose={toggleMusicModal}
-        animationType="fade"
-        //modal is something that sits on top of the entire screen
+      <BottomPage
+        isMusicModalVisible={isMusicModalVisible}
+        setIsMusicModalVisible={setIsMusicModalVisible}
       >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={toggleMusicModal}
-        >
-          <Animated.View
-            style={[
-              styles.modalContainer,
-              {
-                transform: [{ translateY }],
-                backgroundColor: bgColor,
-              },
-            ]}
-          >
-            <View style={styles.modalContent}>
-              <MusicTimeline onSelectSong={setSelectedSong} />
-            </View>
-          </Animated.View>
-        </TouchableOpacity>
-      </Modal>
+        <MusicTimeline onSelectSong={setSelectedSong} />
+      </BottomPage>
     </View>
   );
 };
@@ -274,13 +205,40 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   modalContainer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
-    maxHeight: "80%",
+    paddingBottom: 0, // Add padding if needed
+  },
+  modalIndicator: {
+    width: 40,
+    height: 5,
+    backgroundColor: "#888",
+    borderRadius: 3,
+    alignSelf: "center",
+    marginBottom: 15,
   },
   modalContent: {
     paddingBottom: 20,
+  },
+  option: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderBottomWidth: 1,
+    padding: 10,
+    borderColor: "#E4E3E8",
+  },
+  optionContent: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 14,
+    alignItems: "center",
   },
 });
 
