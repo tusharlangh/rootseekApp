@@ -10,7 +10,7 @@ import axios from "axios";
 const Create = ({ navigation }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
-  const bgColor = colorMode === "light" ? "white" : "#121212";
+  const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
 
   const [picture, setPicture] = useState(null);
   const [selectedSong, setSelectedSong] = useState({});
@@ -58,22 +58,14 @@ const Create = ({ navigation }) => {
           setContent={setContent}
           mood={mood}
           setMood={setMood}
+          picture={picture}
+          setPicture={handlePictureSelect}
+          selectedSong={selectedSong}
+          setSelectedSong={handleSongSelect}
         />
       ),
     },
   ];
-
-  const nextPage = () => {
-    if (currentPage < pages.length) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const previousPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
 
   const createRoot = async () => {
     if (title === "" || content === "") {
@@ -122,75 +114,32 @@ const Create = ({ navigation }) => {
         style={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
         }}
       >
         <Pressable
           style={{
-            backgroundColor: textColor,
             padding: 6,
-            marginLeft: 10,
+
             borderRadius: 10,
           }}
-          onPress={previousPage}
+          onPress={createRoot}
         >
           <Text
             style={{
-              color: bgColor,
+              color: textColor,
               textAlign: "right",
-              fontSize: 15,
-              fontWeight: "600",
+              fontSize: 20,
+              fontWeight: "700",
             }}
           >
-            Previous
+            {creating ? "Creating" : "Create"}
           </Text>
         </Pressable>
-        {currentPage === pages.length - 1 ? (
-          <Pressable
-            style={{
-              backgroundColor: textColor,
-              padding: 6,
-              marginRight: 10,
-              borderRadius: 10,
-            }}
-            onPress={createRoot}
-          >
-            <Text
-              style={{
-                color: bgColor,
-                textAlign: "right",
-                fontSize: 15,
-                fontWeight: "600",
-              }}
-            >
-              {creating ? "Creating" : "Create"}
-            </Text>
-          </Pressable>
-        ) : (
-          <Pressable
-            style={{
-              backgroundColor: textColor,
-              padding: 6,
-              marginRight: 10,
-              borderRadius: 10,
-            }}
-            onPress={nextPage}
-          >
-            <Text
-              style={{
-                color: bgColor,
-                textAlign: "right",
-                fontSize: 15,
-                fontWeight: "600",
-              }}
-            >
-              Next
-            </Text>
-          </Pressable>
-        )}
+        )
       </View>
 
-      <View>{pages[currentPage].component}</View>
+      <View>{pages[2].component}</View>
     </View>
   );
 };

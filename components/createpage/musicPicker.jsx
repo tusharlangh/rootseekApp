@@ -12,17 +12,11 @@ import { useColorMode } from "native-base";
 import { useEffect, useState } from "react";
 import MusicTimeline from "./musicTimeline";
 
-const MusicPicker = ({ handleSongSelect, selectedSong }) => {
+const MusicPicker = ({ handleSongSelect }) => {
   const [showMusic, setShowMusic] = useState(false);
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const bgColor = colorMode === "light" ? "white" : "#121212";
-
-  useEffect(() => {
-    if (Object.keys(selectedSong).length !== 0) {
-      setShowMusic(true);
-    }
-  });
 
   return (
     <View style={{ height: "96%" }}>

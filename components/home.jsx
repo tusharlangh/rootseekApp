@@ -1,4 +1,10 @@
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
 import DisplayPosts from "./display-posts";
 import { useFonts } from "expo-font";
 import { GrandHotel_400Regular } from "@expo-google-fonts/grand-hotel";
@@ -46,7 +52,6 @@ const Home = () => {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="white" />
-        <Text style={styles.loadingText}>Loading...</Text>
       </View>
     );
   }
@@ -54,15 +59,32 @@ const Home = () => {
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
       <View style={styles.nestedContainer}>
-        <View>
-          <Text style={[styles.dailyText, { color: textColor }]}>
-            Daily log
-          </Text>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: textColor,
+            width: 40,
+            height: 40,
+            borderRadius: 100,
+            marginBottom: 10,
+          }}
+        >
+          <Text style={{ fontSize: 20, color: bgColor }}>T</Text>
         </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View>
+            <Text style={[styles.dailyText, { color: textColor }]}>
+              Recently made by you
+            </Text>
+          </View>
 
-        <View style={{ flex: 1 }}>
-          <DisplayPosts posts={posts} />
-        </View>
+          <View style={{ flex: 1 }}>
+            <DisplayPosts posts={posts} />
+          </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -71,9 +93,8 @@ const Home = () => {
 const styles = StyleSheet.create({
   logo: {
     color: "black",
-    fontSize: 30,
+    fontSize: 38,
     fontFamily: "GrandHotel_400Regular",
-    marginLeft: 10,
     marginTop: -10,
   },
   container: {
@@ -87,7 +108,7 @@ const styles = StyleSheet.create({
   },
   dailyText: {
     marginLeft: 8,
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "bold",
   },
 });

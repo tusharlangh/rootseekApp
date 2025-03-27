@@ -140,16 +140,16 @@ export const CreateIconSolid = ({ size = 24, color = "black" }) => (
   </Svg>
 );
 
-export const PictureIcon = ({ size = 24 }) => (
+export const PictureIcon = ({ size = 24, color = "black" }) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
-    strokeWidth={1}
+    strokeWidth={2}
     stroke="currentColor"
     width={size}
     height={size}
-    color="#49CDFD"
+    color={color}
   >
     <Path
       strokeLinecap="round"
@@ -159,14 +159,14 @@ export const PictureIcon = ({ size = 24 }) => (
   </Svg>
 );
 
-export const Music = ({ size = 24 }) => (
+export const Music = ({ size = 24, color = "black" }) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
-    strokeWidth={1}
+    strokeWidth={2}
     stroke="currentColor"
-    color="#CC99FF"
+    color={color}
     width={size}
     height={size}
   >
@@ -221,7 +221,7 @@ export const SmileIcon = ({ size = 24, color = "black" }) => (
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
-    strokeWidth={1.5}
+    strokeWidth={2}
     stroke="currentColor"
     width={size}
     height={size}
@@ -240,7 +240,7 @@ export const Hashtag = ({ size = 24, color = "black" }) => (
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
-    strokeWidth={2.5}
+    strokeWidth={2}
     stroke="currentColor"
     width={size}
     height={size}
@@ -250,6 +250,25 @@ export const Hashtag = ({ size = 24, color = "black" }) => (
       strokeLinecap="round"
       strokeLinejoin="round"
       d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5-3.9 19.5m-2.1-19.5-3.9 19.5"
+    />
+  </Svg>
+);
+
+export const RightArrow = ({ size = 24, color = "black" }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={2}
+    stroke="currentColor"
+    width={size}
+    height={size}
+    color={color}
+  >
+    <Path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="m8.25 4.5 7.5 7.5-7.5 7.5"
     />
   </Svg>
 );
