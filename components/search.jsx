@@ -58,6 +58,7 @@ const Search = () => {
               {
                 backgroundColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
                 color: textColor,
+                borderColor: colorMode === "light" ? "#F0F0F0" : "#121212",
               },
             ]}
             placeholder="Search post"
@@ -65,9 +66,9 @@ const Search = () => {
             value={search}
             onChangeText={setSearch}
           />
-          <View style={{ position: "absolute", top: 12, left: 12 }}>
+          <View style={{ position: "absolute", top: 11, left: 12 }}>
             <SearchIconOutline
-              size={30}
+              size={26}
               color={colorMode === "light" ? "#848388" : "#97989F"}
             />
           </View>
@@ -94,8 +95,8 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     fontWeight: 400,
-    fontSize: 24,
-    paddingLeft: 48,
+    fontSize: 20,
+    paddingLeft: 40,
   },
 });
 

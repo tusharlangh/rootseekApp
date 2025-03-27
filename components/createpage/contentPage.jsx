@@ -1,9 +1,21 @@
-import { TextInput, View, Text, Pressable } from "react-native";
+import {
+  TextInput,
+  View,
+  Text,
+  Pressable,
+  Animated,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+} from "react-native";
 import { useColorMode } from "native-base";
 import { Hashtag, Music, PictureIcon, RightArrow, SmileIcon } from "../icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import pickImage from "./ImagePicker";
 import MusicTimeline from "./musicTimeline";
+
+const { height } = Dimensions.get("window");
 
 const ContentPage = ({
   title,
@@ -19,8 +31,34 @@ const ContentPage = ({
 }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
+  const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
   const [countChar, setCountChar] = useState(content.length);
-  const [showMusic, setShowMusic] = useState(false);
+
+  const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
+  const animation = useRef(new Animated.Value(0)).current;
+
+  const toggleMusicModal = () => {
+    if (isMusicModalVisible) {
+      Animated.timing(animation, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }).start(() => setIsMusicModalVisible(false));
+    } else {
+      setIsMusicModalVisible(true);
+      Animated.timing(animation, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
+  const translateY = animation.interpolate({
+    //changes the range of 0-1 to height-0
+    inputRange: [0, 1],
+    outputRange: [height, 0],
+  });
 
   useEffect(() => {
     setCountChar(content.length);
@@ -126,7 +164,7 @@ const ContentPage = ({
               padding: 10,
               borderColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
             }}
-            onPress={() => setShowMusic(true)}
+            onPress={toggleMusicModal}
           >
             <View
               style={{
@@ -198,22 +236,52 @@ const ContentPage = ({
         </View>
       </View>
 
-      {showMusic && (
-        <View
-          style={{
-            position: "absolute",
-            top: -60,
-            width: "100%",
-          }}
+      <Modal
+        transparent
+        visible={isMusicModalVisible}
+        onRequestClose={toggleMusicModal}
+        animationType="fade"
+        //modal is something that sits on top of the entire screen
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={toggleMusicModal}
         >
-          <MusicTimeline
-            onSelectSong={setSelectedSong}
-            setShowMusic={setShowMusic}
-          />
-        </View>
-      )}
+          <Animated.View
+            style={[
+              styles.modalContainer,
+              {
+                transform: [{ translateY }],
+                backgroundColor: bgColor,
+              },
+            ]}
+          >
+            <View style={styles.modalContent}>
+              <MusicTimeline onSelectSong={setSelectedSong} />
+            </View>
+          </Animated.View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "flex-end",
+  },
+  modalContainer: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    maxHeight: "80%",
+  },
+  modalContent: {
+    paddingBottom: 20,
+  },
+});
 
 export default ContentPage;

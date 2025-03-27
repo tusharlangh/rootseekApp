@@ -8,17 +8,18 @@ import {
   Image,
   ScrollView,
   Pressable,
+  Animated,
+  Easing,
 } from "react-native";
 import { PlayIcon, PauseIcon, SearchIconOutline } from "../icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Audio } from "expo-av";
 
-const MusicTimeline = ({ onSelectSong, setShowMusic }) => {
+const MusicTimeline = ({ onSelectSong }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const songBg = colorMode === "light" ? "white" : "#161618";
-  const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -32,7 +33,7 @@ const MusicTimeline = ({ onSelectSong, setShowMusic }) => {
     const fetchSongs = async () => {
       try {
         const respone = await axios.get(
-          `http://localhost:5002/deezer-proxy?q=${query}&limit=12`
+          `http://localhost:5002/deezer-proxy?q=${query}&limit=16`
         );
         setResults(respone.data.data);
       } catch (error) {
@@ -120,25 +121,23 @@ const MusicTimeline = ({ onSelectSong, setShowMusic }) => {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: bgColor }]}>
-      <Pressable
+    <View style={[styles.container]}>
+      <View
         style={{
-          borderRadius: 10,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
-        onPress={() => setShowMusic(false)}
       >
-        <Text
+        <View
           style={{
-            color: textColor,
-            textAlign: "right",
-            fontSize: 20,
-            fontWeight: "700",
+            height: 2,
+            width: 50,
+            backgroundColor: textColor,
             marginBottom: 20,
           }}
-        >
-          Done
-        </Text>
-      </Pressable>
+        ></View>
+      </View>
 
       <View
         style={[
@@ -153,6 +152,7 @@ const MusicTimeline = ({ onSelectSong, setShowMusic }) => {
               backgroundColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
               color: textColor,
               borderColor: colorMode === "light" ? "#F0F0F0" : "#121212",
+              marginBottom: 10,
             },
           ]}
           placeholder="Search song"
@@ -173,9 +173,8 @@ const MusicTimeline = ({ onSelectSong, setShowMusic }) => {
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: 10,
+            gap: 0,
             marginTop: 10,
-            paddingHorizontal: 8,
           }}
         >
           {results.map((song) => (
@@ -210,11 +209,17 @@ const MusicTimeline = ({ onSelectSong, setShowMusic }) => {
                 />
                 <View style={{ display: "flex", flexDirection: "column" }}>
                   <Text
-                    style={{ color: textColor, fontSize: 18, fontWeight: 700 }}
+                    style={{
+                      color: textColor,
+                      fontSize: 16,
+                      fontWeight: 700,
+                      width: 200,
+                    }}
+                    numberOfLines={1}
                   >
                     {song.title}
                   </Text>
-                  <Text style={{ color: textColor, fontSize: 16 }}>
+                  <Text style={{ color: textColor, fontSize: 14 }}>
                     {song.artist.name}
                   </Text>
                 </View>
