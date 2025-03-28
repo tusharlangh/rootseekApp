@@ -52,12 +52,12 @@ const DisplayPosts = ({ posts }) => {
       >
         <Text
           style={{
-            fontWeight: "700",
+            fontWeight: "500",
             fontSize: 20,
             color: colorMode === "light" ? "black" : "white",
           }}
         >
-          No roots found
+          No posts found
         </Text>
       </View>
     );

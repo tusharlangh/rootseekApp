@@ -25,6 +25,7 @@ import { useEffect, useRef, useState } from "react";
 import pickImage from "./ImagePicker";
 import MusicTimeline from "./musicTimeline";
 import BottomPage from "../bottom-page";
+import { BlurView } from "expo-blur";
 
 const ContentPage = ({
   title,
@@ -50,7 +51,7 @@ const ContentPage = ({
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View
-        style={{ display: "flex", flexDirection: "column", paddingBottom: 500 }}
+        style={{ display: "flex", flexDirection: "column", paddingBottom: 100 }}
       >
         <View
           style={{
@@ -61,122 +62,267 @@ const ContentPage = ({
         >
           <Pressable
             style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 200,
-              height: 200,
-              borderWidth: 2,
-              borderColor: colorMode === "light" ? "#E4E3E8" : "#15191F",
-              borderRadius: 10,
-              fontWeight: "400",
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.2,
-              shadowRadius: 4,
-              elevation: 5,
+              borderRadius: 20,
+              overflow: "hidden", // Ensures blur effect stays within borders
+              marginLeft: 10,
             }}
             onPress={() => pickImage(setPicture)}
           >
-            <View>
-              <PictureIcon size={50} color={textColor} />
+            <View
+              style={{
+                borderRadius: 20,
+                overflow: "hidden",
+                backgroundColor: "rgba(38, 43, 43, 0.6)",
+              }}
+            >
+              <BlurView intensity={50} tint="default" style={{ padding: 10 }}>
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Add Image
+                </Text>
+              </BlurView>
             </View>
           </Pressable>
         </View>
 
-        <View
+        <BlurView
+          intensity={50}
+          tint="default"
           style={{
-            padding: 4,
+            backgroundColor: "rgba(38, 43, 43, 0.6)",
+            padding: 10,
             display: "flex",
             flexDirection: "column",
             gap: 10,
             marginTop: 10,
+            overflow: "hidden",
+            borderRadius: 30,
           }}
         >
           <TextInput
-            style={{
-              fontSize: 14,
-              color: textColor,
+            style={[
+              {
+                textAlign: "center",
+                color: "rgba(245, 245, 245, 0.9)",
+                fontSize: 40,
+                fontWeight: "600",
+                borderBottomWidth: 1,
+                borderBottomColor: "rgb(200, 200, 200)",
+              },
+            ]}
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Title"
+            placeholderTextColor="rgba(245, 245, 245, 0.9)"
+            numberOfLines={1}
+          />
 
+          <TextInput
+            style={{
+              textAlign: "center",
+              fontSize: 18,
+              color: "rgba(245, 245, 245, 0.9)",
               padding: 10,
               borderRadius: 10,
               fontWeight: "400",
-              height: "60%",
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.2,
-              shadowRadius: 4,
-              elevation: 5,
+              paddingBottom: 20,
             }}
             value={content}
             onChangeText={setContent}
-            placeholder="Content.."
+            placeholder="Add a content"
             multiline
-            placeholderTextColor={textColor}
+            placeholderTextColor="rgba(245, 245, 245, 0.9)"
           />
 
-          <Text
-            style={{ color: textColor, paddingRight: 4, textAlign: "right" }}
-          >
+          <Text style={{ color: "white", paddingRight: 4, textAlign: "right" }}>
             {countChar}/2000
           </Text>
-        </View>
+        </BlurView>
 
-        <View
+        <BlurView
+          intensity={50}
+          tint="default"
           style={{
+            backgroundColor: "rgba(38, 43, 43, 0.6)",
             display: "flex",
             flexDirection: "column",
-            marginTop: -50,
-            gap: 20,
+            gap: 10,
+            marginTop: 10,
+            overflow: "hidden",
+            borderRadius: 30,
+            padding: 12,
           }}
         >
           <Pressable
             style={{
               display: "flex",
-              flexDirection: "row",
+              flexDirection: "column",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: "center",
+              gap: 1,
             }}
             onPress={() => setIsMusicModalVisible(true)}
           >
-            <View style={styles.optionContent}>
-              <Music size={28} color={textColor} />
-              <Text style={{ fontSize: 16, color: textColor }}>Add music</Text>
-            </View>
-            <RightArrow size={18} color="#71757E" />
+            <Text
+              style={{
+                fontSize: 14,
+                color: "rgba(245, 245, 245, 0.4)",
+                fontWeight: 500,
+              }}
+            >
+              Add music
+            </Text>
+            <Text
+              style={{
+                marginTop: 4,
+                fontSize: 18,
+                color: "white",
+                fontWeight: 500,
+              }}
+            >
+              Add your music to express your memory
+            </Text>
+            <BlurView
+              intensity={50}
+              tint="systemChromeMaterialLight"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "hidden",
+                width: "80%",
+                padding: 50,
+                borderRadius: 30,
+                marginTop: 10,
+              }}
+            >
+              <Music size={50} color="rgba(245, 245, 245, 0.8)" />
+            </BlurView>
           </Pressable>
+        </BlurView>
 
+        <BlurView
+          intensity={50}
+          tint="default"
+          style={{
+            backgroundColor: "rgba(38, 43, 43, 0.6)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+            marginTop: 10,
+            overflow: "hidden",
+            borderRadius: 30,
+            padding: 12,
+          }}
+        >
           <Pressable
             style={{
               display: "flex",
-              flexDirection: "row",
+              flexDirection: "column",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: "center",
+              gap: 1,
             }}
+            onPress={() => setIsMusicModalVisible(true)}
           >
-            <View style={styles.optionContent}>
-              <SmileIcon size={28} color={textColor} />
-              <Text style={{ fontSize: 16, color: textColor }}>Mood</Text>
-            </View>
-            <RightArrow size={18} color="#71757E" />
+            <Text
+              style={{
+                fontSize: 14,
+                color: "rgba(245, 245, 245, 0.4)",
+                fontWeight: 500,
+              }}
+            >
+              Your mood
+            </Text>
+            <Text
+              style={{
+                marginTop: 4,
+                fontSize: 18,
+                color: "white",
+                fontWeight: 500,
+              }}
+            >
+              Add your mood to express your self
+            </Text>
+            <BlurView
+              intensity={50}
+              tint="systemChromeMaterialLight"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "hidden",
+                width: "80%",
+                padding: 10,
+                borderRadius: 30,
+                marginTop: 10,
+              }}
+            >
+              <SmileIcon size={50} color="rgba(245, 245, 245, 0.8)" />
+            </BlurView>
           </Pressable>
+        </BlurView>
 
+        <BlurView
+          intensity={50}
+          tint="default"
+          style={{
+            backgroundColor: "rgba(38, 43, 43, 0.6)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+            marginTop: 10,
+            overflow: "hidden",
+            borderRadius: 30,
+            padding: 12,
+          }}
+        >
           <Pressable
             style={{
               display: "flex",
-              flexDirection: "row",
+              flexDirection: "column",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: "center",
+              gap: 1,
             }}
+            onPress={() => setIsMusicModalVisible(true)}
           >
-            <View style={styles.optionContent}>
-              <Hashtag size={28} color={textColor} />
-              <Text style={{ fontSize: 16, color: textColor }}>Tags</Text>
-            </View>
-            <RightArrow size={18} color="#71757E" />
+            <Text
+              style={{
+                fontSize: 14,
+                color: "rgba(245, 245, 245, 0.4)",
+                fontWeight: 500,
+              }}
+            >
+              Tags
+            </Text>
+            <Text
+              style={{
+                marginTop: 4,
+                fontSize: 18,
+                color: "white",
+                fontWeight: 500,
+              }}
+            >
+              Add tags for easy lookup
+            </Text>
+            <BlurView
+              intensity={50}
+              tint="systemChromeMaterialLight"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "hidden",
+                width: "80%",
+                padding: 10,
+                borderRadius: 30,
+                marginTop: 10,
+              }}
+            >
+              <Hashtag size={50} color="rgba(245, 245, 245, 0.8)" />
+            </BlurView>
           </Pressable>
-        </View>
+        </BlurView>
       </View>
 
       <BottomPage
@@ -190,6 +336,12 @@ const ContentPage = ({
 };
 
 const styles = StyleSheet.create({
+  blurContainer: {
+    width: "60%",
+    borderRadius: 20,
+    overflow: "hidden", // Ensures blur effect stays within borders
+    marginLeft: 10,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",

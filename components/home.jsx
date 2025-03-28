@@ -75,17 +75,15 @@ const Home = () => {
           <Text style={{ fontSize: 20, color: bgColor }}>T</Text>
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View>
-            <Text style={[styles.dailyText, { color: textColor }]}>
-              Recently made by you
-            </Text>
-          </View>
+        <View>
+          <Text style={[styles.dailyText, { color: textColor }]}>
+            Recently made by you
+          </Text>
+        </View>
 
-          <View style={{ flex: 1, height: "100%", width: "100%" }}>
-            <DisplayPosts posts={posts} />
-          </View>
-        </ScrollView>
+        <View style={{ flex: 1 }}>
+          <DisplayPosts posts={posts} />
+        </View>
       </View>
     </View>
   );

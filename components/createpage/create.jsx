@@ -7,6 +7,7 @@ import {
   Animated,
   Dimensions,
   TextInput,
+  Image,
 } from "react-native";
 import ImagePickerExample from "./ImagePicker";
 import { useColorMode } from "native-base";
@@ -16,6 +17,8 @@ import ContentPage from "./contentPage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { CloseIcon } from "../icons";
+import { TestPic } from "../../additional";
+import { BlurView } from "expo-blur";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -114,27 +117,36 @@ const Create = ({ visible, onClose }) => {
       ]}
     >
       <View
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          left: 0,
+          width: "100%",
+        }}
+      >
+        <Image
+          source={TestPic}
+          style={{ objectFit: "fill", width: "100%", height: "500" }}
+        />
+      </View>
+
+      <View
         style={[
           styles.header,
           { borderBottomColor: colorMode === "light" ? "#E4E3E8" : "#3D3D41" },
         ]}
       >
-        <TextInput
-          style={[
-            styles.createText,
-            {
-              color: textColor,
-              borderRadius: 10,
-            },
-          ]}
-          value={title}
-          onChangeText={setTitle}
-          placeholder="Title"
-          placeholderTextColor={textColor}
-        />
-
-        <Pressable style={{ marginRight: 10 }} onPress={handleClose}>
-          <CloseIcon size={30} color={textColor} />
+        <Pressable
+          style={{
+            marginRight: 10,
+            backgroundColor: "rgba(0,0,0,0.6)",
+            padding: 6,
+            borderRadius: 50,
+          }}
+          onPress={handleClose}
+        >
+          <CloseIcon size={22} color="white" />
         </Pressable>
       </View>
 
@@ -188,17 +200,16 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingHorizontal: 0,
   },
+
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     paddingBottom: 10,
-    //borderBottomWidth: 1,
   },
   createText: {
-    fontSize: 28,
+    fontSize: 18,
     fontWeight: "bold",
-    marginLeft: 16,
   },
   content: {
     flex: 1,
@@ -211,9 +222,9 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   createButton: {
-    padding: 12,
+    padding: 8,
     borderRadius: 10,
-    marginHorizontal: 14,
+    marginHorizontal: 12,
   },
   createButtonText: {
     textAlign: "center",
