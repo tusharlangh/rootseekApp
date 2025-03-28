@@ -143,19 +143,12 @@ export const CreateIconSolid = ({ size = 24, color = "black" }) => (
 export const PictureIcon = ({ size = 24, color = "black" }) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={2}
-    stroke="currentColor"
+    viewBox="0 -960 960 960"
     width={size}
     height={size}
-    color={color}
+    fill={color}
   >
-    <Path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-    />
+    <Path d="M480-480ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h320v80H200v560h560v-320h80v320q0 33-23.5 56.5T760-120H200Zm40-160h480L570-480 450-320l-90-120-120 160Zm440-320v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z" />
   </Svg>
 );
 
@@ -259,7 +252,7 @@ export const RightArrow = ({ size = 24, color = "black" }) => (
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
-    strokeWidth={2}
+    strokeWidth={3}
     stroke="currentColor"
     width={size}
     height={size}
@@ -270,5 +263,48 @@ export const RightArrow = ({ size = 24, color = "black" }) => (
       strokeLinejoin="round"
       d="m8.25 4.5 7.5 7.5-7.5 7.5"
     />
+  </Svg>
+);
+
+export const CloseIcon = ({ size = 24, color = "black" }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={2}
+    stroke="currentColor"
+    width={size}
+    height={size}
+    color={color}
+  >
+    <Path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M6 18 18 6M6 6l12 12"
+    />
+  </Svg>
+);
+
+export const AddPerson = ({ size = 24, color = "black" }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 -960 960 960"
+    width={size}
+    height={size}
+    fill={color}
+  >
+    <Path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z" />
+  </Svg>
+);
+
+export const ShareIcon = ({ size = 24, color = "black" }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 -960 960 960"
+    width={size}
+    height={size}
+    fill={color}
+  >
+    <Path d="M240-40q-33 0-56.5-23.5T160-120v-440q0-33 23.5-56.5T240-640h120v80H240v440h480v-440H600v-80h120q33 0 56.5 23.5T800-560v440q0 33-23.5 56.5T720-40H240Zm200-280v-447l-64 64-56-57 160-160 160 160-56 57-64-64v447h-80Z" />
   </Svg>
 );

@@ -9,9 +9,18 @@ import {
   TouchableOpacity,
   Modal,
   PanResponder,
+  ScrollView,
 } from "react-native";
 import { useColorMode } from "native-base";
-import { Hashtag, Music, PictureIcon, RightArrow, SmileIcon } from "../icons";
+import {
+  AddPerson,
+  Hashtag,
+  Music,
+  PictureIcon,
+  RightArrow,
+  ShareIcon,
+  SmileIcon,
+} from "../icons";
 import { useEffect, useRef, useState } from "react";
 import pickImage from "./ImagePicker";
 import MusicTimeline from "./musicTimeline";
@@ -39,46 +48,74 @@ const ContentPage = ({
   });
 
   return (
-    <View style={{ marginTop: 20 }}>
-      <View style={{ padding: 4, display: "flex", flexDirection: "column" }}>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View
+        style={{ display: "flex", flexDirection: "column", paddingBottom: 500 }}
+      >
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Pressable
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 200,
+              height: 200,
+              borderWidth: 2,
+              borderColor: colorMode === "light" ? "#E4E3E8" : "#15191F",
+              borderRadius: 10,
+              fontWeight: "400",
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+              elevation: 5,
+            }}
+            onPress={() => pickImage(setPicture)}
+          >
+            <View>
+              <PictureIcon size={50} color={textColor} />
+            </View>
+          </Pressable>
+        </View>
+
         <View
           style={{
             padding: 4,
             display: "flex",
             flexDirection: "column",
             gap: 10,
+            marginTop: 10,
           }}
         >
           <TextInput
             style={{
-              fontSize: 18,
+              fontSize: 14,
               color: textColor,
-              backgroundColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
-              padding: 10,
-              borderRadius: 10,
-              fontWeight: "400",
-            }}
-            value={title}
-            onChangeText={setTitle}
-            placeholder="Title"
-            placeholderTextColor={colorMode === "light" ? "#494949" : "#97989F"}
-          />
-          <TextInput
-            style={{
-              fontSize: 18,
-              color: textColor,
-              backgroundColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
+
               padding: 10,
               borderRadius: 10,
               fontWeight: "400",
               height: "60%",
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+              elevation: 5,
             }}
             value={content}
             onChangeText={setContent}
-            placeholder="Content"
+            placeholder="Content.."
             multiline
-            placeholderTextColor={colorMode === "light" ? "#494949" : "#97989F"}
+            placeholderTextColor={textColor}
           />
+
           <Text
             style={{ color: textColor, paddingRight: 4, textAlign: "right" }}
           >
@@ -88,10 +125,10 @@ const ContentPage = ({
 
         <View
           style={{
-            padding: 4,
             display: "flex",
             flexDirection: "column",
-            marginTop: -60,
+            marginTop: -50,
+            gap: 20,
           }}
         >
           <Pressable
@@ -100,17 +137,14 @@ const ContentPage = ({
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
-              borderBottomWidth: 1,
-              padding: 10,
-              borderColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
             }}
-            onPress={() => pickImage(setPicture)}
+            onPress={() => setIsMusicModalVisible(true)}
           >
             <View style={styles.optionContent}>
-              <PictureIcon size={28} color={textColor} />
-              <Text style={{ fontSize: 18, color: textColor }}>Add Image</Text>
+              <Music size={28} color={textColor} />
+              <Text style={{ fontSize: 16, color: textColor }}>Add music</Text>
             </View>
-            <RightArrow size={24} color={textColor} />
+            <RightArrow size={18} color="#71757E" />
           </Pressable>
 
           <Pressable
@@ -119,72 +153,29 @@ const ContentPage = ({
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
-              borderBottomWidth: 1,
-              padding: 10,
-              borderColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
             }}
-            onPress={() => setIsMusicModalVisible(true)}
           >
             <View style={styles.optionContent}>
-              <Music size={28} color={textColor} />
-              <Text style={{ fontSize: 18, color: textColor }}>Add music</Text>
+              <SmileIcon size={28} color={textColor} />
+              <Text style={{ fontSize: 16, color: textColor }}>Mood</Text>
             </View>
-            <RightArrow size={24} color={textColor} />
+            <RightArrow size={18} color="#71757E" />
           </Pressable>
 
-          <View
+          <Pressable
             style={{
               display: "flex",
               flexDirection: "row",
-              gap: 14,
               alignItems: "center",
               justifyContent: "space-between",
-              borderBottomWidth: 1,
-              padding: 10,
-              borderColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
             }}
           >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                gap: 14,
-              }}
-            >
-              <SmileIcon size={28} color={textColor} />
-              <TextInput
-                style={{
-                  fontSize: 18,
-                  color: textColor,
-                }}
-                value={mood}
-                onChangeText={setMood}
-                placeholder="Enter mood"
-                placeholderTextColor={textColor}
-              />
+            <View style={styles.optionContent}>
+              <Hashtag size={28} color={textColor} />
+              <Text style={{ fontSize: 16, color: textColor }}>Tags</Text>
             </View>
-          </View>
-
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: 14,
-              borderBottomWidth: 1,
-              padding: 10,
-              borderColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
-            }}
-          >
-            <Hashtag size={28} color={textColor} />
-            <TextInput
-              style={{
-                fontSize: 18,
-                color: textColor,
-              }}
-              placeholder="Enter hashtags"
-              placeholderTextColor={textColor}
-            />
-          </View>
+            <RightArrow size={18} color="#71757E" />
+          </Pressable>
         </View>
       </View>
 
@@ -194,7 +185,7 @@ const ContentPage = ({
       >
         <MusicTimeline onSelectSong={setSelectedSong} />
       </BottomPage>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -237,7 +228,7 @@ const styles = StyleSheet.create({
   optionContent: {
     display: "flex",
     flexDirection: "row",
-    gap: 14,
+    gap: 10,
     alignItems: "center",
   },
 });

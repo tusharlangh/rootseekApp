@@ -132,7 +132,7 @@ const MusicTimeline = ({ onSelectSong }) => {
         <View
           style={{
             height: 2,
-            width: 50,
+            width: 40,
             backgroundColor: textColor,
             marginBottom: 20,
           }}
