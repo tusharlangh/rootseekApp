@@ -4,6 +4,8 @@ import {
   Text,
   ActivityIndicator,
   ScrollView,
+  Pressable,
+  Modal,
 } from "react-native";
 import DisplayPosts from "./display-posts";
 import { useFonts } from "expo-font";
@@ -12,6 +14,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useColorMode } from "native-base";
+import { AddIcon, CloseIcon } from "./icons";
+import Create from "./createpage/create";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -21,6 +25,8 @@ const Home = () => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
+
+  const [createVisible, setCreateVisible] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -62,29 +68,66 @@ const Home = () => {
         <View
           style={{
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
             alignItems: "center",
-            backgroundColor: textColor,
-            width: 40,
-            height: 40,
-            borderRadius: 100,
+            flexDirection: "row",
+            justifyContent: "space-between",
             marginBottom: 10,
           }}
         >
-          <Text style={{ fontSize: 20, color: bgColor }}>T</Text>
-        </View>
-
-        <View>
-          <Text style={[styles.dailyText, { color: textColor }]}>
-            Recently made by you
-          </Text>
+          <View>
+            <Text style={[styles.dailyText, { color: textColor }]}>
+              Recently made
+            </Text>
+          </View>
+          <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: textColor,
+                width: 40,
+                height: 40,
+                borderRadius: 100,
+              }}
+            >
+              <Text style={{ fontSize: 20, color: bgColor }}>T</Text>
+            </View>
+          </View>
         </View>
 
         <View style={{ flex: 1 }}>
           <DisplayPosts posts={posts} />
         </View>
       </View>
+      <View style={{ position: "absolute", bottom: 10, right: 10 }}>
+        <Pressable
+          style={[
+            styles.closeButton,
+            {
+              backgroundColor:
+                colorMode === "light"
+                  ? "rgba(207, 206, 206, 0.6)"
+                  : "rgba(255, 255, 255, 0.8)",
+            },
+          ]}
+          onPress={() => setCreateVisible(true)}
+        >
+          <AddIcon size={32} color="rgba(0, 0, 0, 0.8)" />
+        </Pressable>
+      </View>
+      <Modal
+        visible={createVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setCreateVisible(false)}
+      >
+        <Create
+          visible={createVisible}
+          onClose={() => setCreateVisible(false)}
+        />
+      </Modal>
     </View>
   );
 };
@@ -107,8 +150,13 @@ const styles = StyleSheet.create({
   },
   dailyText: {
     marginLeft: 8,
-    fontSize: 25,
+    fontSize: 32,
     fontWeight: "bold",
+  },
+  closeButton: {
+    marginLeft: 10,
+    padding: 12,
+    borderRadius: 50,
   },
 });
 

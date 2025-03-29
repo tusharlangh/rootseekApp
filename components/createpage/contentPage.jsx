@@ -48,25 +48,21 @@ const ContentPage = ({
     setCountChar(content.length);
   });
 
+  const openPickImage = () => {
+    pickImage(setPicture);
+  };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View
-        style={{ display: "flex", flexDirection: "column", paddingBottom: 100 }}
-      >
-        <View
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+      <View style={styles.mainContainer}>
+        <View style={styles.imageButton}>
           <Pressable
             style={{
               borderRadius: 20,
               overflow: "hidden", // Ensures blur effect stays within borders
               marginLeft: 10,
             }}
-            onPress={() => pickImage(setPicture)}
+            onPress={openPickImage}
           >
             <View
               style={{
@@ -76,252 +72,93 @@ const ContentPage = ({
               }}
             >
               <BlurView intensity={50} tint="default" style={{ padding: 10 }}>
-                <Text style={{ color: "white", fontWeight: "bold" }}>
-                  Add Image
-                </Text>
+                <Text style={styles.addImageText}>Add Image</Text>
               </BlurView>
             </View>
           </Pressable>
         </View>
 
-        <BlurView
-          intensity={50}
-          tint="default"
-          style={{
-            backgroundColor: "rgba(38, 43, 43, 0.6)",
-            padding: 10,
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-            marginTop: 10,
-            overflow: "hidden",
-            borderRadius: 30,
-          }}
-        >
-          <TextInput
-            style={[
-              {
-                textAlign: "center",
-                color: "rgba(245, 245, 245, 0.9)",
-                fontSize: 40,
-                fontWeight: "600",
-                borderBottomWidth: 1,
-                borderBottomColor: "rgb(200, 200, 200)",
-              },
-            ]}
-            value={title}
-            onChangeText={setTitle}
-            placeholder="Title"
-            placeholderTextColor="rgba(245, 245, 245, 0.9)"
-            numberOfLines={1}
-          />
+        <BlurView intensity={50} tint="dark" style={styles.backgroundBlur}>
+          <BlurView intensity={50} tint="default" style={styles.blurCard}>
+            <TextInput
+              style={styles.titleInput}
+              value={title}
+              onChangeText={setTitle}
+              placeholder="Title"
+              placeholderTextColor="rgba(245, 245, 245, 0.9)"
+              numberOfLines={1}
+            />
 
-          <TextInput
-            style={{
-              textAlign: "center",
-              fontSize: 18,
-              color: "rgba(245, 245, 245, 0.9)",
-              padding: 10,
-              borderRadius: 10,
-              fontWeight: "400",
-              paddingBottom: 20,
-            }}
-            value={content}
-            onChangeText={setContent}
-            placeholder="Add a content"
-            multiline
-            placeholderTextColor="rgba(245, 245, 245, 0.9)"
-          />
+            <TextInput
+              style={styles.contentInput}
+              value={content}
+              onChangeText={setContent}
+              placeholder="Add a content"
+              multiline
+              placeholderTextColor="rgba(245, 245, 245, 0.9)"
+            />
 
-          <Text style={{ color: "white", paddingRight: 4, textAlign: "right" }}>
-            {countChar}/2000
-          </Text>
-        </BlurView>
+            <Text
+              style={{ color: "white", paddingRight: 4, textAlign: "right" }}
+            >
+              {countChar}/2000
+            </Text>
+          </BlurView>
 
-        <BlurView
-          intensity={50}
-          tint="default"
-          style={{
-            backgroundColor: "rgba(38, 43, 43, 0.6)",
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-            marginTop: 10,
-            overflow: "hidden",
-            borderRadius: 30,
-            padding: 12,
-          }}
-        >
-          <Pressable
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 1,
-            }}
-            onPress={() => setIsMusicModalVisible(true)}
-          >
-            <Text
-              style={{
-                fontSize: 14,
-                color: "rgba(245, 245, 245, 0.4)",
-                fontWeight: 500,
-              }}
+          <BlurView intensity={50} tint="default" style={styles.blurCard}>
+            <Pressable
+              style={styles.selectionButton}
+              onPress={() => setIsMusicModalVisible(true)}
             >
-              Add music
-            </Text>
-            <Text
-              style={{
-                marginTop: 4,
-                fontSize: 18,
-                color: "white",
-                fontWeight: 500,
-              }}
-            >
-              Add your music to express your memory
-            </Text>
-            <BlurView
-              intensity={50}
-              tint="systemChromeMaterialLight"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                overflow: "hidden",
-                width: "80%",
-                padding: 50,
-                borderRadius: 30,
-                marginTop: 10,
-              }}
-            >
-              <Music size={50} color="rgba(245, 245, 245, 0.8)" />
-            </BlurView>
-          </Pressable>
-        </BlurView>
+              <Text style={styles.directionTitle}>Add music</Text>
+              <Text style={styles.directionText}>
+                Add your music to express your memory
+              </Text>
+              <BlurView
+                intensity={50}
+                tint={colorMode === "light" ? "extraLight" : "light"}
+                style={[styles.blurNestedContainer, { padding: 50 }]}
+              >
+                <Music size={50} color="rgba(245, 245, 245, 0.8)" />
+              </BlurView>
+            </Pressable>
+          </BlurView>
 
-        <BlurView
-          intensity={50}
-          tint="default"
-          style={{
-            backgroundColor: "rgba(38, 43, 43, 0.6)",
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-            marginTop: 10,
-            overflow: "hidden",
-            borderRadius: 30,
-            padding: 12,
-          }}
-        >
-          <Pressable
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 1,
-            }}
-            onPress={() => setIsMusicModalVisible(true)}
-          >
-            <Text
-              style={{
-                fontSize: 14,
-                color: "rgba(245, 245, 245, 0.4)",
-                fontWeight: 500,
-              }}
+          <BlurView intensity={50} tint="default" style={styles.blurCard}>
+            <Pressable
+              style={styles.selectionButton}
+              onPress={() => setIsMusicModalVisible(true)}
             >
-              Your mood
-            </Text>
-            <Text
-              style={{
-                marginTop: 4,
-                fontSize: 18,
-                color: "white",
-                fontWeight: 500,
-              }}
-            >
-              Add your mood to express your self
-            </Text>
-            <BlurView
-              intensity={50}
-              tint="systemChromeMaterialLight"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                overflow: "hidden",
-                width: "80%",
-                padding: 10,
-                borderRadius: 30,
-                marginTop: 10,
-              }}
-            >
-              <SmileIcon size={50} color="rgba(245, 245, 245, 0.8)" />
-            </BlurView>
-          </Pressable>
-        </BlurView>
+              <Text style={styles.directionTitle}>Your mood</Text>
+              <Text style={styles.directionText}>
+                Add your mood to express your self
+              </Text>
+              <BlurView
+                intensity={50}
+                tint={colorMode === "light" ? "extraLight" : "light"}
+                style={styles.blurNestedContainer}
+              >
+                <SmileIcon size={50} color="rgba(245, 245, 245, 0.8)" />
+              </BlurView>
+            </Pressable>
+          </BlurView>
 
-        <BlurView
-          intensity={50}
-          tint="default"
-          style={{
-            backgroundColor: "rgba(38, 43, 43, 0.6)",
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-            marginTop: 10,
-            overflow: "hidden",
-            borderRadius: 30,
-            padding: 12,
-          }}
-        >
-          <Pressable
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 1,
-            }}
-            onPress={() => setIsMusicModalVisible(true)}
-          >
-            <Text
-              style={{
-                fontSize: 14,
-                color: "rgba(245, 245, 245, 0.4)",
-                fontWeight: 500,
-              }}
+          <BlurView intensity={50} tint="default" style={styles.blurCard}>
+            <Pressable
+              style={styles.selectionButton}
+              onPress={() => setIsMusicModalVisible(true)}
             >
-              Tags
-            </Text>
-            <Text
-              style={{
-                marginTop: 4,
-                fontSize: 18,
-                color: "white",
-                fontWeight: 500,
-              }}
-            >
-              Add tags for easy lookup
-            </Text>
-            <BlurView
-              intensity={50}
-              tint="systemChromeMaterialLight"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                overflow: "hidden",
-                width: "80%",
-                padding: 10,
-                borderRadius: 30,
-                marginTop: 10,
-              }}
-            >
-              <Hashtag size={50} color="rgba(245, 245, 245, 0.8)" />
-            </BlurView>
-          </Pressable>
+              <Text style={styles.directionTitle}>Tags</Text>
+              <Text style={styles.directionText}>Add tags for easy lookup</Text>
+              <BlurView
+                intensity={50}
+                tint={colorMode === "light" ? "extraLight" : "light"}
+                style={styles.blurNestedContainer}
+              >
+                <Hashtag size={50} color="rgba(245, 245, 245, 0.8)" />
+              </BlurView>
+            </Pressable>
+          </BlurView>
         </BlurView>
       </View>
 
@@ -336,52 +173,89 @@ const ContentPage = ({
 };
 
 const styles = StyleSheet.create({
-  blurContainer: {
-    width: "60%",
-    borderRadius: 20,
-    overflow: "hidden", // Ensures blur effect stays within borders
-    marginLeft: 10,
+  mainContainer: {
+    display: "flex",
+    flexDirection: "column",
+    paddingBottom: 40,
+    marginTop: 200,
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "flex-end",
+  backgroundBlur: {
+    backgroundColor: "rgba(0,0,0,0.1)",
+    borderRadius: 30,
+    overflow: "hidden",
+    padding: 12,
   },
-  modalContainer: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-    paddingBottom: 0, // Add padding if needed
+  blurNestedContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+    width: "80%",
+    padding: 10,
+    borderRadius: 30,
+    marginTop: 10,
   },
-  modalIndicator: {
-    width: 40,
-    height: 5,
-    backgroundColor: "#888",
-    borderRadius: 3,
-    alignSelf: "center",
-    marginBottom: 15,
+  directionText: {
+    marginTop: 4,
+    fontSize: 18,
+    color: "white",
+    fontWeight: 500,
   },
-  modalContent: {
+  directionTitle: {
+    fontSize: 14,
+    color: "rgba(245, 245, 245, 0.4)",
+    fontWeight: 500,
+  },
+  selectionButton: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 1,
+    shadowColor: "black",
+    shadowOffset: { width: 100, height: 100 },
+    shadowOpacity: 0.9,
+    shadowRadius: 110,
+  },
+  blurCard: {
+    backgroundColor: "rgba(38, 43, 43, 0.6)",
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+    marginTop: 10,
+    overflow: "hidden",
+    borderRadius: 30,
+    padding: 12,
+  },
+  titleInput: {
+    textAlign: "center",
+    color: "rgba(245, 245, 245, 0.9)",
+    fontSize: 40,
+    fontWeight: "600",
+    borderBottomWidth: 1,
+    borderBottomColor: "rgb(200, 200, 200)",
+    paddingBottom: 4,
+    borderRadius: 2,
+  },
+  contentInput: {
+    textAlign: "center",
+    fontSize: 18,
+    color: "rgba(245, 245, 245, 0.9)",
+    padding: 10,
+    borderRadius: 10,
+    fontWeight: "400",
     paddingBottom: 20,
   },
-  option: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderBottomWidth: 1,
-    padding: 10,
-    borderColor: "#E4E3E8",
+  addImageText: {
+    color: "rgba(245, 245, 245, 0.9)",
+    fontWeight: "bold",
+    fontSize: 16,
   },
-  optionContent: {
+  imageButton: {
     display: "flex",
-    flexDirection: "row",
-    gap: 10,
     alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
   },
 });
 

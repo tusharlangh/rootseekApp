@@ -1,7 +1,7 @@
 import * as ImagePicker from "expo-image-picker";
 import { Platform } from "react-native";
 
-const pickImage = async ({ onSelectPicture }) => {
+const pickImage = async (onSelectPicture) => {
   if (Platform.OS !== "web") {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {

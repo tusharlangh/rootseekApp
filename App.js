@@ -28,7 +28,7 @@ export default function App() {
       <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             
-            <Stack.Screen name="Home" component={Navbar} />
+            <Stack.Screen name="Navbar" component={Navbar} />
           </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>

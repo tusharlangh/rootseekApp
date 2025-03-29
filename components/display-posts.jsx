@@ -38,31 +38,6 @@ const DisplayPosts = ({ posts }) => {
     return ht;
   };
 
-  if (posts.length === 0) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            fontWeight: "500",
-            fontSize: 20,
-            color: colorMode === "light" ? "black" : "white",
-          }}
-        >
-          No posts found
-        </Text>
-      </View>
-    );
-  }
-
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -83,6 +58,65 @@ const DisplayPosts = ({ posts }) => {
             paddingBottom: 30,
           }}
         >
+          <View
+            style={[
+              styles.postContainer,
+              {
+                backgroundColor: colorMode === "light" ? "white" : "#161618",
+              },
+            ]}
+          >
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <Text
+                style={[
+                  styles.postTitle,
+                  {
+                    color: colorMode === "light" ? "black" : "white",
+                    flex: 7.5,
+                  },
+                ]}
+                numberOfLines={1}
+              >
+                what happened today.
+              </Text>
+              <Text style={[styles.postTime, { flex: 1.5, color: textColor }]}>
+                11:35
+              </Text>
+            </View>
+
+            <View>
+              <Text
+                style={[styles.postContent, { color: textColor }]}
+                numberOfLines={4}
+              >
+                It sounds like you're describing a serious medical condition,
+                possibly a severe case of carotid artery disease or another
+                vascular issue leading to stroke risk. If a doctor has
+                recommended daily medication or a stent, it's crucial to follow
+                their advice carefully. However, missing a single dose of
+                medication does not necessarily mean immediate death, but it can
+                increase the risk of complications over time.
+              </Text>
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                <Text
+                  style={[
+                    styles.postHashTags,
+                    { color: colorMode === "light" ? "black" : "white" },
+                  ]}
+                >
+                  #rootseekapp
+                </Text>
+              </View>
+            </View>
+          </View>
+
           {posts.map((post, index) => (
             <View
               key={index}
@@ -197,17 +231,17 @@ const styles = StyleSheet.create({
   },
   postTitle: {
     fontWeight: "600",
-    fontSize: 22,
+    fontSize: 20,
   },
   postContent: {
     fontWeight: "400",
-    fontSize: 16,
+    fontSize: 14,
     color: "#B3B3B3",
   },
   postHashTags: {
     marginTop: 4,
     fontWeight: "500",
-    fontSize: 16,
+    fontSize: 14,
     color: "white",
   },
   postTime: {

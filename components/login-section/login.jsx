@@ -50,7 +50,7 @@ const LoginPage = ({ navigation }) => {
       .then((response) => {
         if (response.data && response.data.token) {
           AsyncStorage.setItem("token", response.data.token);
-          navigation.navigate("Home");
+          navigation.navigate("Navbar");
         } else {
           console.log("Invalid response from server");
         }

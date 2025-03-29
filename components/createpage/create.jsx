@@ -9,10 +9,8 @@ import {
   TextInput,
   Image,
 } from "react-native";
-import ImagePickerExample from "./ImagePicker";
 import { useColorMode } from "native-base";
 import { useCallback, useEffect, useRef, useState } from "react";
-import MusicPicker from "./musicPicker";
 import ContentPage from "./contentPage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -25,7 +23,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const Create = ({ visible, onClose }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
-  const bgColor = colorMode === "light" ? "#F2F1F5" : "#0D1014";
+  const bgColor = "black";
 
   const [picture, setPicture] = useState(null);
   const [selectedSong, setSelectedSong] = useState({});
@@ -39,7 +37,7 @@ const Create = ({ visible, onClose }) => {
 
   useEffect(() => {
     if (visible) {
-      translateX.setValue(SCREEN_WIDTH); // Reset position
+      translateX.setValue(SCREEN_WIDTH);
       Animated.timing(translateX, {
         toValue: 0,
         duration: 300,
@@ -58,8 +56,8 @@ const Create = ({ visible, onClose }) => {
     });
   };
 
-  const handlePictureSelect = useCallback((picture) => {
-    setPicture(picture);
+  const handlePictureSelect = useCallback((pic) => {
+    setPicture(pic);
   }, []);
 
   const handleSongSelect = useCallback((song) => {
@@ -99,7 +97,7 @@ const Create = ({ visible, onClose }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      navigation.navigate("Homepage");
+      navigation.navigate("Home");
     } catch (error) {
       console.error(error);
     } finally {
@@ -116,18 +114,16 @@ const Create = ({ visible, onClose }) => {
         },
       ]}
     >
-      <View
-        style={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          left: 0,
-          width: "100%",
-        }}
-      >
+      <View intensity={500} tint="default" style={styles.absolute}>
         <Image
-          source={TestPic}
-          style={{ objectFit: "fill", width: "100%", height: "500" }}
+          source={{ uri: picture }}
+          style={[
+            styles.backgroundImage,
+            {
+              opacity: colorMode === "light" ? 0.9 : 0.8,
+            },
+          ]}
+          resizeMode="top"
         />
       </View>
 
@@ -137,17 +133,26 @@ const Create = ({ visible, onClose }) => {
           { borderBottomColor: colorMode === "light" ? "#E4E3E8" : "#3D3D41" },
         ]}
       >
-        <Pressable
-          style={{
-            marginRight: 10,
-            backgroundColor: "rgba(0,0,0,0.6)",
-            padding: 6,
-            borderRadius: 50,
-          }}
-          onPress={handleClose}
-        >
+        <Pressable style={styles.closeButton} onPress={handleClose}>
           <CloseIcon size={22} color="white" />
         </Pressable>
+        <BlurView
+          intensity={50}
+          tint="systemChromeMaterialLight"
+          style={styles.createButtonBlur}
+        >
+          <Pressable
+            style={[styles.createButton]}
+            onPress={createRoot}
+            disabled={creating}
+          >
+            <Text
+              style={[styles.createButtonText, { color: "rgba(0,0,0, 0.6)" }]}
+            >
+              {creating ? "Creating..." : "Create"}
+            </Text>
+          </Pressable>
+        </BlurView>
       </View>
 
       <View style={styles.content}>
@@ -164,28 +169,6 @@ const Create = ({ visible, onClose }) => {
           setSelectedSong={handleSongSelect}
         />
       </View>
-
-      <View
-        style={[
-          styles.footer,
-          { borderTopColor: colorMode === "light" ? "#E4E3E8" : "#3D3D41" },
-        ]}
-      >
-        <Pressable
-          style={[
-            styles.createButton,
-            {
-              backgroundColor: "#3B83F7",
-            },
-          ]}
-          onPress={createRoot}
-          disabled={creating}
-        >
-          <Text style={[styles.createButtonText, { color: "white" }]}>
-            {creating ? "Creating..." : "Create"}
-          </Text>
-        </Pressable>
-      </View>
     </Animated.View>
   );
 };
@@ -200,11 +183,17 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingHorizontal: 0,
   },
-
+  blurView: {
+    width: "100%",
+    height: 300, // Adjust as needed
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10, // Optional: add rounded corners
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
     paddingBottom: 10,
   },
   createText: {
@@ -214,22 +203,44 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingVertical: 10,
-    marginHorizontal: 12,
   },
   footer: {
     paddingTop: 20,
     //borderTopWidth: 1,
     paddingBottom: 50,
   },
+  createButtonBlur: {
+    borderRadius: 30,
+    overflow: "hidden",
+    marginRight: 10,
+    backgroundColor: "rgba(255,255,255, 0.6)",
+  },
   createButton: {
-    padding: 8,
+    padding: 6,
     borderRadius: 10,
-    marginHorizontal: 12,
+    paddingHorizontal: 12,
   },
   createButtonText: {
     textAlign: "center",
     fontSize: 16,
     fontWeight: "700",
+  },
+  closeButton: {
+    marginLeft: 10,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    padding: 6,
+    borderRadius: 50,
+  },
+  backgroundImage: {
+    width: "100%",
+    height: 400,
+  },
+  absolute: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    left: 0,
+    width: "100%",
   },
 });
 

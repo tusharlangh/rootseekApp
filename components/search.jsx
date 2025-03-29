@@ -66,9 +66,9 @@ const Search = () => {
             value={search}
             onChangeText={setSearch}
           />
-          <View style={{ position: "absolute", top: 11, left: 12 }}>
+          <View style={{ position: "absolute", top: 9, left: 12 }}>
             <SearchIconOutline
-              size={26}
+              size={22}
               color={colorMode === "light" ? "#848388" : "#97989F"}
             />
           </View>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   searchBar: {
-    padding: 12,
+    padding: 8,
     borderRadius: 10,
     fontWeight: 400,
     fontSize: 20,

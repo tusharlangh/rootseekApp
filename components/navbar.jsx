@@ -28,7 +28,9 @@ const Navbar = () => {
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
-          tabBarLabel: "",
+          tabBarLabelStyle: {
+            color: textColor,
+          },
           tabBarStyle: {
             height: 80,
             borderColor: colorMode === "light" ? "#D1D1D1" : "#2E2E36",
@@ -38,7 +40,7 @@ const Navbar = () => {
         }}
       >
         <Tab.Screen
-          name="Homepage"
+          name="Home"
           component={Home}
           options={{
             tabBarIcon: ({ focused }) =>
@@ -50,7 +52,7 @@ const Navbar = () => {
           }}
         />
         <Tab.Screen
-          name="Searchpage"
+          name="Search"
           component={Search}
           options={{
             tabBarIcon: ({ focused }) =>
@@ -61,37 +63,7 @@ const Navbar = () => {
               ),
           }}
         />
-        <Tab.Screen
-          name="Createpage"
-          component={View} // Empty component, since we handle the modal separately
-          options={{
-            tabBarIcon: ({ focused }) =>
-              focused ? (
-                <CreateIconSolid size={30} color={textColor} />
-              ) : (
-                <CreateIconOutline size={30} color={textColor} />
-              ),
-          }}
-          listeners={{
-            tabPress: (e) => {
-              e.preventDefault();
-              setCreateVisible(true);
-            },
-          }}
-        />
       </Tab.Navigator>
-
-      <Modal
-        visible={createVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setCreateVisible(false)}
-      >
-        <Create
-          visible={createVisible}
-          onClose={() => setCreateVisible(false)}
-        />
-      </Modal>
     </>
   );
 };
