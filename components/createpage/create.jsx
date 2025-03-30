@@ -23,7 +23,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const Create = ({ visible, onClose }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
-  const bgColor = "black";
+  const bgColor = colorMode === "light" ? "white" : "black";
 
   const [picture, setPicture] = useState(null);
   const [selectedSong, setSelectedSong] = useState({});

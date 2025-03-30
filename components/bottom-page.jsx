@@ -101,17 +101,23 @@ const BottomPage = ({ children, isModalVisible, setIsModalVisible }) => {
             {
               height: MODAL_HEIGHT,
               transform: [{ translateY: panY }],
+              backgroundColor:
+                colorMode === "light" ? "rgba()" : "rgba(0,0,0,0.4)",
             },
           ]}
           {...panResponders.panHandlers}
         >
           <BlurView
-            intensity={300}
-            tint="dark"
+            intensity={80}
+            tint={colorMode === "light" ? "light" : "dark"}
             style={[
               styles.modalContainer,
               {
                 height: MODAL_HEIGHT,
+                backgroundColor:
+                  colorMode === "light"
+                    ? "rgba(242,241,245,0.9)"
+                    : "rgba(0,0,0,0.9)",
               },
             ]}
           >
@@ -138,7 +144,6 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 0,
     overflow: "hidden",
-    backgroundColor: "rgba(0,0,0,0.4)",
   },
 
   modalIndicator: {

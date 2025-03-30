@@ -1,9 +1,12 @@
 import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
+import { useColorMode } from "native-base";
 
 const ContentModal = ({ setContent, content }) => {
   const [countChar, setCountChar] = useState(content.length);
+  const { colorMode } = useColorMode();
+  const textColor = colorMode === "light" ? "black" : "white";
 
   useEffect(() => {
     setCountChar(content.length);
@@ -22,7 +25,10 @@ const ContentModal = ({ setContent, content }) => {
           style={{
             height: 2,
             width: 40,
-            backgroundColor: "rgb(91, 90, 90)",
+            backgroundColor:
+              colorMode === "light"
+                ? "rgba(172, 172, 172, 0.9)"
+                : "rgba(38, 43, 43, 0.1)",
             marginBottom: 20,
             borderRadius: 10,
           }}
@@ -30,7 +36,10 @@ const ContentModal = ({ setContent, content }) => {
       </View>
       <Text
         style={{
-          color: "rgba(255,255,255,0.6)",
+          color:
+            colorMode === "light"
+              ? "rgba(0, 0, 0, 0.9)"
+              : "rgba(245, 245, 245, 0.9)",
           fontWeight: 500,
           fontSize: 14,
           marginLeft: 10,
@@ -39,11 +48,25 @@ const ContentModal = ({ setContent, content }) => {
         Post content:
       </Text>
 
-      <BlurView intensity={60} tint="light" style={styles.inputContainer}>
+      <BlurView
+        style={[
+          styles.inputContainer,
+          {
+            backgroundColor:
+              colorMode === "light"
+                ? "rgba(255,255,255,0.8)"
+                : "rgba(0, 0, 0, 0.6)",
+          },
+        ]}
+      >
         <TextInput
-          style={{ color: "white", fontSize: 16 }}
+          style={{ color: textColor, fontSize: 16 }}
           placeholder="Talk about your memory. What makes it a memory?"
-          placeholderTextColor="rgba(255,255,255,0.6)"
+          placeholderTextColor={
+            colorMode === "light"
+              ? "rgba(0, 0, 0, 0.6)"
+              : "rgba(255,255,255,0.6)"
+          }
           multiline
           value={content}
           onChangeText={setContent}
@@ -51,7 +74,7 @@ const ContentModal = ({ setContent, content }) => {
       </BlurView>
       <Text
         style={{
-          color: "rgba(255,255,255,0.7)",
+          color: textColor,
           textAlign: "right",
           marginRight: 10,
           marginTop: 4,
@@ -82,6 +105,7 @@ const styles = StyleSheet.create({
     padding: 12,
     height: 300,
     borderRadius: 10,
+
     overflow: "hidden",
   },
 });

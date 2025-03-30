@@ -19,7 +19,7 @@ import { BlurView } from "expo-blur";
 
 const MusicTimeline = ({ onSelectSong }) => {
   const { colorMode } = useColorMode();
-  const textColor = "white";
+  const textColor = colorMode === "light" ? "black" : "white";
   const songBg = "rgba(255,255,255,0.25)";
 
   const [query, setQuery] = useState("");
@@ -138,7 +138,10 @@ const MusicTimeline = ({ onSelectSong }) => {
           style={{
             height: 2,
             width: 40,
-            backgroundColor: "rgb(91, 90, 90)",
+            backgroundColor:
+              colorMode === "light"
+                ? "rgba(172, 172, 172, 0.9)"
+                : "rgba(38, 43, 43, 0.1)",
             marginBottom: 20,
             borderRadius: 10,
           }}
@@ -146,14 +149,16 @@ const MusicTimeline = ({ onSelectSong }) => {
       </View>
 
       <BlurView
-        intensity={70}
-        tint="light"
         style={[
           styles.nestedContainer,
           {
             position: "relative",
             paddingHorizontal: 2,
             borderRadius: 12,
+            backgroundColor:
+              colorMode === "light"
+                ? "rgba(255,255,255,0.8)"
+                : "rgba(0, 0, 0, 0.7)",
           },
         ]}
       >

@@ -51,7 +51,7 @@ const ContentPage = ({
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.mainContainer}>
+      <View style={[styles.mainContainer]}>
         <View style={styles.imageButton}>
           <Pressable
             style={{
@@ -75,18 +75,60 @@ const ContentPage = ({
           </Pressable>
         </View>
 
-        <BlurView intensity={74} tint="dark" style={styles.backgroundBlur}>
-          <BlurView intensity={50} tint="default" style={[styles.blurCard]}>
+        <BlurView
+          intensity={80}
+          tint={colorMode === "light" ? "light" : "dark"}
+          style={[
+            styles.backgroundBlur,
+            {
+              backgroundColor:
+                colorMode === "light"
+                  ? "rgba(242,241,245,0.9)"
+                  : "rgba(0,0,0,0.9)",
+            },
+          ]}
+        >
+          <BlurView
+            intensity={50}
+            tint="default"
+            style={[
+              styles.blurCard,
+              {
+                color: textColor,
+                backgroundColor:
+                  colorMode === "light"
+                    ? "rgba(255, 255, 255, 0.9)"
+                    : "rgba(38, 43, 43, 0.1)",
+              },
+            ]}
+          >
             <TextInput
               style={styles.titleInput}
               value={title}
               onChangeText={setTitle}
               placeholder="Title"
-              placeholderTextColor="rgba(245, 245, 245, 0.9)"
+              placeholderTextColor={
+                colorMode === "light"
+                  ? "rgba(0, 0, 0, 0.9)"
+                  : "rgba(245, 245, 245, 0.9)"
+              }
               numberOfLines={1}
             />
           </BlurView>
-          <BlurView intensity={50} tint="default" style={[styles.blurCard]}>
+          <BlurView
+            intensity={50}
+            tint="default"
+            style={[
+              styles.blurCard,
+              {
+                color: textColor,
+                backgroundColor:
+                  colorMode === "light"
+                    ? "rgba(255, 255, 255, 0.9)"
+                    : "rgba(38, 43, 43, 0.1)",
+              },
+            ]}
+          >
             <Pressable onPress={() => setIsContentModalVisible(true)}>
               <Text
                 style={{
@@ -101,38 +143,117 @@ const ContentPage = ({
             </Pressable>
           </BlurView>
 
-          <BlurView intensity={50} tint="default" style={[styles.blurCard]}>
+          <BlurView
+            intensity={50}
+            tint="default"
+            style={[
+              styles.blurCard,
+              {
+                color: textColor,
+                backgroundColor:
+                  colorMode === "light"
+                    ? "rgba(255, 255, 255, 0.9)"
+                    : "rgba(38, 43, 43, 0.1)",
+              },
+            ]}
+          >
             <Pressable
               style={styles.selectionButton}
               onPress={() => setIsMusicModalVisible(true)}
             >
-              <Text style={styles.directionTitle}>Add music</Text>
-              <Text style={styles.directionText}>
+              <Text
+                style={[
+                  styles.directionTitle,
+                  {
+                    color:
+                      colorMode === "light"
+                        ? "rgba(0,0,0,0.4)"
+                        : "rgba(245, 245, 245, 0.6)",
+                  },
+                ]}
+              >
+                Add music
+              </Text>
+              <Text style={[styles.directionText, { color: textColor }]}>
                 Add your music to express your memory
               </Text>
               <BlurView
-                intensity={50}
+                intensity={0}
                 tint={colorMode === "light" ? "extraLight" : "light"}
-                style={[styles.blurNestedContainer, { padding: 50 }]}
+                style={[
+                  styles.blurNestedContainer,
+                  {
+                    padding: 50,
+                    backgroundColor:
+                      colorMode === "light" ? "#F2F1F5" : "#222222",
+                  },
+                ]}
               >
-                <Music size={50} color="rgba(255, 255, 255, 0.9)" />
+                <Music
+                  size={50}
+                  color={
+                    colorMode === "light"
+                      ? "rgba(0,0,0,0.7)"
+                      : "rgba(255, 255, 255, 0.9)"
+                  }
+                />
               </BlurView>
             </Pressable>
           </BlurView>
 
-          <BlurView intensity={50} tint="default" style={styles.blurCard}>
+          <BlurView
+            intensity={50}
+            tint="default"
+            style={[
+              styles.blurCard,
+              {
+                color: textColor,
+                backgroundColor:
+                  colorMode === "light"
+                    ? "rgba(255, 255, 255, 0.9)"
+                    : "rgba(38, 43, 43, 0.1)",
+              },
+            ]}
+          >
             <Pressable
               style={styles.selectionButton}
               onPress={() => setIsMusicModalVisible(true)}
             >
-              <Text style={styles.directionTitle}>Tags</Text>
-              <Text style={styles.directionText}>Add tags for easy lookup</Text>
-              <BlurView
-                intensity={50}
-                tint={colorMode === "light" ? "extraLight" : "light"}
-                style={styles.blurNestedContainer}
+              <Text
+                style={[
+                  styles.directionTitle,
+                  {
+                    color:
+                      colorMode === "light"
+                        ? "rgba(0,0,0,0.4)"
+                        : "rgba(245, 245, 245, 0.6)",
+                  },
+                ]}
               >
-                <Hashtag size={50} color="rgba(255, 255, 255, 0.9)" />
+                Tags
+              </Text>
+              <Text style={[styles.directionText, { color: textColor }]}>
+                Add tags for easy lookup
+              </Text>
+              <BlurView
+                intensity={0}
+                tint={colorMode === "light" ? "extraLight" : "light"}
+                style={[
+                  styles.blurNestedContainer,
+                  {
+                    backgroundColor:
+                      colorMode === "light" ? "#F2F1F5" : "#222222",
+                  },
+                ]}
+              >
+                <Hashtag
+                  size={50}
+                  color={
+                    colorMode === "light"
+                      ? "rgba(0,0,0,0.7)"
+                      : "rgba(255, 255, 255, 0.9)"
+                  }
+                />
               </BlurView>
             </Pressable>
           </BlurView>
@@ -163,7 +284,6 @@ const styles = StyleSheet.create({
     marginTop: 200,
   },
   backgroundBlur: {
-    backgroundColor: "rgba(0,0,0,0.1)",
     borderRadius: 30,
     overflow: "hidden",
     padding: 12,
@@ -180,17 +300,12 @@ const styles = StyleSheet.create({
   },
   directionText: {
     marginTop: 4,
-    fontSize: 18,
-    color: "white",
-    fontWeight: 500,
-    shadowColor: "white", // Shadow color
-    shadowOffset: { width: 0, height: 2 }, // Horizontal and Vertical offset
-    shadowOpacity: 0.04, // Shadow opacity
-    shadowRadius: 3, // Radius of the shadow
+    fontSize: 16,
+    fontWeight: 600,
   },
   directionTitle: {
     fontSize: 14,
-    color: "rgba(245, 245, 245, 0.6)",
+
     fontWeight: 600,
   },
   selectionButton: {
@@ -199,13 +314,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 1,
-    shadowColor: "black",
-    shadowOffset: { width: 100, height: 100 },
-    shadowOpacity: 0.9,
-    shadowRadius: 110,
   },
   blurCard: {
-    backgroundColor: "rgba(38, 43, 43, 0.1)",
     display: "flex",
     flexDirection: "column",
     gap: 10,
