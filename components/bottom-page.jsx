@@ -11,9 +11,14 @@ import { useEffect, useRef, useState } from "react";
 import { useColorMode } from "native-base";
 import { BlurView } from "expo-blur";
 
-const BottomPage = ({ children, isModalVisible, setIsModalVisible }) => {
+const BottomPage = ({
+  children,
+  isModalVisible,
+  setIsModalVisible,
+  height,
+}) => {
   const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-  const MODAL_HEIGHT = SCREEN_HEIGHT * 0.9;
+  const MODAL_HEIGHT = SCREEN_HEIGHT * (height / 100);
 
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";

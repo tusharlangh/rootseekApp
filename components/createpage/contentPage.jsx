@@ -10,6 +10,7 @@ import {
   Modal,
   PanResponder,
   ScrollView,
+  Image,
 } from "react-native";
 import { useColorMode } from "native-base";
 import {
@@ -27,6 +28,7 @@ import MusicTimeline from "./musicTimeline";
 import BottomPage from "../bottom-page";
 import { BlurView } from "expo-blur";
 import ContentModal from "./contentModal";
+import TagsModal from "./tagsModal";
 
 const ContentPage = ({
   title,
@@ -39,14 +41,22 @@ const ContentPage = ({
   setPicture,
   selectedSong,
   setSelectedSong,
+  tags,
+  handleTags,
 }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
   const [isContentModalVisible, setIsContentModalVisible] = useState(false);
+  const [isTagsModalVisible, setIsTagsModalVisible] = useState(false);
 
   const openPickImage = () => {
     pickImage(setPicture);
+  };
+
+  const getTags = (tags) => {
+    const t = tags.split("#").filter((h) => h.length > 0);
+    return t;
   };
 
   return (
@@ -103,7 +113,7 @@ const ContentPage = ({
             ]}
           >
             <TextInput
-              style={styles.titleInput}
+              style={[styles.titleInput, { color: textColor }]}
               value={title}
               onChangeText={setTitle}
               placeholder="Title"
@@ -130,16 +140,29 @@ const ContentPage = ({
             ]}
           >
             <Pressable onPress={() => setIsContentModalVisible(true)}>
-              <Text
-                style={{
-                  color: textColor,
-                  textAlign: "center",
-                  fontSize: 16,
-                  fontWeight: 600,
-                }}
-              >
-                Add a content.
-              </Text>
+              {content ? (
+                <Text
+                  style={{
+                    color: textColor,
+                    textAlign: "center",
+                    fontSize: 14,
+                    fontWeight: 400,
+                  }}
+                >
+                  {content}
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: textColor,
+                    textAlign: "center",
+                    fontSize: 16,
+                    fontWeight: 600,
+                  }}
+                >
+                  Add a content.
+                </Text>
+              )}
             </Pressable>
           </BlurView>
 
@@ -189,14 +212,41 @@ const ContentPage = ({
                   },
                 ]}
               >
-                <Music
-                  size={50}
-                  color={
-                    colorMode === "light"
-                      ? "rgba(0,0,0,0.7)"
-                      : "rgba(255, 255, 255, 0.9)"
-                  }
-                />
+                {selectedSong.id ? (
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Music size={20} color={textColor} />
+                    <View style={{ marginLeft: 10 }}>
+                      <Text
+                        style={{
+                          color: textColor,
+                          fontSize: 18,
+                          fontWeight: 700,
+                        }}
+                        numberOfLines={1}
+                      >
+                        {selectedSong.title}
+                      </Text>
+                      <Text style={{ color: textColor, fontSize: 16 }}>
+                        {selectedSong.artist.name}
+                      </Text>
+                    </View>
+                  </View>
+                ) : (
+                  <Music
+                    size={50}
+                    color={
+                      colorMode === "light"
+                        ? "rgba(0,0,0,0.7)"
+                        : "rgba(255, 255, 255, 0.9)"
+                    }
+                  />
+                )}
               </BlurView>
             </Pressable>
           </BlurView>
@@ -217,7 +267,7 @@ const ContentPage = ({
           >
             <Pressable
               style={styles.selectionButton}
-              onPress={() => setIsMusicModalVisible(true)}
+              onPress={() => setIsTagsModalVisible(true)}
             >
               <Text
                 style={[
@@ -246,14 +296,24 @@ const ContentPage = ({
                   },
                 ]}
               >
-                <Hashtag
-                  size={50}
-                  color={
-                    colorMode === "light"
-                      ? "rgba(0,0,0,0.7)"
-                      : "rgba(255, 255, 255, 0.9)"
-                  }
-                />
+                {tags ? (
+                  <View>
+                    {getTags(tags).map((tag, index) => (
+                      <Text numberOfLines={1} key={index}>
+                        #{tag}
+                      </Text>
+                    ))}
+                  </View>
+                ) : (
+                  <Hashtag
+                    size={50}
+                    color={
+                      colorMode === "light"
+                        ? "rgba(0,0,0,0.7)"
+                        : "rgba(255, 255, 255, 0.9)"
+                    }
+                  />
+                )}
               </BlurView>
             </Pressable>
           </BlurView>
@@ -263,14 +323,23 @@ const ContentPage = ({
       <BottomPage
         isModalVisible={isMusicModalVisible}
         setIsModalVisible={setIsMusicModalVisible}
+        height={90}
       >
         <MusicTimeline onSelectSong={setSelectedSong} />
       </BottomPage>
       <BottomPage
         isModalVisible={isContentModalVisible}
         setIsModalVisible={setIsContentModalVisible}
+        height={90}
       >
         <ContentModal setContent={setContent} content={content} />
+      </BottomPage>
+      <BottomPage
+        isModalVisible={isTagsModalVisible}
+        setIsModalVisible={setIsTagsModalVisible}
+        height={90}
+      >
+        <TagsModal tags={tags} handleTags={handleTags} />
       </BottomPage>
     </ScrollView>
   );

@@ -69,7 +69,11 @@ const ContentModal = ({ setContent, content }) => {
           }
           multiline
           value={content}
-          onChangeText={setContent}
+          onChangeText={(text) => {
+            if (countChar < 2000 || text.length < content.length) {
+              setContent(text);
+            }
+          }}
         />
       </BlurView>
       <Text

@@ -17,6 +17,8 @@ import axios from "axios";
 import { CloseIcon } from "../icons";
 import { TestPic } from "../../additional";
 import { BlurView } from "expo-blur";
+import BottomPage from "../bottom-page";
+import CloseModal from "./closeModal";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -31,8 +33,10 @@ const Create = ({ visible, onClose }) => {
   const [content, setContent] = useState("");
   const [mood, setMood] = useState("");
   const [creating, setCreating] = useState(false);
+  const [tags, setTags] = useState("");
+  const [send, setSend] = useState(false);
+  const [isCloseModalVisible, setIsCloseModalVisible] = useState(false);
 
-  // Start offscreen to the right
   const translateX = useRef(new Animated.Value(SCREEN_WIDTH)).current;
 
   useEffect(() => {
@@ -56,12 +60,30 @@ const Create = ({ visible, onClose }) => {
     });
   };
 
+  useEffect(() => {
+    if (content && title) {
+      setSend(true);
+    } else {
+      setSend(false);
+    }
+  });
+
   const handlePictureSelect = useCallback((pic) => {
     setPicture(pic);
   }, []);
 
   const handleSongSelect = useCallback((song) => {
     setSelectedSong(song);
+  }, []);
+
+  function isAlphaWithHash(str) {
+    return /^[A-Za-z#]+$/.test(str);
+  }
+
+  const handleTags = useCallback((tags) => {
+    if (isAlphaWithHash(tags) || tags === "") {
+      setTags(tags);
+    }
   }, []);
 
   const createRoot = async () => {
@@ -133,7 +155,18 @@ const Create = ({ visible, onClose }) => {
           { borderBottomColor: colorMode === "light" ? "#E4E3E8" : "#3D3D41" },
         ]}
       >
-        <Pressable style={styles.closeButton} onPress={handleClose}>
+        <Pressable
+          style={[
+            styles.closeButton,
+            {
+              backgroundColor:
+                colorMode === "light"
+                  ? "rgba(0,0,0,0.6)"
+                  : "rgba(255,255,255,0.4)",
+            },
+          ]}
+          onPress={() => setIsCloseModalVisible(true)}
+        >
           <CloseIcon size={22} color="white" />
         </Pressable>
         <BlurView
@@ -142,14 +175,34 @@ const Create = ({ visible, onClose }) => {
           style={styles.createButtonBlur}
         >
           <Pressable
-            style={[styles.createButton]}
+            style={[
+              styles.createButton,
+              {
+                backgroundColor:
+                  colorMode === "light"
+                    ? send
+                      ? "rgba(0,0,0,0.6)"
+                      : "rgba(0,0,0,0.1)"
+                    : send
+                    ? "rgba(255,255,255,0.6)"
+                    : "rgba(96, 96, 96, 0.6)",
+              },
+            ]}
             onPress={createRoot}
-            disabled={creating}
+            disabled={send}
           >
             <Text
-              style={[styles.createButtonText, { color: "rgba(0,0,0, 0.6)" }]}
+              style={[
+                styles.createButtonText,
+                {
+                  color:
+                    colorMode === "light"
+                      ? "rgba(255,255,255,0.9)"
+                      : "rgba(0,0,0, 0.6)",
+                },
+              ]}
             >
-              {creating ? "Creating..." : "Create"}
+              {creating ? "Creating" : "Create"}
             </Text>
           </Pressable>
         </BlurView>
@@ -167,8 +220,21 @@ const Create = ({ visible, onClose }) => {
           setPicture={handlePictureSelect}
           selectedSong={selectedSong}
           setSelectedSong={handleSongSelect}
+          tags={tags}
+          handleTags={handleTags}
         />
       </View>
+
+      <BottomPage
+        isModalVisible={isCloseModalVisible}
+        setIsModalVisible={setIsCloseModalVisible}
+        height={19}
+      >
+        <CloseModal
+          setIsCloseModalVisible={setIsCloseModalVisible}
+          handleClose={handleClose}
+        />
+      </BottomPage>
     </Animated.View>
   );
 };
