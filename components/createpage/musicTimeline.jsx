@@ -15,11 +15,12 @@ import { PlayIcon, PauseIcon, SearchIconOutline } from "../icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Audio } from "expo-av";
+import { BlurView } from "expo-blur";
 
 const MusicTimeline = ({ onSelectSong }) => {
   const { colorMode } = useColorMode();
-  const textColor = colorMode === "light" ? "black" : "white";
-  const songBg = colorMode === "light" ? "white" : "#161618";
+  const textColor = "white";
+  const songBg = "rgba(255,255,255,0.25)";
 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -109,7 +110,9 @@ const MusicTimeline = ({ onSelectSong }) => {
     }
   };
 
-  if (!results || results.length === 0) {
+  {
+    /*
+    if (!results || results.length === 0) {
     return (
       <View style={{ flex: 1, height: "100%", width: "100%" }}>
         <ActivityIndicator
@@ -118,6 +121,8 @@ const MusicTimeline = ({ onSelectSong }) => {
         />
       </View>
     );
+  }
+    */
   }
 
   return (
@@ -133,40 +138,44 @@ const MusicTimeline = ({ onSelectSong }) => {
           style={{
             height: 2,
             width: 40,
-            backgroundColor: textColor,
+            backgroundColor: "rgb(91, 90, 90)",
             marginBottom: 20,
+            borderRadius: 10,
           }}
         ></View>
       </View>
 
-      <View
+      <BlurView
+        intensity={70}
+        tint="light"
         style={[
           styles.nestedContainer,
-          { position: "relative", paddingHorizontal: 2 },
+          {
+            position: "relative",
+            paddingHorizontal: 2,
+            borderRadius: 12,
+          },
         ]}
       >
         <TextInput
           style={[
             styles.searchBar,
             {
-              backgroundColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
               color: textColor,
-              borderColor: colorMode === "light" ? "#F0F0F0" : "#121212",
-              marginBottom: 10,
             },
           ]}
           placeholder="Search song"
-          placeholderTextColor={colorMode === "light" ? "#494949" : "#97989F"}
+          placeholderTextColor={textColor}
           value={query}
           onChangeText={setQuery}
         />
-        <View style={{ position: "absolute", top: 11, left: 12 }}>
+        <View style={{ position: "absolute", top: 9, left: 12 }}>
           <SearchIconOutline
-            size={26}
+            size={22}
             color={colorMode === "light" ? "#848388" : "#97989F"}
           />
         </View>
-      </View>
+      </BlurView>
 
       <ScrollView>
         <View
@@ -185,7 +194,7 @@ const MusicTimeline = ({ onSelectSong }) => {
                 flexDirection: "row",
                 backgroundColor: selectedSongId === song.id ? songBg : "",
                 borderRadius: 6,
-                padding: 8,
+                padding: 12,
                 alignItems: "center",
               }}
               key={song.id}
@@ -252,14 +261,19 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   nestedContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    overflow: "hidden",
     paddingHorizontal: 4,
   },
   searchBar: {
-    padding: 12,
+    padding: 10,
     borderRadius: 10,
     fontWeight: 400,
-    fontSize: 20,
-    paddingLeft: 40,
+    fontSize: 16,
+    paddingLeft: 36,
+    width: "100%",
   },
 });
 

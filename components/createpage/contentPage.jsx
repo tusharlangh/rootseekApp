@@ -26,6 +26,7 @@ import pickImage from "./ImagePicker";
 import MusicTimeline from "./musicTimeline";
 import BottomPage from "../bottom-page";
 import { BlurView } from "expo-blur";
+import ContentModal from "./contentModal";
 
 const ContentPage = ({
   title,
@@ -41,12 +42,8 @@ const ContentPage = ({
 }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
-  const [countChar, setCountChar] = useState(content.length);
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
-
-  useEffect(() => {
-    setCountChar(content.length);
-  });
+  const [isContentModalVisible, setIsContentModalVisible] = useState(false);
 
   const openPickImage = () => {
     pickImage(setPicture);
@@ -78,8 +75,8 @@ const ContentPage = ({
           </Pressable>
         </View>
 
-        <BlurView intensity={50} tint="dark" style={styles.backgroundBlur}>
-          <BlurView intensity={50} tint="default" style={styles.blurCard}>
+        <BlurView intensity={74} tint="dark" style={styles.backgroundBlur}>
+          <BlurView intensity={50} tint="default" style={[styles.blurCard]}>
             <TextInput
               style={styles.titleInput}
               value={title}
@@ -88,24 +85,23 @@ const ContentPage = ({
               placeholderTextColor="rgba(245, 245, 245, 0.9)"
               numberOfLines={1}
             />
-
-            <TextInput
-              style={styles.contentInput}
-              value={content}
-              onChangeText={setContent}
-              placeholder="Add a content"
-              multiline
-              placeholderTextColor="rgba(245, 245, 245, 0.9)"
-            />
-
-            <Text
-              style={{ color: "white", paddingRight: 4, textAlign: "right" }}
-            >
-              {countChar}/2000
-            </Text>
+          </BlurView>
+          <BlurView intensity={50} tint="default" style={[styles.blurCard]}>
+            <Pressable onPress={() => setIsContentModalVisible(true)}>
+              <Text
+                style={{
+                  color: textColor,
+                  textAlign: "center",
+                  fontSize: 16,
+                  fontWeight: 600,
+                }}
+              >
+                Add a content.
+              </Text>
+            </Pressable>
           </BlurView>
 
-          <BlurView intensity={50} tint="default" style={styles.blurCard}>
+          <BlurView intensity={50} tint="default" style={[styles.blurCard]}>
             <Pressable
               style={styles.selectionButton}
               onPress={() => setIsMusicModalVisible(true)}
@@ -119,26 +115,7 @@ const ContentPage = ({
                 tint={colorMode === "light" ? "extraLight" : "light"}
                 style={[styles.blurNestedContainer, { padding: 50 }]}
               >
-                <Music size={50} color="rgba(245, 245, 245, 0.8)" />
-              </BlurView>
-            </Pressable>
-          </BlurView>
-
-          <BlurView intensity={50} tint="default" style={styles.blurCard}>
-            <Pressable
-              style={styles.selectionButton}
-              onPress={() => setIsMusicModalVisible(true)}
-            >
-              <Text style={styles.directionTitle}>Your mood</Text>
-              <Text style={styles.directionText}>
-                Add your mood to express your self
-              </Text>
-              <BlurView
-                intensity={50}
-                tint={colorMode === "light" ? "extraLight" : "light"}
-                style={styles.blurNestedContainer}
-              >
-                <SmileIcon size={50} color="rgba(245, 245, 245, 0.8)" />
+                <Music size={50} color="rgba(255, 255, 255, 0.9)" />
               </BlurView>
             </Pressable>
           </BlurView>
@@ -155,7 +132,7 @@ const ContentPage = ({
                 tint={colorMode === "light" ? "extraLight" : "light"}
                 style={styles.blurNestedContainer}
               >
-                <Hashtag size={50} color="rgba(245, 245, 245, 0.8)" />
+                <Hashtag size={50} color="rgba(255, 255, 255, 0.9)" />
               </BlurView>
             </Pressable>
           </BlurView>
@@ -163,10 +140,16 @@ const ContentPage = ({
       </View>
 
       <BottomPage
-        isMusicModalVisible={isMusicModalVisible}
-        setIsMusicModalVisible={setIsMusicModalVisible}
+        isModalVisible={isMusicModalVisible}
+        setIsModalVisible={setIsMusicModalVisible}
       >
         <MusicTimeline onSelectSong={setSelectedSong} />
+      </BottomPage>
+      <BottomPage
+        isModalVisible={isContentModalVisible}
+        setIsModalVisible={setIsContentModalVisible}
+      >
+        <ContentModal setContent={setContent} content={content} />
       </BottomPage>
     </ScrollView>
   );
@@ -200,11 +183,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "white",
     fontWeight: 500,
+    shadowColor: "white", // Shadow color
+    shadowOffset: { width: 0, height: 2 }, // Horizontal and Vertical offset
+    shadowOpacity: 0.04, // Shadow opacity
+    shadowRadius: 3, // Radius of the shadow
   },
   directionTitle: {
     fontSize: 14,
-    color: "rgba(245, 245, 245, 0.4)",
-    fontWeight: 500,
+    color: "rgba(245, 245, 245, 0.6)",
+    fontWeight: 600,
   },
   selectionButton: {
     display: "flex",
@@ -218,7 +205,7 @@ const styles = StyleSheet.create({
     shadowRadius: 110,
   },
   blurCard: {
-    backgroundColor: "rgba(38, 43, 43, 0.6)",
+    backgroundColor: "rgba(38, 43, 43, 0.1)",
     display: "flex",
     flexDirection: "column",
     gap: 10,
@@ -232,9 +219,8 @@ const styles = StyleSheet.create({
     color: "rgba(245, 245, 245, 0.9)",
     fontSize: 40,
     fontWeight: "600",
-    borderBottomWidth: 1,
-    borderBottomColor: "rgb(200, 200, 200)",
-    paddingBottom: 4,
+    //borderBottomWidth: 1,
+    //borderBottomColor: "rgba(200, 200, 200, 0.1)",
     borderRadius: 2,
   },
   contentInput: {

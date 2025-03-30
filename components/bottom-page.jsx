@@ -9,12 +9,9 @@ import {
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { useColorMode } from "native-base";
+import { BlurView } from "expo-blur";
 
-const BottomPage = ({
-  children,
-  isMusicModalVisible,
-  setIsMusicModalVisible,
-}) => {
+const BottomPage = ({ children, isModalVisible, setIsModalVisible }) => {
   const { height: SCREEN_HEIGHT } = Dimensions.get("window");
   const MODAL_HEIGHT = SCREEN_HEIGHT * 0.9;
 
@@ -23,10 +20,10 @@ const BottomPage = ({
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
 
   useEffect(() => {
-    if (isMusicModalVisible) {
+    if (isModalVisible) {
       resetPositionAnim.start();
     }
-  }, [isMusicModalVisible]);
+  }, [isModalVisible]);
 
   const panY = useRef(new Animated.Value(MODAL_HEIGHT)).current; // Start off-screen at bottom
 
@@ -72,22 +69,22 @@ const BottomPage = ({
   };
 
   const toggleMusicModal = () => {
-    if (isMusicModalVisible) {
+    if (isModalVisible) {
       closeModal();
     } else {
-      setIsMusicModalVisible(true);
+      setIsModalVisible(true);
       resetPositionAnim.start();
     }
   };
 
   const closeModal = () => {
-    closeAnim.start(() => setIsMusicModalVisible(false));
+    closeAnim.start(() => setIsModalVisible(false));
   };
 
   return (
     <Modal
       transparent
-      visible={isMusicModalVisible}
+      visible={isModalVisible}
       onRequestClose={toggleMusicModal}
       animationType="fade"
     >
@@ -97,18 +94,29 @@ const BottomPage = ({
           activeOpacity={1}
           onPress={toggleMusicModal}
         />
+
         <Animated.View
           style={[
             styles.modalContainer,
             {
               height: MODAL_HEIGHT,
               transform: [{ translateY: panY }],
-              backgroundColor: bgColor,
             },
           ]}
           {...panResponders.panHandlers}
         >
-          <View style={styles.modalContent}>{children}</View>
+          <BlurView
+            intensity={300}
+            tint="dark"
+            style={[
+              styles.modalContainer,
+              {
+                height: MODAL_HEIGHT,
+              },
+            ]}
+          >
+            <View style={styles.modalContent}>{children}</View>
+          </BlurView>
         </Animated.View>
       </Animated.View>
     </Modal>
@@ -125,11 +133,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
     padding: 20,
     paddingBottom: 0,
+    overflow: "hidden",
+    backgroundColor: "rgba(0,0,0,0.4)",
   },
+
   modalIndicator: {
     width: 40,
     height: 5,
