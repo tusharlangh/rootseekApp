@@ -5,13 +5,19 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
+  Modal,
+  Pressable,
 } from "react-native";
 import { useColorMode } from "native-base";
+import { useState } from "react";
+import ViewPost from "./viewPost";
 
 const DisplayPosts = ({ posts }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#8A898D" : "#8E8D93";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
+  const [post, setPost] = useState();
+  const [viewPostVisible, setViewPostVisible] = useState(false);
 
   if (!posts) {
     return (
@@ -58,7 +64,7 @@ const DisplayPosts = ({ posts }) => {
             paddingBottom: 30,
           }}
         >
-          <View
+          <Pressable
             style={[
               styles.postContainer,
               {
@@ -115,10 +121,10 @@ const DisplayPosts = ({ posts }) => {
                 </Text>
               </View>
             </View>
-          </View>
+          </Pressable>
 
           {posts.map((post, index) => (
-            <View
+            <Pressable
               key={index}
               style={[
                 styles.postContainer,
@@ -126,6 +132,10 @@ const DisplayPosts = ({ posts }) => {
                   backgroundColor: colorMode === "light" ? "white" : "#161618",
                 },
               ]}
+              onPress={() => {
+                setPost(post);
+                setViewPostVisible(true);
+              }}
             >
               <View
                 style={{
@@ -212,10 +222,21 @@ const DisplayPosts = ({ posts }) => {
               ) : (
                 ""
               )}
-            </View>
+            </Pressable>
           ))}
         </View>
       </ScrollView>
+      <Modal
+        visible={viewPostVisible}
+        transparent={true}
+        onRequestClose={() => setViewPostVisible(false)}
+      >
+        <ViewPost
+          post={post}
+          setViewPostVisible={setViewPostVisible}
+          viewPostVisible={viewPostVisible}
+        />
+      </Modal>
     </View>
   );
 };

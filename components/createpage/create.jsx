@@ -87,6 +87,7 @@ const Create = ({ visible, onClose }) => {
   }, []);
 
   const createRoot = async () => {
+    console.log("got in");
     if (title === "" || content === "") {
       console.log("Please fill up the title and the content.");
       return;
@@ -102,6 +103,7 @@ const Create = ({ visible, onClose }) => {
     formData.append("trackName", selectedSong?.title);
     formData.append("trackArtist", selectedSong?.artist?.name);
     formData.append("trackAlbumCover", selectedSong?.album?.cover);
+    formData.append("hashTags", tags);
 
     if (picture) {
       formData.append("image", {
@@ -119,7 +121,7 @@ const Create = ({ visible, onClose }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      navigation.navigate("Home");
+      handleClose();
     } catch (error) {
       console.error(error);
     } finally {
@@ -189,7 +191,6 @@ const Create = ({ visible, onClose }) => {
               },
             ]}
             onPress={createRoot}
-            disabled={send}
           >
             <Text
               style={[

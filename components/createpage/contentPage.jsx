@@ -402,15 +402,6 @@ const styles = StyleSheet.create({
     //borderBottomColor: "rgba(200, 200, 200, 0.1)",
     borderRadius: 2,
   },
-  contentInput: {
-    textAlign: "center",
-    fontSize: 18,
-    color: "rgba(245, 245, 245, 0.9)",
-    padding: 10,
-    borderRadius: 10,
-    fontWeight: "400",
-    paddingBottom: 20,
-  },
   addImageText: {
     color: "rgba(245, 245, 245, 0.9)",
     fontWeight: "bold",
