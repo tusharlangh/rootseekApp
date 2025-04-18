@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useColorMode } from "native-base";
 import {
-  CreateIconOutline,
-  CreateIconSolid,
   HomeIconOutline,
   HomeIconSolid,
   SearchIconOutline,
@@ -11,8 +9,6 @@ import {
 } from "./icons";
 import Home from "./home";
 import Search from "./search";
-import { View, Modal } from "react-native";
-import Create from "./createpage/create";
 
 const Tab = createBottomTabNavigator();
 
@@ -20,8 +16,6 @@ const Navbar = () => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
-
-  const [createVisible, setCreateVisible] = useState(false);
 
   return (
     <>

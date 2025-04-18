@@ -237,7 +237,7 @@ const DisplayPosts = ({ posts }) => {
           viewPostVisible={viewPostVisible}
         />
       </Modal>
-    </View>
+    </View> 
   );
 };
 

@@ -12,13 +12,16 @@ import { useFonts } from "expo-font";
 import { GrandHotel_400Regular } from "@expo-google-fonts/grand-hotel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { Axios } from "axios";
 import { useColorMode } from "native-base";
-import { AddIcon, CloseIcon } from "./icons";
+import { AddIcon, CloseIcon, ShuffleIcon } from "./icons";
 import Create from "./createpage/create";
+import ViewPost from "./viewPost";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const [shufflePosts, setShufflePosts] = useState([]);
+  const [shuffleRandomNumber, setShuffleRandomNumber] = useState(0);
   let [fontsLoaded] = useFonts({
     GrandHotel_400Regular,
   });
@@ -27,6 +30,7 @@ const Home = () => {
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
 
   const [createVisible, setCreateVisible] = useState(false);
+  const [shufflePostVisible, setShufflePostVisible] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -53,6 +57,29 @@ const Home = () => {
 
     fetchPosts();
   }, []);
+
+  const activateShufflePost = async () => {
+    try {
+      if (shufflePosts.length === 0) {
+        const token = await AsyncStorage.getItem("token");
+        if (!token) {
+          console.log("no token found.");
+        }
+        const response = await axios.get("http://localhost:5002/posts/all", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setShufflePosts(response.data);
+      }
+
+      const randomNumber = Math.floor(Math.random() * shufflePosts.length);
+      setShuffleRandomNumber(randomNumber);
+      setShufflePostVisible(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (!fontsLoaded) {
     return (
@@ -101,6 +128,23 @@ const Home = () => {
           <DisplayPosts posts={posts} />
         </View>
       </View>
+      <View style={{ position: "absolute", bottom: 72, right: 10 }}>
+        <Pressable
+          style={[
+            styles.closeButton,
+            {
+              backgroundColor:
+                colorMode === "light"
+                  ? "rgba(207, 206, 206, 0.6)"
+                  : "rgba(255, 255, 255, 0.8)",
+              padding: 12,
+            },
+          ]}
+          onPress={activateShufflePost}
+        >
+          <ShuffleIcon size={22} color="rgba(0, 0, 0, 0.8)" />
+        </Pressable>
+      </View>
       <View style={{ position: "absolute", bottom: 10, right: 10 }}>
         <Pressable
           style={[
@@ -126,6 +170,19 @@ const Home = () => {
         <Create
           visible={createVisible}
           onClose={() => setCreateVisible(false)}
+        />
+      </Modal>
+
+      <Modal
+        visible={shufflePostVisible}
+        animationType="none"
+        transparent={true}
+        onRequestClose={() => setShufflePostVisible(false)}
+      >
+        <ViewPost
+          post={shufflePosts[shuffleRandomNumber]}
+          setViewPostVisible={setShufflePostVisible}
+          viewPostVisible={shufflePostVisible}
         />
       </Modal>
     </View>

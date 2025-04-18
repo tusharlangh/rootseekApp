@@ -16,7 +16,7 @@ const CloseModal = ({ setIsCloseModalVisible, handleClose }) => {
             textAlign: "center",
           }}
         >
-          If you leave, your root will not be saved.
+          If you leave, your post will not be saved.
         </Text>
         <View
           style={{
@@ -40,7 +40,7 @@ const CloseModal = ({ setIsCloseModalVisible, handleClose }) => {
                 color: "red",
               }}
             >
-              Discard root
+              Discard post
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setIsCloseModalVisible(false)}>
