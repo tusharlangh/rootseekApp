@@ -11,6 +11,7 @@ import {
 import { useColorMode } from "native-base";
 import { useState } from "react";
 import ViewPost from "./viewPost";
+import moment from "moment";
 
 const DisplayPosts = ({ posts }) => {
   const { colorMode } = useColorMode();
@@ -18,6 +19,35 @@ const DisplayPosts = ({ posts }) => {
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
   const [postIndex, setPostIndex] = useState(0);
   const [viewPostVisible, setViewPostVisible] = useState(false);
+
+  const groupPostsByDate = (posts) => {
+    const sorted = posts.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+    const grouped = {};
+
+    sorted.forEach((post) => {
+      let dateKey;
+      const date = moment(post.createdAt);
+
+      if (date.isSame(moment(), "day")) {
+        dateKey = "Today";
+      } else if (date.isSame(moment().subtract(1, "days"), "day")) {
+        dateKey = "Yesterday";
+      } else {
+        dateKey = date.format("MMMM D");
+      }
+      if (!grouped[dateKey]) grouped[dateKey] = [];
+      grouped[dateKey].push(post);
+    });
+
+    const result = Object.keys(grouped).map((date) => ({
+      title: date,
+      data: grouped[date],
+    }));
+    return result;
+  };
 
   if (!posts) {
     return (
@@ -45,7 +75,7 @@ const DisplayPosts = ({ posts }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, padding: 2 }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
@@ -64,165 +94,154 @@ const DisplayPosts = ({ posts }) => {
             paddingBottom: 30,
           }}
         >
-          <Pressable
-            style={[
-              styles.postContainer,
-              {
-                backgroundColor: colorMode === "light" ? "white" : "#161618",
-              },
-            ]}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
+          {groupPostsByDate(posts).map((post, index) => (
+            <View key={index}>
               <Text
-                style={[
-                  styles.postTitle,
-                  {
-                    color: colorMode === "light" ? "black" : "white",
-                    flex: 7.5,
-                  },
-                ]}
-                numberOfLines={1}
-              >
-                what happened today.
-              </Text>
-              <Text style={[styles.postTime, { flex: 1.5, color: textColor }]}>
-                11:35
-              </Text>
-            </View>
-
-            <View>
-              <Text
-                style={[styles.postContent, { color: textColor }]}
-                numberOfLines={4}
-              >
-                It sounds like you're describing a serious medical condition,
-                possibly a severe case of carotid artery disease or another
-                vascular issue leading to stroke risk. If a doctor has
-                recommended daily medication or a stent, it's crucial to follow
-                their advice carefully. However, missing a single dose of
-                medication does not necessarily mean immediate death, but it can
-                increase the risk of complications over time.
-              </Text>
-              <View style={{ display: "flex", flexDirection: "row" }}>
-                <Text
-                  style={[
-                    styles.postHashTags,
-                    { color: colorMode === "light" ? "black" : "white" },
-                  ]}
-                >
-                  #rootseekapp
-                </Text>
-              </View>
-            </View>
-          </Pressable>
-
-          {posts.map((post, index) => (
-            <Pressable
-              key={index}
-              style={[
-                styles.postContainer,
-                {
-                  backgroundColor: colorMode === "light" ? "white" : "#161618",
-                },
-              ]}
-              onPress={() => {
-                setPostIndex(index);
-                setViewPostVisible(true);
-              }}
-            >
-              <View
                 style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 2,
+                  color: colorMode === "light" ? "black" : "white",
+                  fontWeight: 500,
+                  fontSize: 22,
+                  marginBottom: 10,
+                  marginTop: 12,
+                  marginLeft: 4,
                 }}
               >
-                <Text
-                  style={[
-                    styles.postTitle,
-                    {
-                      color: colorMode === "light" ? "black" : "white",
-                      flex: 7.5,
-                    },
-                  ]}
-                  numberOfLines={1}
-                >
-                  {post.title}
-                </Text>
-                <Text
-                  style={[styles.postTime, { flex: 1.5, color: textColor }]}
-                >
-                  {FormatTime(post)}
-                </Text>
-              </View>
-
-              <View>
-                <Text
-                  style={[styles.postContent, { color: textColor }]}
-                  numberOfLines={4}
-                >
-                  {post.content}
-                </Text>
-                <View style={{ display: "flex", flexDirection: "row" }}>
-                  {post.hashTags &&
-                    getHashTags(post.hashTags).map((hashTag, index) => (
+                {post.title}
+              </Text>
+              <View
+                style={{ display: "flex", flexDirection: "column", gap: 8 }}
+              >
+                {post.data.map((post, index) => (
+                  <Pressable
+                    key={index}
+                    style={[
+                      styles.postContainer,
+                      {
+                        backgroundColor:
+                          colorMode === "light" ? "white" : "#161618",
+                      },
+                    ]}
+                    onPress={() => {
+                      setPostIndex(posts.findIndex((p) => p._id === post._id));
+                      setViewPostVisible(true);
+                    }}
+                  >
+                    <View
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 2,
+                      }}
+                    >
                       <Text
-                        key={index}
                         style={[
-                          styles.postHashTags,
-                          { color: colorMode === "light" ? "black" : "white" },
+                          styles.postTitle,
+                          {
+                            color: colorMode === "light" ? "black" : "white",
+                            flex: 7.5,
+                          },
+                        ]}
+                        numberOfLines={1}
+                      >
+                        {post.title}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.postTime,
+                          {
+                            flex: 1.5,
+                            color: colorMode === "light" ? "black" : "white",
+                          },
                         ]}
                       >
-                        #{hashTag}
+                        {FormatTime(post)}
                       </Text>
-                    ))}
-                </View>
+                    </View>
+
+                    <View>
+                      <Text
+                        style={[
+                          styles.postContent,
+                          { color: colorMode === "light" ? "black" : "white" },
+                        ]}
+                        numberOfLines={4}
+                      >
+                        {post.content}
+                      </Text>
+                      <View
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: 4,
+                        }}
+                      >
+                        {post.hashTags &&
+                          getHashTags(post.hashTags).map((hashTag, index) => (
+                            <Text
+                              key={index}
+                              style={[
+                                styles.postHashTags,
+                                {
+                                  color:
+                                    colorMode === "light" ? "black" : "white",
+                                  backgroundColor:
+                                    colorMode === "light"
+                                      ? "#F0F0F0"
+                                      : "#262629",
+                                  paddingHorizontal: 10,
+                                  paddingVertical: 3,
+                                  borderRadius: 15,
+                                },
+                              ]}
+                            >
+                              #{hashTag}
+                            </Text>
+                          ))}
+                      </View>
+                    </View>
+                    {post.trackId !== "undefined" ? (
+                      <View
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 10,
+                        }}
+                      >
+                        <Image
+                          source={{ uri: post.trackAlbumCover }}
+                          style={{ width: 50, height: 50, borderRadius: 6 }}
+                        />
+                        <View
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <Text
+                            style={{
+                              color: colorMode === "light" ? "black" : "white",
+                              fontSize: 14,
+                              fontWeight: 700,
+                            }}
+                          >
+                            {post.trackName}
+                          </Text>
+                          <Text
+                            style={{
+                              color: colorMode === "light" ? "black" : "white",
+                              fontSize: 12,
+                            }}
+                          >
+                            {post.trackArtist}
+                          </Text>
+                        </View>
+                      </View>
+                    ) : (
+                      ""
+                    )}
+                  </Pressable>
+                ))}
               </View>
-              {post.trackId !== "undefined" ? (
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <Image
-                    source={{ uri: post.trackAlbumCover }}
-                    style={{ width: 50, height: 50, borderRadius: 6 }}
-                  />
-                  <View style={{ display: "flex", flexDirection: "column" }}>
-                    <Text
-                      style={{
-                        color: colorMode === "light" ? "black" : "white",
-                        fontSize: 14,
-                        fontWeight: 700,
-                      }}
-                    >
-                      {post.trackName}
-                    </Text>
-                    <Text
-                      style={{
-                        color: colorMode === "light" ? "black" : "white",
-                        fontSize: 12,
-                      }}
-                    >
-                      {post.trackArtist}
-                    </Text>
-                  </View>
-                </View>
-              ) : (
-                ""
-              )}
-            </Pressable>
+            </View>
           ))}
         </View>
       </ScrollView>
@@ -248,7 +267,7 @@ const styles = StyleSheet.create({
     position: "relative",
     display: "flex",
     flexDirection: "column",
-    gap: 10,
+    gap: 16,
     padding: 18,
     borderRadius: 10,
   },
@@ -262,8 +281,8 @@ const styles = StyleSheet.create({
     color: "#B3B3B3",
   },
   postHashTags: {
-    marginTop: 4,
-    fontWeight: "500",
+    marginTop: 6,
+    fontWeight: "400",
     fontSize: 14,
     color: "white",
   },

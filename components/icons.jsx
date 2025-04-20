@@ -405,3 +405,21 @@ export const ThreeDotsIcon = ({ size = 24, color = "black" }) => (
     <Path d="M4.5 13.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm15 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-7.5 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
   </Svg>
 );
+
+export const AddLibraryIcon = ({ size = 24, color = "black" }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="transparent"
+    viewBox="0 0 24 24"
+    strokeWidth={2}
+    stroke={color}
+    width={size}
+    height={size}
+  >
+    <Path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+    />
+  </Svg>
+);

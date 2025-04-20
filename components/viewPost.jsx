@@ -20,6 +20,8 @@ import {
   VolumeDownIcon,
   ShareIcon,
   ThreeDotsIcon,
+  AddIcon,
+  AddLibraryIcon,
 } from "./icons";
 import axios from "axios";
 import { Audio } from "expo-av";
@@ -50,7 +52,7 @@ const ViewPost = ({
         stopPreviousSound();
       }
       if (mute) {
-        toggleMute();
+        setMute(!mute);
       }
       try {
         const response = await axios.get(
@@ -98,16 +100,21 @@ const ViewPost = ({
     }
   };
 
-  useEffect(() => {
+  {
+    /*
+    useEffect(() => {
     if (song) {
       playSound();
     }
   }, [song]);
+  */
+  }
 
   const FormatTime = (post) => {
     const formattedTime = new Date(post.date).toLocaleDateString("en-US", {
       month: "long",
       day: "2-digit",
+      year: "numeric",
     });
     return formattedTime;
   };
@@ -201,7 +208,7 @@ const ViewPost = ({
               </View>
             </View>
             <LinearGradient
-              colors={[item.gradientColor, bgColor]}
+              colors={[item.gradientColor, bgColor, bgColor]}
               style={{
                 height,
                 width,
@@ -219,51 +226,32 @@ const ViewPost = ({
                   position: "absolute",
                 }}
               />
+            </LinearGradient>
+
+            <BlurView
+              intensity={0}
+              tint={colorMode === "light" ? "light" : "dark"}
+              style={{
+                gap: 10,
+                paddingHorizontal: 20,
+                borderRadius: 30,
+                overflow: "hidden",
+                padding: 30,
+                marginBottom: 30,
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                left: 0,
+              }}
+            >
               <View
                 style={{
-                  position: "absolute",
-                  bottom: 50,
-                  zIndex: 200,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "flex-end",
-                  paddingRight: 18,
                   gap: 20,
                 }}
               >
-                <Pressable onPress={toggleMute}>
-                  {item.trackId !== "undefined" ? (
-                    mute ? (
-                      <VolumeDownIcon
-                        size={28}
-                        color={
-                          colorMode === "light"
-                            ? "black"
-                            : "rgba(255,255,255,0.8)"
-                        }
-                      />
-                    ) : (
-                      <VolumeUpIcon
-                        size={28}
-                        color={
-                          colorMode === "light"
-                            ? "black"
-                            : "rgba(255,255,255,0.8)"
-                        }
-                      />
-                    )
-                  ) : (
-                    ""
-                  )}
-                </Pressable>
-                <Pressable style={[{}]}>
-                  <ShareIcon
-                    size={28}
-                    color={
-                      colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"
-                    }
-                  />
-                </Pressable>
                 <View
                   style={[
                     {
@@ -279,8 +267,7 @@ const ViewPost = ({
                   <Text
                     numberOfLines={1}
                     style={{
-                      paddingLeft: 14,
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: "600",
                       color:
                         colorMode === "light"
@@ -302,29 +289,10 @@ const ViewPost = ({
                   </Pressable>
                 </View>
               </View>
-            </LinearGradient>
-
-            <BlurView
-              intensity={100}
-              tint={colorMode === "light" ? "light" : "dark"}
-              style={{
-                maxHeight: "60%",
-                gap: 10,
-                paddingHorizontal: 20,
-                borderRadius: 30,
-                overflow: "hidden",
-                padding: 30,
-                minHeight: "35%",
-                marginTop: -50,
-                backgroundColor:
-                  colorMode === "light" ? "rgba(255, 255, 255, 0.6)" : "black",
-              }}
-            >
               <Text
                 style={{
                   fontSize: 38,
                   fontWeight: "600",
-                  textAlign: "center",
                   color:
                     colorMode === "light"
                       ? "rgba(0, 0, 0, 0.8)"
@@ -334,59 +302,147 @@ const ViewPost = ({
               >
                 {item.title}
               </Text>
-              <ScrollView showsVerticalScrollIndicator={false}>
-                <Text
+              <View style={{ maxHeight: 200 }}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "400",
+                      color:
+                        colorMode === "light"
+                          ? "rgba(0, 0, 0, 0.9)"
+                          : "rgba(245, 245, 245, 0.9)",
+                    }}
+                  >
+                    {item.content}
+                  </Text>
+                </ScrollView>
+              </View>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 30,
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  marginTop: 0,
+                  marginBottom: 10,
+                }}
+              >
+                <Pressable
                   style={{
-                    fontSize: 16,
-                    fontWeight: "400",
-                    color:
-                      colorMode === "light"
-                        ? "rgba(0, 0, 0, 0.9)"
-                        : "rgba(245, 245, 245, 0.9)",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: 4,
                   }}
                 >
-                  {item.content}
-                </Text>
-              </ScrollView>
+                  <AddLibraryIcon
+                    size={28}
+                    color={
+                      colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"
+                    }
+                  />
+                </Pressable>
+                <Pressable
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <ShareIcon
+                    size={28}
+                    color={
+                      colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"
+                    }
+                  />
+                </Pressable>
+              </View>
+              {item.trackId !== "undefined" && (
+                <View
+                  style={{
+                    width: "100%",
+                    height: 1,
+                    backgroundColor:
+                      colorMode === "light" ? "#D4D5DA" : "#282828",
+                    marginBottom: 10,
+                  }}
+                ></View>
+              )}
+
               {item.trackId !== "undefined" && (
                 <View
                   style={{
                     display: "flex",
                     flexDirection: "row",
-                    gap: 10,
-                    justifyContent: "flex-end",
+                    gap: 14,
+                    justifyContent: "space-between",
                     alignItems: "center",
                   }}
                 >
-                  <View>
-                    <Text
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: 14,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Image
+                      source={{ uri: item.trackAlbumCover }}
                       style={{
-                        fontWeight: 600,
-                        fontSize: 12,
-                        color: colorMode === "light" ? "black" : "white",
+                        width: 58,
+                        height: 58,
+                        borderRadius: 6,
                       }}
-                    >
-                      {item.trackName}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        color: colorMode === "light" ? "black" : "white",
-                      }}
-                    >
-                      {item.trackArtist}
-                    </Text>
+                    />
+                    <View>
+                      <Text
+                        style={{
+                          fontWeight: 600,
+                          fontSize: 18,
+                          color: colorMode === "light" ? "black" : "white",
+                        }}
+                      >
+                        {item.trackName}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          color: colorMode === "light" ? "black" : "white",
+                        }}
+                      >
+                        {item.trackArtist}
+                      </Text>
+                    </View>
                   </View>
 
-                  <Image
-                    source={{ uri: item.trackAlbumCover }}
-                    style={{
-                      width: 38,
-                      height: 38,
-                      borderRadius: 6,
-                      marginTop: 0,
-                    }}
-                  />
+                  <Pressable onPress={toggleMute}>
+                    {item.trackId !== "undefined" ? (
+                      mute ? (
+                        <VolumeDownIcon
+                          size={28}
+                          color={
+                            colorMode === "light"
+                              ? "black"
+                              : "rgba(255,255,255,0.8)"
+                          }
+                        />
+                      ) : (
+                        <VolumeUpIcon
+                          size={28}
+                          color={
+                            colorMode === "light"
+                              ? "black"
+                              : "rgba(255,255,255,0.8)"
+                          }
+                        />
+                      )
+                    ) : (
+                      ""
+                    )}
+                  </Pressable>
                 </View>
               )}
             </BlurView>

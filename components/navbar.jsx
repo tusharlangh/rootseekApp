@@ -1,6 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useColorMode } from "native-base";
+import { View } from "react-native";
 import {
   HomeIconOutline,
   HomeIconSolid,
@@ -12,6 +13,7 @@ import {
 } from "./icons";
 import Home from "./home";
 import Search from "./search";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,7 +23,7 @@ const Navbar = () => {
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
 
   return (
-    <>
+    <View style={{ height: "100%" }}>
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
@@ -30,7 +32,6 @@ const Navbar = () => {
           },
           tabBarStyle: {
             height: 80,
-            borderColor: colorMode === "light" ? "#D1D1D1" : "#2E2E36",
             paddingTop: 10,
             backgroundColor: bgColor,
           },
@@ -61,7 +62,7 @@ const Navbar = () => {
           }}
         />
       </Tab.Navigator>
-    </>
+    </View>
   );
 };
 

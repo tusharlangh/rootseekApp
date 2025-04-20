@@ -1,4 +1,13 @@
-import { StyleSheet, View, TextInput, Pressable, Modal } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  Pressable,
+  Modal,
+  Text,
+  ScrollView,
+  FlatList,
+} from "react-native";
 import DisplayPosts from "./display-posts";
 import { useEffect, useState } from "react";
 import { SearchIconOutline, ShuffleIcon } from "./icons";
@@ -122,6 +131,8 @@ const Search = () => {
     }
   };
 
+  const options = ["Today", "This week", "This month", "This year", "Custom"];
+
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
       <View
@@ -143,6 +154,7 @@ const Search = () => {
           <ShuffleIcon size={32} color="rgba(0, 0, 0, 0.8)" />
         </Pressable>
       </View>
+
       <View style={styles.nestedContainer}>
         <View style={{ position: "relative", paddingHorizontal: 2 }}>
           <TextInput
@@ -159,17 +171,46 @@ const Search = () => {
             value={search}
             onChangeText={setSearch}
           />
-          <View style={{ position: "absolute", top: 9, left: 12 }}>
+          <View style={{ position: "absolute", top: 12, left: 12 }}>
             <SearchIconOutline
-              size={22}
-              color={colorMode === "light" ? "#848388" : "#97989F"}
+              size={18}
+              color={colorMode === "light" ? "black" : "white"}
             />
           </View>
         </View>
+        <View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ marginTop: 10 }}
+          >
+            <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+              {options.map((option, index) => (
+                <View
+                  key={index}
+                  style={{
+                    backgroundColor:
+                      colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
+                    borderRadius: 16,
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ color: textColor, fontSize: 16 }}>
+                    {option}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+
         <View style={{ flex: 1 }}>
           <DisplayPosts posts={posts} />
         </View>
       </View>
+
       <Modal
         visible={shufflePostVisible}
         animationType="none"
@@ -197,11 +238,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   searchBar: {
-    padding: 8,
-    borderRadius: 10,
+    padding: 10,
+    borderRadius: 14,
     fontWeight: 400,
-    fontSize: 20,
-    paddingLeft: 40,
+    fontSize: 18,
+    paddingLeft: 36,
   },
   closeButton: {
     marginLeft: 10,
