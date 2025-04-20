@@ -4,8 +4,11 @@ import { useColorMode } from "native-base";
 import {
   HomeIconOutline,
   HomeIconSolid,
+  LibraryOutline,
+  LibrarySolid,
   SearchIconOutline,
   SearchIconSolid,
+  ShuffleIcon,
 } from "./icons";
 import Home from "./home";
 import Search from "./search";

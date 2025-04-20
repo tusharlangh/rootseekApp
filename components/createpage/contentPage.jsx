@@ -299,7 +299,11 @@ const ContentPage = ({
                 {tags ? (
                   <View>
                     {getTags(tags).map((tag, index) => (
-                      <Text numberOfLines={1} key={index}>
+                      <Text
+                        style={{ color: textColor }}
+                        numberOfLines={1}
+                        key={index}
+                      >
                         #{tag}
                       </Text>
                     ))}

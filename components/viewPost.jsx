@@ -1,6 +1,6 @@
 import { BlurView } from "expo-blur";
 import { useColorMode } from "native-base";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -9,215 +9,391 @@ import {
   Animated,
   Dimensions,
   PanResponder,
+  Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { FlatList } from "react-native";
+import {
+  CloseIcon,
+  LeftArrowIcon,
+  VolumeUpIcon,
+  VolumeDownIcon,
+  ShareIcon,
+  ThreeDotsIcon,
+} from "./icons";
+import axios from "axios";
+import { Audio } from "expo-av";
 
-const { height: MODAL_HEIGHT } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
-const ViewPost = ({ post, setViewPostVisible, viewPostVisible }) => {
+const ViewPost = ({
+  posts,
+  currentIndex,
+  setViewPostVisible,
+  viewPostVisible,
+}) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#0D0D0D" : "#8E8D93";
   const bgColor = colorMode === "light" ? "#ECEBEF" : "black";
   const __dirname =
     "file:///Users/tusharlanghnoda/Desktop/Projects/RootSeek/rootseek/server";
 
-  const panY = useRef(new Animated.Value(MODAL_HEIGHT)).current;
+  const [currIndex, setCurrIndex] = useState(currentIndex);
+  const [song, setSong] = useState(null);
 
-  const ligherColorsForLightTheme = [
-    "#8AA7B7", // Alice Blue (darker)
-    "#B28A6A", // Antique White (darker)
-    "#D1A57B", // Blanched Almond (darker)
-    "#A4A4D1", // Lavender (darker)
-    "#9F7FAE", // Thistle (darker)
-    "#8AB9B5", // Light Cyan (darker)
-    "#6D9F89", // Mint Green (darker)
-    "#A69F7C", // Beige (darker)
-    "#E4A97A", // Pastel Peach (darker)
-    "#CDA74D", // Light Gold (darker)
-    "#8BAF8A", // Pale Green (darker)
-    "#9F8AC9", // Soft Lavender (darker)
-    "#5E8CC8", // Baby Blue (darker)
-    "#E0A3A1", // Misty Rose (darker)
-    "#A4D3B9", // Soft Seafoam (darker)
-    "#C5A6C2", // Light Lilac (darker)
-    "#D2A75C", // Wheat (darker)
-    "#E3B2B6", // Pale Rose (darker)
-    "#D28396", // Light Magenta (darker)
-    "#8DAFBF", // Powder Blue (darker)
-  ];
-  const darkerColorsForDarkTheme = [
-    "#7F5B83", // Muted Purple
-    "#D32F2F", // Dark Red
-    "#1565C0", // Dark Blue
-    "#388E3C", // Dark Green
-    "#8E24AA", // Dark Magenta
-    "#0288D1", // Deep Sky Blue
-    "#8B4513", // Saddle Brown
-    "#6A1B9A", // Deep Purple
-    "#FF7043", // Burnt Orange
-    "#FBC02D", // Deep Yellow
-    "#388E3C", // Forest Green
-    "#C2185B", // Dark Pink
-    "#5D4037", // Cocoa Brown
-    "#9E9D24", // Olive Green
-    "#0288D1", // Royal Blue
-    "#D32F2F", // Crimson Red
-    "#1B5E20", // Dark Forest Green
-    "#1976D2", // Medium Blue
-    "#7B1FA2", // Dark Violet
-    "#FF5722", // Deep Orange
-  ];
-
-  const randomColor = Math.floor(
-    Math.random() * ligherColorsForLightTheme.length
-  );
+  const [mute, setMute] = useState(false);
+  const [sound, setSound] = useState(null);
 
   useEffect(() => {
-    if (viewPostVisible) {
-      resetPositionAnim.start();
+    const fetchSong = async () => {
+      if (posts[currIndex].trackId === "undefined") {
+        stopPreviousSound();
+      }
+      if (mute) {
+        toggleMute();
+      }
+      try {
+        const response = await axios.get(
+          `http://localhost:5002/deezer-search-song?trackId=${posts[currIndex].trackId}`
+        );
+        setSong(response.data);
+      } catch (error) {
+        console.error("Error searching music:", error);
+      }
+    };
+    fetchSong();
+  }, [currIndex]);
+
+  const stopPreviousSound = async () => {
+    if (sound) {
+      await sound.stopAsync();
+      await sound.unloadAsync();
+      setSound(null);
     }
-  }, [viewPostVisible]);
-
-  const resetPositionAnim = Animated.timing(panY, {
-    toValue: 0,
-    duration: 200,
-    useNativeDriver: true,
-  });
-
-  const closeAnim = Animated.timing(panY, {
-    toValue: -MODAL_HEIGHT,
-    duration: 200,
-    useNativeDriver: true,
-  });
-
-  const closeModal = () => {
-    closeAnim.start(() => setViewPostVisible(false));
   };
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderMove: (_, gestureState) => {
-        if (gestureState.dy < 0) {
-          panY.setValue(gestureState.dy);
-        }
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        if (gestureState.dy < -200) {
-          closeModal();
-        } else {
-          resetPositionAnim.start();
-        }
-      },
-    })
-  ).current;
+  const playSound = async () => {
+    if (!song) return;
+
+    try {
+      await stopPreviousSound();
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        { uri: song },
+        { shouldPlay: true }
+      );
+      await newSound.setIsLoopingAsync(true);
+      setSound(newSound);
+
+      await newSound.playAsync();
+    } catch (error) {
+      console.error("Error playing sound:", error);
+    }
+  };
+
+  const toggleMute = async () => {
+    if (sound) {
+      const newMuted = !mute;
+      setMute(newMuted);
+      await sound.setIsMutedAsync(newMuted);
+    }
+  };
+
+  useEffect(() => {
+    if (song) {
+      playSound();
+    }
+  }, [song]);
+
+  const FormatTime = (post) => {
+    const formattedTime = new Date(post.date).toLocaleDateString("en-US", {
+      month: "long",
+      day: "2-digit",
+    });
+    return formattedTime;
+  };
+
+  const viewabilityConfig = { viewAreaCoveragePercentThreshold: 90 };
+
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems.length > 0) {
+      const index = viewableItems[0].index;
+      if (index !== currIndex) {
+        setCurrIndex(index);
+      }
+    }
+  }).current;
 
   return (
-    <Animated.View
-      style={{
-        backgroundColor: bgColor,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-end",
-        transform: [{ translateY: panY }],
-      }}
-      {...panResponder.panHandlers}
-    >
-      <LinearGradient
-        colors={
-          colorMode === "light"
-            ? [ligherColorsForLightTheme[randomColor], bgColor]
-            : [darkerColorsForDarkTheme[randomColor], bgColor]
-        }
-        style={{
-          height: "100%",
-          width: "100%",
-          position: "relative",
-        }}
-      >
-        <Image
-          source={{
-            uri: __dirname + post.picture,
-          }}
-          style={{ height: "100%", width: "100%", objectFit: "cover" }}
-        />
-      </LinearGradient>
-
-      <BlurView
-        intensity={100}
-        tint={colorMode === "light" ? "light" : "dark"}
-        style={{
-          maxHeight: "60%",
-          gap: 10,
-          paddingHorizontal: 20,
-          borderRadius: 30,
-          overflow: "hidden",
-          padding: 30,
-          marginTop: -50,
-          minHeight: "35%",
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 38,
-            fontWeight: "600",
-            textAlign: "center",
-            color:
-              colorMode === "light"
-                ? "rgba(0, 0, 0, 0.8)"
-                : "rgba(245, 245, 245, 0.9)",
-            letterSpacing: -1,
-          }}
-        >
-          {post.title}
-        </Text>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: "400",
-              color:
-                colorMode === "light"
-                  ? "rgba(0, 0, 0, 0.9)"
-                  : "rgba(245, 245, 245, 0.9)",
-            }}
-          >
-            {post.content}
-          </Text>
-        </ScrollView>
-        {post.trackId !== "undefined" && (
+    <View>
+      <FlatList
+        initialScrollIndex={currentIndex}
+        data={posts}
+        keyExtractor={(_, index) => index.toString()}
+        horizontal
+        pagingEnabled
+        decelerationRate="fast"
+        snapToInterval={width}
+        snapToAlignment="start"
+        showsHorizontalScrollIndicator={false}
+        getItemLayout={(_, index) => ({
+          length: width,
+          offset: width * index,
+          index,
+        })}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        renderItem={({ item }) => (
           <View
             style={{
+              backgroundColor: bgColor,
+              width,
               display: "flex",
-              flexDirection: "row",
-              gap: 10,
+              flexDirection: "column",
               justifyContent: "flex-end",
-              alignItems: "center",
             }}
           >
-            <View>
-              <Text style={{ fontWeight: 600, fontSize: 12, color: textColor }}>
-                {post.trackName}
-              </Text>
-              <Text style={{ fontSize: 10, color: textColor }}>
-                {post.trackArtist}
-              </Text>
-            </View>
-
-            <Image
-              source={{ uri: post.trackAlbumCover }}
+            <View
               style={{
-                width: 38,
-                height: 38,
-                borderRadius: 6,
-                marginTop: 0,
+                position: "absolute",
+                top: 70,
+                zIndex: 100,
               }}
-            />
+            >
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <Pressable
+                  style={[
+                    {
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      paddingLeft: 20,
+                    },
+                  ]}
+                  onPress={() => {
+                    stopPreviousSound();
+                    setViewPostVisible(false);
+                  }}
+                >
+                  <LeftArrowIcon
+                    size={28}
+                    color={colorMode === "light" ? "black" : "white"}
+                  />
+                </Pressable>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 700,
+                    color: colorMode === "light" ? "black" : "white",
+                    paddingRight: 42,
+                  }}
+                >
+                  {FormatTime(item)}
+                </Text>
+                <Text></Text>
+              </View>
+            </View>
+            <LinearGradient
+              colors={[item.gradientColor, bgColor]}
+              style={{
+                height,
+                width,
+                position: "relative",
+              }}
+            >
+              <Image
+                source={{
+                  uri: __dirname + item.picture,
+                }}
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  objectFit: "cover",
+                  position: "absolute",
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: 50,
+                  zIndex: 200,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  paddingRight: 18,
+                  gap: 20,
+                }}
+              >
+                <Pressable onPress={toggleMute}>
+                  {item.trackId !== "undefined" ? (
+                    mute ? (
+                      <VolumeDownIcon
+                        size={28}
+                        color={
+                          colorMode === "light"
+                            ? "black"
+                            : "rgba(255,255,255,0.8)"
+                        }
+                      />
+                    ) : (
+                      <VolumeUpIcon
+                        size={28}
+                        color={
+                          colorMode === "light"
+                            ? "black"
+                            : "rgba(255,255,255,0.8)"
+                        }
+                      />
+                    )
+                  ) : (
+                    ""
+                  )}
+                </Pressable>
+                <Pressable style={[{}]}>
+                  <ShareIcon
+                    size={28}
+                    color={
+                      colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"
+                    }
+                  />
+                </Pressable>
+                <View
+                  style={[
+                    {
+                      width: "100%",
+                      justifyContent: "space-between",
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginBottom: 14,
+                    },
+                  ]}
+                >
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      paddingLeft: 14,
+                      fontSize: 16,
+                      fontWeight: "600",
+                      color:
+                        colorMode === "light"
+                          ? "black"
+                          : "rgba(255,255,255,0.8)",
+                    }}
+                  >
+                    {item.hashTags}
+                  </Text>
+                  <Pressable style={[{}]}>
+                    <ThreeDotsIcon
+                      size={28}
+                      color={
+                        colorMode === "light"
+                          ? "black"
+                          : "rgba(255,255,255,0.8)"
+                      }
+                    />
+                  </Pressable>
+                </View>
+              </View>
+            </LinearGradient>
+
+            <BlurView
+              intensity={100}
+              tint={colorMode === "light" ? "light" : "dark"}
+              style={{
+                maxHeight: "60%",
+                gap: 10,
+                paddingHorizontal: 20,
+                borderRadius: 30,
+                overflow: "hidden",
+                padding: 30,
+                minHeight: "35%",
+                marginTop: -50,
+                backgroundColor:
+                  colorMode === "light" ? "rgba(255, 255, 255, 0.6)" : "black",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 38,
+                  fontWeight: "600",
+                  textAlign: "center",
+                  color:
+                    colorMode === "light"
+                      ? "rgba(0, 0, 0, 0.8)"
+                      : "rgba(245, 245, 245, 0.9)",
+                  letterSpacing: -1,
+                }}
+              >
+                {item.title}
+              </Text>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "400",
+                    color:
+                      colorMode === "light"
+                        ? "rgba(0, 0, 0, 0.9)"
+                        : "rgba(245, 245, 245, 0.9)",
+                  }}
+                >
+                  {item.content}
+                </Text>
+              </ScrollView>
+              {item.trackId !== "undefined" && (
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 10,
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                  }}
+                >
+                  <View>
+                    <Text
+                      style={{
+                        fontWeight: 600,
+                        fontSize: 12,
+                        color: colorMode === "light" ? "black" : "white",
+                      }}
+                    >
+                      {item.trackName}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        color: colorMode === "light" ? "black" : "white",
+                      }}
+                    >
+                      {item.trackArtist}
+                    </Text>
+                  </View>
+
+                  <Image
+                    source={{ uri: item.trackAlbumCover }}
+                    style={{
+                      width: 38,
+                      height: 38,
+                      borderRadius: 6,
+                      marginTop: 0,
+                    }}
+                  />
+                </View>
+              )}
+            </BlurView>
           </View>
         )}
-      </BlurView>
-    </Animated.View>
+      />
+    </View>
   );
 };
 

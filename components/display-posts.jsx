@@ -16,7 +16,7 @@ const DisplayPosts = ({ posts }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#8A898D" : "#8E8D93";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
-  const [post, setPost] = useState();
+  const [postIndex, setPostIndex] = useState(0);
   const [viewPostVisible, setViewPostVisible] = useState(false);
 
   if (!posts) {
@@ -133,7 +133,7 @@ const DisplayPosts = ({ posts }) => {
                 },
               ]}
               onPress={() => {
-                setPost(post);
+                setPostIndex(index);
                 setViewPostVisible(true);
               }}
             >
@@ -227,17 +227,19 @@ const DisplayPosts = ({ posts }) => {
         </View>
       </ScrollView>
       <Modal
+        animationType="fade"
         visible={viewPostVisible}
         transparent={true}
         onRequestClose={() => setViewPostVisible(false)}
       >
         <ViewPost
-          post={post}
+          currentIndex={postIndex}
+          posts={posts}
           setViewPostVisible={setViewPostVisible}
           viewPostVisible={viewPostVisible}
         />
       </Modal>
-    </View> 
+    </View>
   );
 };
 

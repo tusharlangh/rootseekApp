@@ -128,23 +128,7 @@ const Home = () => {
           <DisplayPosts posts={posts} />
         </View>
       </View>
-      <View style={{ position: "absolute", bottom: 72, right: 10 }}>
-        <Pressable
-          style={[
-            styles.closeButton,
-            {
-              backgroundColor:
-                colorMode === "light"
-                  ? "rgba(207, 206, 206, 0.6)"
-                  : "rgba(255, 255, 255, 0.8)",
-              padding: 12,
-            },
-          ]}
-          onPress={activateShufflePost}
-        >
-          <ShuffleIcon size={22} color="rgba(0, 0, 0, 0.8)" />
-        </Pressable>
-      </View>
+
       <View style={{ position: "absolute", bottom: 10, right: 10 }}>
         <Pressable
           style={[
@@ -170,19 +154,6 @@ const Home = () => {
         <Create
           visible={createVisible}
           onClose={() => setCreateVisible(false)}
-        />
-      </Modal>
-
-      <Modal
-        visible={shufflePostVisible}
-        animationType="none"
-        transparent={true}
-        onRequestClose={() => setShufflePostVisible(false)}
-      >
-        <ViewPost
-          post={shufflePosts[shuffleRandomNumber]}
-          setViewPostVisible={setShufflePostVisible}
-          viewPostVisible={shufflePostVisible}
         />
       </Modal>
     </View>

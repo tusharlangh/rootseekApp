@@ -1,24 +1,20 @@
-import {
-  StyleSheet,
-  View,
-  Text,
-  ActivityIndicator,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, View, TextInput, Pressable, Modal } from "react-native";
 import DisplayPosts from "./display-posts";
-import { use, useEffect, useState } from "react";
-import { SearchIconOutline } from "./icons";
+import { useEffect, useState } from "react";
+import { SearchIconOutline, ShuffleIcon } from "./icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useColorMode } from "native-base";
+import ShuffledPost from "./shuffledPost";
 
 const Search = () => {
   const [search, setSearch] = useState("");
   const [posts, setPosts] = useState([]);
+
+  const [shufflePosts, setShufflePosts] = useState([]);
+  const [shuffleRandomNumber, setShuffleRandomNumber] = useState(0);
+  const [shufflePostVisible, setShufflePostVisible] = useState(false);
+
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
@@ -40,7 +36,7 @@ const Search = () => {
             },
           }
         );
-        setPosts(response.data);
+        setPosts(assignGradientColors(response.data, colorMode === "light"));
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
@@ -48,8 +44,105 @@ const Search = () => {
     fetchPosts();
   }, [search]);
 
+  const assignGradientColors = (posts, isLight) => {
+    const palette = isLight
+      ? ligherColorsForLightTheme
+      : darkerColorsForDarkTheme;
+    return posts.map((post, index) => ({
+      ...post,
+      gradientColor: palette[index % palette.length],
+    }));
+  };
+
+  const ligherColorsForLightTheme = [
+    "#8AA7B7", // Alice Blue (darker)
+    "#B28A6A", // Antique White (darker)
+    "#D1A57B", // Blanched Almond (darker)
+    "#A4A4D1", // Lavender (darker)
+    "#9F7FAE", // Thistle (darker)
+    "#8AB9B5", // Light Cyan (darker)
+    "#6D9F89", // Mint Green (darker)
+    "#A69F7C", // Beige (darker)
+    "#E4A97A", // Pastel Peach (darker)
+    "#CDA74D", // Light Gold (darker)
+    "#8BAF8A", // Pale Green (darker)
+    "#9F8AC9", // Soft Lavender (darker)
+    "#5E8CC8", // Baby Blue (darker)
+    "#E0A3A1", // Misty Rose (darker)
+    "#A4D3B9", // Soft Seafoam (darker)
+    "#C5A6C2", // Light Lilac (darker)
+    "#D2A75C", // Wheat (darker)
+    "#E3B2B6", // Pale Rose (darker)
+    "#D28396", // Light Magenta (darker)
+    "#8DAFBF", // Powder Blue (darker)
+  ];
+  const darkerColorsForDarkTheme = [
+    "#7F5B83", // Muted Purple
+    "#D32F2F", // Dark Red
+    "#1565C0", // Dark Blue
+    "#388E3C", // Dark Green
+    "#8E24AA", // Dark Magenta
+    "#0288D1", // Deep Sky Blue
+    "#8B4513", // Saddle Brown
+    "#6A1B9A", // Deep Purple
+    "#FF7043", // Burnt Orange
+    "#FBC02D", // Deep Yellow
+    "#388E3C", // Forest Green
+    "#C2185B", // Dark Pink
+    "#5D4037", // Cocoa Brown
+    "#9E9D24", // Olive Green
+    "#0288D1", // Royal Blue
+    "#D32F2F", // Crimson Red
+    "#1B5E20", // Dark Forest Green
+    "#1976D2", // Medium Blue
+    "#7B1FA2", // Dark Violet
+    "#FF5722", // Deep Orange
+  ];
+
+  const activateShufflePost = async () => {
+    try {
+      if (shufflePosts.length === 0) {
+        const token = await AsyncStorage.getItem("token");
+        if (!token) {
+          console.log("no token found.");
+        }
+        const response = await axios.get("http://localhost:5002/posts/all", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setShufflePosts(response.data);
+      }
+
+      const randomNumber = Math.floor(Math.random() * shufflePosts.length);
+      setShuffleRandomNumber(randomNumber);
+      setShufflePostVisible(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
+      <View
+        style={{ position: "absolute", bottom: 10, right: 10, zIndex: 100 }}
+      >
+        <Pressable
+          style={[
+            styles.closeButton,
+            {
+              backgroundColor:
+                colorMode === "light"
+                  ? "rgba(207, 206, 206, 0.6)"
+                  : "rgba(255, 255, 255, 0.8)",
+              padding: 14,
+            },
+          ]}
+          onPress={activateShufflePost}
+        >
+          <ShuffleIcon size={32} color="rgba(0, 0, 0, 0.8)" />
+        </Pressable>
+      </View>
       <View style={styles.nestedContainer}>
         <View style={{ position: "relative", paddingHorizontal: 2 }}>
           <TextInput
@@ -77,6 +170,18 @@ const Search = () => {
           <DisplayPosts posts={posts} />
         </View>
       </View>
+      <Modal
+        visible={shufflePostVisible}
+        animationType="none"
+        transparent={true}
+        onRequestClose={() => setShufflePostVisible(false)}
+      >
+        <ShuffledPost
+          post={shufflePosts[shuffleRandomNumber]}
+          setViewPostVisible={setShufflePostVisible}
+          viewPostVisible={shufflePostVisible}
+        />
+      </Modal>
     </View>
   );
 };
@@ -97,6 +202,11 @@ const styles = StyleSheet.create({
     fontWeight: 400,
     fontSize: 20,
     paddingLeft: 40,
+  },
+  closeButton: {
+    marginLeft: 10,
+    padding: 12,
+    borderRadius: 50,
   },
 });
 

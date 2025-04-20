@@ -141,7 +141,7 @@ const MusicTimeline = ({ onSelectSong }) => {
             backgroundColor:
               colorMode === "light"
                 ? "rgba(172, 172, 172, 0.9)"
-                : "rgba(38, 43, 43, 0.1)",
+                : "rgba(38, 43, 43, 0.9)",
             marginBottom: 20,
             borderRadius: 10,
           }}
