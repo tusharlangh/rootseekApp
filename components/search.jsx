@@ -9,12 +9,15 @@ import {
   FlatList,
 } from "react-native";
 import DisplayPosts from "./display-posts";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { SearchIconOutline, ShuffleIcon } from "./icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useColorMode } from "native-base";
 import ShuffledPost from "./shuffledPost";
+import moment from "moment";
+
+export const PostsContext = createContext();
 
 const Search = () => {
   const [search, setSearch] = useState("");
@@ -28,6 +31,7 @@ const Search = () => {
   const textColor = colorMode === "light" ? "black" : "white";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
 
+  const [selectedFilter, setSelectedFilter] = useState("all");
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -131,99 +135,215 @@ const Search = () => {
     }
   };
 
-  const options = ["Today", "This week", "This month", "This year", "Custom"];
+  const groupPostsByDate = (posts) => {
+    const sorted = posts.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+    const grouped = {};
+
+    if (selectedFilter === "all") {
+      sorted.forEach((post) => {
+        let dateKey;
+        const date = moment(post.createdAt);
+
+        if (date.isSame(moment(), "day")) {
+          dateKey = "Today";
+        } else if (date.isSame(moment().subtract(1, "days"), "day")) {
+          dateKey = "Yesterday";
+        } else {
+          dateKey = date.format("MMMM D");
+        }
+        if (!grouped[dateKey]) grouped[dateKey] = [];
+        grouped[dateKey].push(post);
+      });
+    } else if (selectedFilter === "week") {
+      sorted.forEach((post) => {
+        let dateKey;
+        const date = moment(post.createdAt);
+
+        if (date.isBetween(moment().subtract(7, "days"), moment(), "day")) {
+          dateKey = date.format("MMMM D");
+          if (!grouped[dateKey]) grouped[dateKey] = [];
+          grouped[dateKey].push(post);
+        }
+      });
+    } else if (selectedFilter === "month") {
+      sorted.forEach((post) => {
+        let dateKey;
+        const date = moment(post.createdAt);
+
+        if (date.isSame(moment(), "month")) {
+          dateKey = date.format("MMMM D");
+          if (!grouped[dateKey]) grouped[dateKey] = [];
+          grouped[dateKey].push(post);
+        }
+      });
+    } else if (selectedFilter === "year") {
+      sorted.forEach((post) => {
+        let dateKey;
+        const date = moment(post.createdAt);
+
+        if (date.isSame(moment(), "year")) {
+          dateKey = date.format("MMMM D");
+          if (!grouped[dateKey]) grouped[dateKey] = [];
+          grouped[dateKey].push(post);
+        }
+      });
+    }
+
+    const result = Object.keys(grouped).map((date) => ({
+      title: date,
+      data: grouped[date],
+    }));
+    return result;
+  };
+
+  const options = [
+    {
+      name: "All",
+      id: "all",
+    },
+    {
+      name: "This week",
+      id: "week",
+    },
+    {
+      name: "This month",
+      id: "month",
+    },
+    {
+      name: "This year",
+      id: "year",
+    },
+    {
+      name: "Custom",
+      id: "custom",
+    },
+  ];
 
   return (
-    <View style={[styles.container, { backgroundColor: bgColor }]}>
-      <View
-        style={{ position: "absolute", bottom: 10, right: 10, zIndex: 100 }}
-      >
-        <Pressable
-          style={[
-            styles.closeButton,
-            {
-              backgroundColor:
-                colorMode === "light"
-                  ? "rgba(207, 206, 206, 0.6)"
-                  : "rgba(255, 255, 255, 0.8)",
-              padding: 14,
-            },
-          ]}
-          onPress={activateShufflePost}
+    <PostsContext.Provider value={{ posts, setPosts }}>
+      <View style={[styles.container, { backgroundColor: bgColor }]}>
+        <View
+          style={{ position: "absolute", bottom: 10, right: 10, zIndex: 100 }}
         >
-          <ShuffleIcon size={32} color="rgba(0, 0, 0, 0.8)" />
-        </Pressable>
-      </View>
-
-      <View style={styles.nestedContainer}>
-        <View style={{ position: "relative", paddingHorizontal: 2 }}>
-          <TextInput
+          <Pressable
             style={[
-              styles.searchBar,
+              styles.closeButton,
               {
-                backgroundColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
-                color: textColor,
-                borderColor: colorMode === "light" ? "#F0F0F0" : "#121212",
+                backgroundColor:
+                  colorMode === "light"
+                    ? "rgba(207, 206, 206, 0.6)"
+                    : "rgba(255, 255, 255, 0.8)",
+                padding: 14,
               },
             ]}
-            placeholder="Search post"
-            placeholderTextColor={colorMode === "light" ? "#494949" : "#97989F"}
-            value={search}
-            onChangeText={setSearch}
-          />
-          <View style={{ position: "absolute", top: 12, left: 12 }}>
-            <SearchIconOutline
-              size={18}
-              color={colorMode === "light" ? "black" : "white"}
+            onPress={activateShufflePost}
+          >
+            <ShuffleIcon size={32} color="rgba(0, 0, 0, 0.8)" />
+          </Pressable>
+        </View>
+
+        <View style={styles.nestedContainer}>
+          <View style={{ position: "relative", paddingHorizontal: 2 }}>
+            <TextInput
+              style={[
+                styles.searchBar,
+                {
+                  backgroundColor:
+                    colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
+                  color: textColor,
+                  borderColor: colorMode === "light" ? "#F0F0F0" : "#121212",
+                },
+              ]}
+              placeholder="Search post"
+              placeholderTextColor={
+                colorMode === "light" ? "#494949" : "#97989F"
+              }
+              value={search}
+              onChangeText={setSearch}
             />
+            <View style={{ position: "absolute", top: 12, left: 12 }}>
+              <SearchIconOutline
+                size={18}
+                color={colorMode === "light" ? "black" : "white"}
+              />
+            </View>
+          </View>
+          <View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={{ marginTop: 10 }}
+            >
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 10,
+                  paddingHorizontal: 2,
+                }}
+              >
+                {options.map((option, index) => (
+                  <Pressable
+                    key={index}
+                    style={{
+                      backgroundColor:
+                        colorMode === "light"
+                          ? selectedFilter === option.id
+                            ? "#1C1C1E"
+                            : "#E4E3E8"
+                          : selectedFilter === option.id
+                          ? "#E4E3E8"
+                          : "#1C1C1E",
+                      borderRadius: 16,
+                      paddingHorizontal: 12,
+                      paddingVertical: 6,
+                      justifyContent: "center",
+                    }}
+                    onPress={() => setSelectedFilter(option.id)}
+                  >
+                    <Text
+                      style={{
+                        color:
+                          colorMode === "light"
+                            ? selectedFilter === option.id
+                              ? "white"
+                              : "black"
+                            : selectedFilter === option.id
+                            ? "black"
+                            : "white",
+                        fontSize: 16,
+                      }}
+                    >
+                      {option.name}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+
+          <View style={{ flex: 1 }}>
+            <DisplayPosts groupedPosts={groupPostsByDate(posts)} />
           </View>
         </View>
-        <View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={{ marginTop: 10 }}
-          >
-            <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-              {options.map((option, index) => (
-                <View
-                  key={index}
-                  style={{
-                    backgroundColor:
-                      colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
-                    borderRadius: 16,
-                    paddingHorizontal: 12,
-                    paddingVertical: 6,
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text style={{ color: textColor, fontSize: 16 }}>
-                    {option}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
 
-        <View style={{ flex: 1 }}>
-          <DisplayPosts posts={posts} />
-        </View>
+        <Modal
+          visible={shufflePostVisible}
+          animationType="none"
+          transparent={true}
+          onRequestClose={() => setShufflePostVisible(false)}
+        >
+          <ShuffledPost
+            post={shufflePosts[shuffleRandomNumber]}
+            setViewPostVisible={setShufflePostVisible}
+            viewPostVisible={shufflePostVisible}
+          />
+        </Modal>
       </View>
-
-      <Modal
-        visible={shufflePostVisible}
-        animationType="none"
-        transparent={true}
-        onRequestClose={() => setShufflePostVisible(false)}
-      >
-        <ShuffledPost
-          post={shufflePosts[shuffleRandomNumber]}
-          setViewPostVisible={setShufflePostVisible}
-          viewPostVisible={shufflePostVisible}
-        />
-      </Modal>
-    </View>
+    </PostsContext.Provider>
   );
 };
 

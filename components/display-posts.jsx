@@ -9,45 +9,17 @@ import {
   Pressable,
 } from "react-native";
 import { useColorMode } from "native-base";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ViewPost from "./viewPost";
-import moment from "moment";
+import { PostsContext } from "./search";
 
-const DisplayPosts = ({ posts }) => {
+const DisplayPosts = ({ groupedPosts }) => {
+  const { posts } = useContext(PostsContext);
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#8A898D" : "#8E8D93";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
   const [postIndex, setPostIndex] = useState(0);
   const [viewPostVisible, setViewPostVisible] = useState(false);
-
-  const groupPostsByDate = (posts) => {
-    const sorted = posts.sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
-
-    const grouped = {};
-
-    sorted.forEach((post) => {
-      let dateKey;
-      const date = moment(post.createdAt);
-
-      if (date.isSame(moment(), "day")) {
-        dateKey = "Today";
-      } else if (date.isSame(moment().subtract(1, "days"), "day")) {
-        dateKey = "Yesterday";
-      } else {
-        dateKey = date.format("MMMM D");
-      }
-      if (!grouped[dateKey]) grouped[dateKey] = [];
-      grouped[dateKey].push(post);
-    });
-
-    const result = Object.keys(grouped).map((date) => ({
-      title: date,
-      data: grouped[date],
-    }));
-    return result;
-  };
 
   if (!posts) {
     return (
@@ -94,7 +66,7 @@ const DisplayPosts = ({ posts }) => {
             paddingBottom: 30,
           }}
         >
-          {groupPostsByDate(posts).map((post, index) => (
+          {groupedPosts.map((post, index) => (
             <View key={index}>
               <Text
                 style={{

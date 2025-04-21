@@ -17,6 +17,7 @@ import { useColorMode } from "native-base";
 import { AddIcon, CloseIcon, ShuffleIcon } from "./icons";
 import Create from "./createpage/create";
 import ViewPost from "./viewPost";
+import DisplayHomePosts from "./display-home-posts";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -125,7 +126,7 @@ const Home = () => {
         </View>
 
         <View style={{ flex: 1 }}>
-          <DisplayPosts posts={posts} />
+          <DisplayHomePosts posts={posts} />
         </View>
       </View>
 
