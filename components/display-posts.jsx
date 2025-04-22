@@ -13,8 +13,8 @@ import { useContext, useState } from "react";
 import ViewPost from "./viewPost";
 import { PostsContext } from "./search";
 
-const DisplayPosts = ({ groupedPosts }) => {
-  const { posts } = useContext(PostsContext);
+const DisplayPosts = ({ groupedPostsByDate, setSearch }) => {
+  const { groupedPosts: posts } = useContext(PostsContext);
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#8A898D" : "#8E8D93";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
@@ -63,10 +63,9 @@ const DisplayPosts = ({ groupedPosts }) => {
             flexDirection: "column",
             flex: 1,
             gap: 10,
-            paddingBottom: 30,
           }}
         >
-          {groupedPosts.map((post, index) => (
+          {groupedPostsByDate.map((post, index) => (
             <View key={index}>
               <Text
                 style={{
@@ -150,25 +149,29 @@ const DisplayPosts = ({ groupedPosts }) => {
                       >
                         {post.hashTags &&
                           getHashTags(post.hashTags).map((hashTag, index) => (
-                            <Text
+                            <Pressable
                               key={index}
-                              style={[
-                                styles.postHashTags,
-                                {
-                                  color:
-                                    colorMode === "light" ? "black" : "white",
-                                  backgroundColor:
-                                    colorMode === "light"
-                                      ? "#F0F0F0"
-                                      : "#262629",
-                                  paddingHorizontal: 10,
-                                  paddingVertical: 3,
-                                  borderRadius: 15,
-                                },
-                              ]}
+                              onPress={() => setSearch("#" + hashTag)}
                             >
-                              #{hashTag}
-                            </Text>
+                              <Text
+                                style={[
+                                  styles.postHashTags,
+                                  {
+                                    color:
+                                      colorMode === "light" ? "black" : "white",
+                                    backgroundColor:
+                                      colorMode === "light"
+                                        ? "#F0F0F0"
+                                        : "#262629",
+                                    paddingHorizontal: 10,
+                                    paddingVertical: 3,
+                                    borderRadius: 15,
+                                  },
+                                ]}
+                              >
+                                #{hashTag}
+                              </Text>
+                            </Pressable>
                           ))}
                       </View>
                     </View>

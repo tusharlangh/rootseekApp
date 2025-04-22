@@ -49,6 +49,7 @@ const ContentPage = ({
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
   const [isContentModalVisible, setIsContentModalVisible] = useState(false);
   const [isTagsModalVisible, setIsTagsModalVisible] = useState(false);
+  const [onClose, setOnClose] = useState(0);
 
   const openPickImage = () => {
     pickImage(setPicture);
@@ -328,8 +329,9 @@ const ContentPage = ({
         isModalVisible={isMusicModalVisible}
         setIsModalVisible={setIsMusicModalVisible}
         height={90}
+        setOnCloseSignal={setOnClose}
       >
-        <MusicTimeline onSelectSong={setSelectedSong} />
+        <MusicTimeline onSelectSong={setSelectedSong} onCloseSignal={onClose} />
       </BottomPage>
       <BottomPage
         isModalVisible={isContentModalVisible}

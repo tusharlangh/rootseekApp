@@ -22,6 +22,7 @@ export const PostsContext = createContext();
 const Search = () => {
   const [search, setSearch] = useState("");
   const [posts, setPosts] = useState([]);
+  const [groupedPosts, setGroupedPosts] = useState([]);
 
   const [shufflePosts, setShufflePosts] = useState([]);
   const [shuffleRandomNumber, setShuffleRandomNumber] = useState(0);
@@ -162,7 +163,13 @@ const Search = () => {
         let dateKey;
         const date = moment(post.createdAt);
 
-        if (date.isBetween(moment().subtract(7, "days"), moment(), "day")) {
+        if (
+          date.isBetween(
+            moment().subtract(7, "days"),
+            moment().add(1, "days"),
+            "day"
+          )
+        ) {
           dateKey = date.format("MMMM D");
           if (!grouped[dateKey]) grouped[dateKey] = [];
           grouped[dateKey].push(post);
@@ -196,8 +203,15 @@ const Search = () => {
       title: date,
       data: grouped[date],
     }));
+
     return result;
   };
+
+  useEffect(() => {
+    const rawPosts = groupPostsByDate(posts);
+    const groupedResult = rawPosts.flatMap((post) => post.data);
+    setGroupedPosts(groupedResult);
+  }, [selectedFilter, posts]);
 
   const options = [
     {
@@ -223,10 +237,10 @@ const Search = () => {
   ];
 
   return (
-    <PostsContext.Provider value={{ posts, setPosts }}>
+    <PostsContext.Provider value={{ groupedPosts, setGroupedPosts }}>
       <View style={[styles.container, { backgroundColor: bgColor }]}>
         <View
-          style={{ position: "absolute", bottom: 10, right: 10, zIndex: 100 }}
+          style={{ position: "absolute", bottom: 100, right: 10, zIndex: 100 }}
         >
           <Pressable
             style={[
@@ -246,7 +260,12 @@ const Search = () => {
         </View>
 
         <View style={styles.nestedContainer}>
-          <View style={{ position: "relative", paddingHorizontal: 2 }}>
+          <View
+            style={{
+              position: "relative",
+              paddingHorizontal: 2,
+            }}
+          >
             <TextInput
               style={[
                 styles.searchBar,
@@ -325,8 +344,11 @@ const Search = () => {
             </ScrollView>
           </View>
 
-          <View style={{ flex: 1 }}>
-            <DisplayPosts groupedPosts={groupPostsByDate(posts)} />
+          <View style={{ flex: 1, height: "100%" }}>
+            <DisplayPosts
+              groupedPostsByDate={groupPostsByDate(posts)}
+              setSearch={setSearch}
+            />
           </View>
         </View>
 
@@ -355,7 +377,7 @@ const styles = StyleSheet.create({
   },
   nestedContainer: {
     height: "100%",
-    paddingHorizontal: 4,
+    paddingHorizontal: 2,
   },
   searchBar: {
     padding: 10,

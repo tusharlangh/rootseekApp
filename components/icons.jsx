@@ -48,25 +48,29 @@ export const EyeIconClosed = ({ size = 24, color = "black" }) => (
 
 export const HomeIconSolid = ({ size = 24, color = "black" }) => (
   <Svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 48 48"
-    fill={color}
+    data-encore-id="icon"
+    role="img"
+    aria-hidden="true"
+    viewBox="0 0 24 24"
     width={size}
     height={size}
+    fill={color}
   >
-    <Path d="M39.5,43h-9c-1.381,0-2.5-1.119-2.5-2.5v-9c0-1.105-0.895-2-2-2h-4c-1.105,0-2,0.895-2,2v9c0,1.381-1.119,2.5-2.5,2.5h-9	C7.119,43,6,41.881,6,40.5V21.413c0-2.299,1.054-4.471,2.859-5.893L23.071,4.321c0.545-0.428,1.313-0.428,1.857,0L39.142,15.52	C40.947,16.942,42,19.113,42,21.411V40.5C42,41.881,40.881,43,39.5,43z"></Path>
+    <Path d="M13.5 1.515a3 3 0 0 0-3 0L3 5.845a2 2 0 0 0-1 1.732V21a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6h4v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V7.577a2 2 0 0 0-1-1.732l-7.5-4.33z"></Path>
   </Svg>
 );
 
 export const HomeIconOutline = ({ size = 24, color = "black" }) => (
   <Svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 48 48"
-    fill={color}
+    data-encore-id="icon"
+    role="img"
+    aria-hidden="true"
+    viewBox="0 0 24 24"
     width={size}
     height={size}
+    fill={color}
   >
-    <Path d="M 23.951172 4 A 1.50015 1.50015 0 0 0 23.072266 4.3222656 L 8.859375 15.519531 C 7.0554772 16.941163 6 19.113506 6 21.410156 L 6 40.5 C 6 41.863594 7.1364058 43 8.5 43 L 18.5 43 C 19.863594 43 21 41.863594 21 40.5 L 21 30.5 C 21 30.204955 21.204955 30 21.5 30 L 26.5 30 C 26.795045 30 27 30.204955 27 30.5 L 27 40.5 C 27 41.863594 28.136406 43 29.5 43 L 39.5 43 C 40.863594 43 42 41.863594 42 40.5 L 42 21.410156 C 42 19.113506 40.944523 16.941163 39.140625 15.519531 L 24.927734 4.3222656 A 1.50015 1.50015 0 0 0 23.951172 4 z M 24 7.4101562 L 37.285156 17.876953 C 38.369258 18.731322 39 20.030807 39 21.410156 L 39 40 L 30 40 L 30 30.5 C 30 28.585045 28.414955 27 26.5 27 L 21.5 27 C 19.585045 27 18 28.585045 18 30.5 L 18 40 L 9 40 L 9 21.410156 C 9 20.030807 9.6307412 18.731322 10.714844 17.876953 L 24 7.4101562 z"></Path>
+    <Path d="M12.5 3.247a1 1 0 0 0-1 0L4 7.577V20h4.5v-6a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v6H20V7.577l-7.5-4.33zm-2-1.732a3 3 0 0 1 3 0l7.5 4.33a2 2 0 0 1 1 1.732V21a1 1 0 0 1-1 1h-6.5a1 1 0 0 1-1-1v-6h-3v6a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.577a2 2 0 0 1 1-1.732l7.5-4.33z"></Path>
   </Svg>
 );
 
@@ -166,39 +170,31 @@ export const Music = ({ size = 24, color = "black" }) => (
 
 export const PlayIcon = ({ size = 24, color = "black" }) => (
   <Svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={2}
-    stroke="currentColor"
+    data-encore-id="icon"
+    role="img"
+    aria-hidden="true"
+    class="e-9812-icon e-9812-baseline"
+    viewBox="0 0 16 16"
     width={size}
     height={size}
-    color={color}
+    fill={color}
   >
-    <Path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
-    />
+    <Path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.288V1.713z"></Path>
   </Svg>
 );
 
 export const PauseIcon = ({ size = 24, color = "black" }) => (
   <Svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={2}
-    stroke="currentColor"
+    data-encore-id="icon"
+    role="img"
+    aria-hidden="true"
+    class="e-9812-icon e-9812-baseline"
+    viewBox="0 0 16 16"
     width={size}
     height={size}
-    color={color}
+    fill={color}
   >
-    <Path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M15.75 5.25v13.5m-7.5-13.5v13.5"
-    />
+    <Path d="M2.7 1a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7H2.7zm8 0a.7.7 0 0 0-.7.7v12.6a.7.7 0 0 0 .7.7h2.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-2.6z"></Path>
   </Svg>
 );
 

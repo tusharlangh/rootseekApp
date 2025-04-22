@@ -16,6 +16,7 @@ const BottomPage = ({
   isModalVisible,
   setIsModalVisible,
   height,
+  setOnCloseSignal = () => {},
 }) => {
   const { height: SCREEN_HEIGHT } = Dimensions.get("window");
   const MODAL_HEIGHT = SCREEN_HEIGHT * (height / 100);
@@ -50,6 +51,7 @@ const BottomPage = ({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: (_, gestureState) => {
         // Only allow downward dragging
+        setOnCloseSignal((prev) => prev + 1);
         if (gestureState.dy > 0) {
           panY.setValue(gestureState.dy);
         }
@@ -83,7 +85,10 @@ const BottomPage = ({
   };
 
   const closeModal = () => {
-    closeAnim.start(() => setIsModalVisible(false));
+    closeAnim.start(() => {
+      setIsModalVisible(false);
+      setOnCloseSignal((prev) => prev + 1);
+    });
   };
 
   return (
@@ -146,7 +151,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-    padding: 20,
+    padding: 18,
     paddingBottom: 0,
     overflow: "hidden",
   },

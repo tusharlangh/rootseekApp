@@ -130,7 +130,7 @@ const Home = () => {
         </View>
       </View>
 
-      <View style={{ position: "absolute", bottom: 10, right: 10 }}>
+      <View style={{ position: "absolute", bottom: 100, right: 10 }}>
         <Pressable
           style={[
             styles.closeButton,

@@ -12,6 +12,7 @@ import { useColorMode } from "native-base";
 import { useEffect, useState } from "react";
 import MusicTimeline from "./musicTimeline";
 
+//NOT USING THIS PAGE
 const MusicPicker = ({ handleSongSelect }) => {
   const [showMusic, setShowMusic] = useState(false);
   const { colorMode } = useColorMode();

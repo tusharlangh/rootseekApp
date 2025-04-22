@@ -17,7 +17,7 @@ import axios from "axios";
 import { Audio } from "expo-av";
 import { BlurView } from "expo-blur";
 
-const MusicTimeline = ({ onSelectSong }) => {
+const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const songBg = "rgba(255,255,255,0.25)";
@@ -102,6 +102,10 @@ const MusicTimeline = ({ onSelectSong }) => {
     }
   };
 
+  useEffect(() => {
+    stopPreviousSound();
+  }, [onCloseSignal]);
+
   const togglePlayPause = () => {
     if (!isPlaying) {
       playSound();
@@ -148,17 +152,12 @@ const MusicTimeline = ({ onSelectSong }) => {
         ></View>
       </View>
 
-      <BlurView
+      <View
         style={[
           styles.nestedContainer,
           {
             position: "relative",
             paddingHorizontal: 2,
-            borderRadius: 12,
-            backgroundColor:
-              colorMode === "light"
-                ? "rgba(255,255,255,0.8)"
-                : "rgba(0, 0, 0, 0.7)",
           },
         ]}
       >
@@ -166,21 +165,23 @@ const MusicTimeline = ({ onSelectSong }) => {
           style={[
             styles.searchBar,
             {
-              color: textColor,
+              backgroundColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
+              color: colorMode === "light" ? "black" : "white",
+              borderColor: colorMode === "light" ? "#F0F0F0" : "#121212",
             },
           ]}
           placeholder="Search song"
-          placeholderTextColor={textColor}
+          placeholderTextColor={colorMode === "light" ? "#494949" : "#97989F"}
           value={query}
           onChangeText={setQuery}
         />
-        <View style={{ position: "absolute", top: 9, left: 12 }}>
+        <View style={{ position: "absolute", top: 12, left: 12 }}>
           <SearchIconOutline
-            size={22}
-            color={colorMode === "light" ? "#848388" : "#97989F"}
+            size={18}
+            color={colorMode === "light" ? "black" : "white"}
           />
         </View>
-      </BlurView>
+      </View>
 
       <ScrollView>
         <View
@@ -243,9 +244,9 @@ const MusicTimeline = ({ onSelectSong }) => {
                   <View>
                     <Pressable onPress={togglePlayPause}>
                       {isPlaying ? (
-                        <PauseIcon size={24} color={textColor} />
+                        <PauseIcon size={20} color={textColor} />
                       ) : (
-                        <PlayIcon size={24} color={textColor} />
+                        <PlayIcon size={20} color={textColor} />
                       )}
                     </Pressable>
                   </View>
@@ -261,7 +262,6 @@ const MusicTimeline = ({ onSelectSong }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 5,
     position: "relative",
     height: "100%",
   },
@@ -270,13 +270,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     overflow: "hidden",
-    paddingHorizontal: 4,
+    paddingHorizontal: 2,
   },
   searchBar: {
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 14,
     fontWeight: 400,
-    fontSize: 16,
+    fontSize: 18,
     paddingLeft: 36,
     width: "100%",
   },

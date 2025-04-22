@@ -1,39 +1,32 @@
 import { BlurView } from "expo-blur";
 import { useColorMode } from "native-base";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
   ScrollView,
   Image,
-  Animated,
   Dimensions,
-  PanResponder,
   Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FlatList } from "react-native";
 import {
-  CloseIcon,
   LeftArrowIcon,
   VolumeUpIcon,
   VolumeDownIcon,
   ShareIcon,
   ThreeDotsIcon,
-  AddIcon,
   AddLibraryIcon,
 } from "./icons";
 import axios from "axios";
 import { Audio } from "expo-av";
+import { PostsContext } from "./search";
 
 const { width, height } = Dimensions.get("window");
 
-const ViewPost = ({
-  posts,
-  currentIndex,
-  setViewPostVisible,
-  viewPostVisible,
-}) => {
+const ViewPost = ({ currentIndex, setViewPostVisible, viewPostVisible }) => {
+  const { groupedPosts: posts } = useContext(PostsContext);
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#0D0D0D" : "#8E8D93";
   const bgColor = colorMode === "light" ? "#ECEBEF" : "black";
@@ -403,7 +396,9 @@ const ViewPost = ({
                           fontWeight: 600,
                           fontSize: 18,
                           color: colorMode === "light" ? "black" : "white",
+                          width: 200,
                         }}
+                        numberOfLines={1}
                       >
                         {item.trackName}
                       </Text>
