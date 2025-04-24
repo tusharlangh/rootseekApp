@@ -1,5 +1,5 @@
 import React from "react";
-import Svg, { Path } from "react-native-svg";
+import Svg, { G, Path, Rect, Circle } from "react-native-svg";
 
 export const EyeIconOpen = ({ size = 24, color = "black" }) => (
   <Svg
@@ -147,12 +147,14 @@ export const CreateIconSolid = ({ size = 24, color = "black" }) => (
 export const PictureIcon = ({ size = 24, color = "black" }) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 -960 960 960"
-    width={size}
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke-width="3"
+    stroke={color}
     height={size}
-    fill={color}
+    width={size}
   >
-    <Path d="M480-480ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h320v80H200v560h560v-320h80v320q0 33-23.5 56.5T760-120H200Zm40-160h480L570-480 450-320l-90-120-120 160Zm440-320v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Z" />
+    <Path d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
   </Svg>
 );
 
@@ -341,26 +343,69 @@ export const LeftArrowIcon = ({ size = 24, color = "black" }) => (
 );
 
 export const LibraryOutline = ({ size = 24, color = "black" }) => (
-  <Svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 -960 960 960"
-    width={size}
-    height={size}
-    fill={color}
-  >
-    <Path d="M400-400h160v-80H400v80Zm0-120h320v-80H400v80Zm0-120h320v-80H400v80Zm-80 400q-33 0-56.5-23.5T240-320v-480q0-33 23.5-56.5T320-880h480q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H320Zm0-80h480v-480H320v480ZM160-80q-33 0-56.5-23.5T80-160v-560h80v560h560v80H160Zm160-720v480-480Z" />
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    {/* First Book */}
+    <Rect
+      x="3"
+      y="3"
+      width="2"
+      height="18"
+      rx="1"
+      stroke={color}
+      strokeWidth="2"
+    />
+
+    {/* Second Book */}
+    <Rect
+      x="10"
+      y="3"
+      width="2"
+      height="18"
+      rx="1"
+      stroke={color}
+      strokeWidth="2"
+    />
+
+    {/* Third Book with top edge tilted */}
+    <Path
+      d="M17 4 L22 5 L22 21 L17 21 Z"
+      stroke={color}
+      strokeWidth="2"
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </Svg>
 );
 
 export const LibrarySolid = ({ size = 24, color = "black" }) => (
-  <Svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 -960 960 960"
-    width={size}
-    height={size}
-    fill={color}
-  >
-    <Path d="M400-400h160v-80H400v80Zm0-120h320v-80H400v80Zm0-120h320v-80H400v80Zm-80 400q-33 0-56.5-23.5T240-320v-480q0-33 23.5-56.5T320-880h480q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H320ZM160-80q-33 0-56.5-23.5T80-160v-560h80v560h560v80H160Z" />
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+    <Rect
+      x="3"
+      y="3"
+      width="2"
+      height="18"
+      rx="1"
+      stroke={color}
+      strokeWidth="2"
+    />
+    <Rect
+      x="10"
+      y="3"
+      width="2"
+      height="18"
+      rx="1"
+      stroke={color}
+      strokeWidth="2"
+    />
+    <Path
+      d="M17 4 L22 5 L22 21 L17 21 Z"
+      stroke={color}
+      strokeWidth="2"
+      fill={color}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </Svg>
 );
 
@@ -417,5 +462,50 @@ export const AddLibraryIcon = ({ size = 24, color = "black" }) => (
       strokeLinejoin="round"
       d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
     />
+  </Svg>
+);
+
+export const FilterIcon = ({ size = 24, color = "black" }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    {/* Down Arrow */}
+    <Path
+      d="M7 4v12M7 16l-3-3m3 3l3-3"
+      stroke={color}
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    {/* Up Arrow */}
+    <Path
+      d="M17 20V8m0 0l-3 3m3-3l3 3"
+      stroke={color}
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+export const GoalsIcons = ({ size = 24, color = "black" }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    height={size}
+    viewBox="0 -960 960 960"
+    width={size}
+    fill={color}
+  >
+    <Path d="M200-120v-680h360l16 80h224v400H520l-16-80H280v280h-80Zm300-440Zm86 160h134v-240H510l-16-80H280v240h290l16 80Z" />
+  </Svg>
+);
+
+export const MemoryIcon = ({ size = 24, color = "black" }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    height={size}
+    viewBox="0 -960 960 960"
+    width={size}
+    fill={color}
+  >
+    <Path d="M508-200h224q-7 26-24 42t-44 20L228-85q-33 5-59.5-15.5T138-154L85-591q-4-33 16-59t53-30l46-6v80l-36 5 54 437 290-36Zm-148-80q-33 0-56.5-23.5T280-360v-440q0-33 23.5-56.5T360-880h440q33 0 56.5 23.5T880-800v440q0 33-23.5 56.5T800-280H360Zm0-80h440v-440H360v440Zm220-220ZM218-164Zm363-236q68 0 115.5-47T749-560q-68 0-116.5 47T581-400Zm0 0q-3-66-51.5-113T413-560q5 66 52.5 113T581-400Zm0-120q17 0 28.5-11.5T621-560v-10l10 4q15 6 30.5 3t23.5-17q9-15 6-32t-20-24l-10-4 10-4q17-7 19.5-24.5T685-700q-9-15-24-17.5t-30 3.5l-10 4v-10q0-17-11.5-28.5T581-760q-17 0-28.5 11.5T541-720v10l-10-4q-15-6-30-3.5T477-700q-8 14-5.5 31.5T491-644l10 4-10 4q-17 7-20 24t6 32q8 14 23.5 17t30.5-3l10-4v10q0 17 11.5 28.5T581-520Zm0-80q-17 0-28.5-11.5T541-640q0-17 11.5-28.5T581-680q17 0 28.5 11.5T621-640q0 17-11.5 28.5T581-600Z" />
   </Svg>
 );

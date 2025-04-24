@@ -17,34 +17,22 @@ import {
 import Home from "./home";
 import Search from "./search";
 import { LinearGradient } from "expo-linear-gradient";
+import Library from "./libraryPage/library";
+import { BlurView } from "expo-blur";
 
 const Tab = createBottomTabNavigator();
 
 const Navbar = () => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
-  const outlineBgColor =
-    colorMode === "light" ? "rgba(0, 0, 0, 0.8)" : "rgba(220, 220, 220, 0.8)";
+  const outlineTextColor =
+    colorMode === "light"
+      ? "rgba(49, 49, 49, 0.8)"
+      : "rgba(220, 220, 220, 0.8)";
   const bgColor =
     colorMode === "light"
-      ? [
-          "rgba(242,241,245, 0)",
-          "rgba(242,241,245, 0.40)",
-          "rgba(242,241,245, 0.85)",
-          "rgba(242,241,245, 0.99)",
-          "rgba(242,241,245, 0.99)",
-          "rgba(242,241,245, 0.99)",
-          "rgb(242,241,245)",
-        ]
-      : [
-          "rgba(0,0,0, 0)",
-          "rgba(0,0,0, 0.40)",
-          "rgba(0,0,0, 0.85)",
-          "rgba(0,0,0, 0.90)",
-          "rgba(0,0,0, 0.94)",
-          "rgba(0,0,0, 0.99)",
-          "rgb(0,0,0)",
-        ];
+      ? ["transparent", "rgba(242,241,245,0.1)", "rgb(242,241,245)"]
+      : ["transparent", "rgba(0,0,0,0.9)", "black"];
 
   return (
     <View style={{ height: "100%" }}>
@@ -53,14 +41,16 @@ const Navbar = () => {
           <>
             <LinearGradient
               colors={bgColor}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 0, y: 1 }}
               style={{
                 position: "absolute",
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: 100,
+                height: 80,
+                backgroundColor:
+                  colorMode === "light"
+                    ? "rgba(242,241,245,0.95)"
+                    : "rgba(0,0,0,0.86)",
               }}
             />
 
@@ -71,7 +61,8 @@ const Navbar = () => {
           headerShown: false,
           tabBarLabelStyle: {
             color: textColor,
-            paddingTop: 5,
+            paddingRight: -10,
+            textAlign: "center",
           },
           tabBarStyle: {
             position: "absolute",
@@ -88,9 +79,9 @@ const Navbar = () => {
           options={{
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <HomeIconSolid size={30} color={textColor} />
+                <HomeIconSolid size={24} color={textColor} />
               ) : (
-                <HomeIconOutline size={30} color={outlineBgColor} />
+                <HomeIconOutline size={24} color={outlineTextColor} />
               ),
           }}
         />
@@ -100,9 +91,21 @@ const Navbar = () => {
           options={{
             tabBarIcon: ({ focused }) =>
               focused ? (
-                <SearchIconSolid size={30} color={textColor} />
+                <SearchIconSolid size={24} color={textColor} />
               ) : (
-                <SearchIconOutline size={30} color={outlineBgColor} />
+                <SearchIconOutline size={24} color={outlineTextColor} />
+              ),
+          }}
+        />
+        <Tab.Screen
+          name="Library"
+          component={Library}
+          options={{
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <LibrarySolid size={24} color={textColor} />
+              ) : (
+                <LibraryOutline size={24} color={outlineTextColor} />
               ),
           }}
         />

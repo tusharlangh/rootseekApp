@@ -65,7 +65,7 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch }) => {
             gap: 10,
           }}
         >
-          {groupedPostsByDate.map((post, index) => (
+          {groupedPostsByDate.map((p, index) => (
             <View key={index}>
               <Text
                 style={{
@@ -77,19 +77,24 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch }) => {
                   marginLeft: 4,
                 }}
               >
-                {post.title}
+                {p.title}
               </Text>
               <View
                 style={{ display: "flex", flexDirection: "column", gap: 8 }}
               >
-                {post.data.map((post, index) => (
+                {p.data.map((post, innerIndex) => (
                   <Pressable
-                    key={index}
+                    key={innerIndex}
                     style={[
                       styles.postContainer,
                       {
                         backgroundColor:
                           colorMode === "light" ? "white" : "#161618",
+                        marginBottom:
+                          index === groupedPostsByDate.length - 1 &&
+                          innerIndex === p.data.length - 1
+                            ? 100
+                            : 0,
                       },
                     ]}
                     onPress={() => {
