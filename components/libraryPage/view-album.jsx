@@ -7,6 +7,7 @@ import {
   Dimensions,
   Image,
   ScrollView,
+  Modal,
 } from "react-native";
 import { AddIcon, LeftArrowIcon, ShareIcon, ThreeDotsIcon } from "../icons";
 import { DefualtCover } from "../../additional";
@@ -14,6 +15,7 @@ import { BlurView } from "expo-blur";
 import { Animated } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
+import ViewPost from "../viewPost";
 
 const { width, height } = Dimensions.get("window");
 const ViewAlbum = ({ album, setIsModalVisible }) => {
@@ -24,7 +26,11 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
+  const [viewPostVisible, setViewPostVisible] = useState(false);
+  const [postIndex, setPostIndex] = useState(0);
+
   useEffect(() => {
+    //a normal useeffect will not work since scrollY is an changing object. The object remains same but the content inside of it is changing. Adding an event listener will attach with the value inside so whenever it changes it will call the useeffect.
     const id = scrollY.addListener(({ value }) => {
       if (value > 340) {
         setReachedTop(true);
@@ -44,6 +50,19 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
     colorMode === "light" ? "rgb(230, 230, 230)" : "rgba(31, 31, 31, 0.9)";
   const iconsTextColor =
     colorMode === "light" ? "rgb(69, 69, 69)" : "rgb(182, 182, 182)";
+
+  const FormatTime = (post) => {
+    const formattedTime = new Date(post.date).toLocaleDateString("en-US", {
+      month: "long",
+      day: "2-digit",
+    });
+    return formattedTime;
+  };
+
+  const getHashTags = (hashTags) => {
+    const ht = hashTags.split("#").filter((h) => h.length > 0);
+    return ht;
+  };
 
   return (
     <LinearGradient
@@ -168,8 +187,8 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
                 transform: [
                   {
                     scale: scrollY.interpolate({
-                      inputRange: [0, 300],
-                      outputRange: [1, 0.8],
+                      inputRange: [0, 400],
+                      outputRange: [1, 0.5],
                       extrapolate: "clamp",
                     }),
                   },
@@ -252,12 +271,14 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
             <ThreeDotsIcon size={22} color={iconsTextColor} />
           </Pressable>
           <View>
-            <Text style={{ color: iconsTextColor }}>0 Roots</Text>
+            <Text style={{ color: iconsTextColor }}>
+              {album.totalPosts} Roots
+            </Text>
           </View>
         </Animated.View>
       </Animated.View>
 
-      {album.totalPosts === 1 && (
+      {album.totalPosts === 0 && (
         <View
           style={{
             flexDirection: "row",
@@ -284,10 +305,11 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
         </View>
       )}
       <Animated.ScrollView
-        scrollEventThrottle={16}
+        scrollEventThrottle={16} //every 16 miliseconds the scroll value will be checked.
         onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: true }
+          //animated.event helps transform data into a animated value.
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }], //native event is a package of information you get from your phone like how much you have scrolled.
+          { useNativeDriver: true } //let the phones graphics be used for smoother animation.
         )}
         style={{
           flex: 1,
@@ -312,632 +334,157 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
             paddingBottom: 90,
           }}
         >
-          <Pressable
-            style={[
-              styles.postContainer,
-              {
-                backgroundColor: colorMode === "light" ? "white" : "#161618",
-              },
-            ]}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 2,
+          {album.posts.map((post, index) => (
+            <Pressable
+              key={index}
+              style={[
+                styles.postContainer,
+                {
+                  backgroundColor: colorMode === "light" ? "white" : "#161618",
+                },
+              ]}
+              onPress={() => {
+                setPostIndex(index);
+                setViewPostVisible(true);
               }}
             >
-              <Text
-                style={[
-                  styles.postTitle,
-                  {
-                    color: colorMode === "light" ? "black" : "white",
-                    flex: 7.5,
-                  },
-                ]}
-                numberOfLines={1}
-              >
-                tushar hi
-              </Text>
-              <Text
-                style={[
-                  styles.postTime,
-                  {
-                    flex: 1.5,
-                    color: colorMode === "light" ? "black" : "white",
-                  },
-                ]}
-              >
-                10:45pm
-              </Text>
-            </View>
-
-            <View>
-              <Text
-                style={[
-                  styles.postContent,
-                  { color: colorMode === "light" ? "black" : "white" },
-                ]}
-                numberOfLines={4}
-              >
-                ugtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtg
-              </Text>
               <View
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  gap: 4,
+                  alignItems: "center",
+                  gap: 2,
                 }}
               >
-                <Pressable>
-                  <Text
-                    style={[
-                      styles.postHashTags,
-                      {
-                        color: colorMode === "light" ? "black" : "white",
-                        backgroundColor:
-                          colorMode === "light" ? "#F0F0F0" : "#262629",
-                        paddingHorizontal: 10,
-                        paddingVertical: 3,
-                        borderRadius: 15,
-                      },
-                    ]}
-                  >
-                    #tushar#life
-                  </Text>
-                </Pressable>
+                <Text
+                  style={[
+                    styles.postTitle,
+                    {
+                      color: colorMode === "light" ? "black" : "white",
+                      flex: 7.5,
+                    },
+                  ]}
+                  numberOfLines={1}
+                >
+                  {post.title}
+                </Text>
+                <Text
+                  style={[
+                    styles.postTime,
+                    {
+                      flex: 1.5,
+                      color: colorMode === "light" ? "black" : "white",
+                    },
+                  ]}
+                >
+                  {FormatTime(post)}
+                </Text>
               </View>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.postContainer,
-              {
-                backgroundColor: colorMode === "light" ? "white" : "#161618",
-              },
-            ]}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
-              <Text
-                style={[
-                  styles.postTitle,
-                  {
-                    color: colorMode === "light" ? "black" : "white",
-                    flex: 7.5,
-                  },
-                ]}
-                numberOfLines={1}
-              >
-                tushar hi
-              </Text>
-              <Text
-                style={[
-                  styles.postTime,
-                  {
-                    flex: 1.5,
-                    color: colorMode === "light" ? "black" : "white",
-                  },
-                ]}
-              >
-                10:45pm
-              </Text>
-            </View>
 
-            <View>
-              <Text
-                style={[
-                  styles.postContent,
-                  { color: colorMode === "light" ? "black" : "white" },
-                ]}
-                numberOfLines={4}
-              >
-                ugtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtg
-              </Text>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 4,
-                }}
-              >
-                <Pressable>
-                  <Text
-                    style={[
-                      styles.postHashTags,
-                      {
-                        color: colorMode === "light" ? "black" : "white",
-                        backgroundColor:
-                          colorMode === "light" ? "#F0F0F0" : "#262629",
-                        paddingHorizontal: 10,
-                        paddingVertical: 3,
-                        borderRadius: 15,
-                      },
-                    ]}
-                  >
-                    #tushar#life
-                  </Text>
-                </Pressable>
+              <View>
+                <Text
+                  style={[
+                    styles.postContent,
+                    { color: colorMode === "light" ? "black" : "white" },
+                  ]}
+                  numberOfLines={4}
+                >
+                  {post.content}
+                </Text>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 4,
+                  }}
+                >
+                  {post.hashTags &&
+                    getHashTags(post.hashTags).map((hashTag, index) => (
+                      <Pressable
+                        key={index}
+                        onPress={() => setSearch("#" + hashTag)}
+                      >
+                        <Text
+                          style={[
+                            styles.postHashTags,
+                            {
+                              color: colorMode === "light" ? "black" : "white",
+                              backgroundColor:
+                                colorMode === "light" ? "#F0F0F0" : "#262629",
+                              paddingHorizontal: 10,
+                              paddingVertical: 3,
+                              borderRadius: 15,
+                            },
+                          ]}
+                        >
+                          #{hashTag}
+                        </Text>
+                      </Pressable>
+                    ))}
+                </View>
               </View>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.postContainer,
-              {
-                backgroundColor: colorMode === "light" ? "white" : "#161618",
-              },
-            ]}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
-              <Text
-                style={[
-                  styles.postTitle,
-                  {
-                    color: colorMode === "light" ? "black" : "white",
-                    flex: 7.5,
-                  },
-                ]}
-                numberOfLines={1}
-              >
-                tushar hi
-              </Text>
-              <Text
-                style={[
-                  styles.postTime,
-                  {
-                    flex: 1.5,
-                    color: colorMode === "light" ? "black" : "white",
-                  },
-                ]}
-              >
-                10:45pm
-              </Text>
-            </View>
-
-            <View>
-              <Text
-                style={[
-                  styles.postContent,
-                  { color: colorMode === "light" ? "black" : "white" },
-                ]}
-                numberOfLines={4}
-              >
-                ugtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtg
-              </Text>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 4,
-                }}
-              >
-                <Pressable>
-                  <Text
-                    style={[
-                      styles.postHashTags,
-                      {
-                        color: colorMode === "light" ? "black" : "white",
-                        backgroundColor:
-                          colorMode === "light" ? "#F0F0F0" : "#262629",
-                        paddingHorizontal: 10,
-                        paddingVertical: 3,
-                        borderRadius: 15,
-                      },
-                    ]}
+              {post.trackId !== "undefined" ? (
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
                   >
-                    #tushar#life
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.postContainer,
-              {
-                backgroundColor: colorMode === "light" ? "white" : "#161618",
-              },
-            ]}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
-              <Text
-                style={[
-                  styles.postTitle,
-                  {
-                    color: colorMode === "light" ? "black" : "white",
-                    flex: 7.5,
-                  },
-                ]}
-                numberOfLines={1}
-              >
-                tushar hi
-              </Text>
-              <Text
-                style={[
-                  styles.postTime,
-                  {
-                    flex: 1.5,
-                    color: colorMode === "light" ? "black" : "white",
-                  },
-                ]}
-              >
-                10:45pm
-              </Text>
-            </View>
-
-            <View>
-              <Text
-                style={[
-                  styles.postContent,
-                  { color: colorMode === "light" ? "black" : "white" },
-                ]}
-                numberOfLines={4}
-              >
-                ugtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtg
-              </Text>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 4,
-                }}
-              >
-                <Pressable>
-                  <Text
-                    style={[
-                      styles.postHashTags,
-                      {
-                        color: colorMode === "light" ? "black" : "white",
-                        backgroundColor:
-                          colorMode === "light" ? "#F0F0F0" : "#262629",
-                        paddingHorizontal: 10,
-                        paddingVertical: 3,
-                        borderRadius: 15,
-                      },
-                    ]}
-                  >
-                    #tushar#life
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.postContainer,
-              {
-                backgroundColor: colorMode === "light" ? "white" : "#161618",
-              },
-            ]}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
-              <Text
-                style={[
-                  styles.postTitle,
-                  {
-                    color: colorMode === "light" ? "black" : "white",
-                    flex: 7.5,
-                  },
-                ]}
-                numberOfLines={1}
-              >
-                tushar hi
-              </Text>
-              <Text
-                style={[
-                  styles.postTime,
-                  {
-                    flex: 1.5,
-                    color: colorMode === "light" ? "black" : "white",
-                  },
-                ]}
-              >
-                10:45pm
-              </Text>
-            </View>
-
-            <View>
-              <Text
-                style={[
-                  styles.postContent,
-                  { color: colorMode === "light" ? "black" : "white" },
-                ]}
-                numberOfLines={4}
-              >
-                ugtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtg
-              </Text>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 4,
-                }}
-              >
-                <Pressable>
-                  <Text
-                    style={[
-                      styles.postHashTags,
-                      {
-                        color: colorMode === "light" ? "black" : "white",
-                        backgroundColor:
-                          colorMode === "light" ? "#F0F0F0" : "#262629",
-                        paddingHorizontal: 10,
-                        paddingVertical: 3,
-                        borderRadius: 15,
-                      },
-                    ]}
-                  >
-                    #tushar#life
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.postContainer,
-              {
-                backgroundColor: colorMode === "light" ? "white" : "#161618",
-              },
-            ]}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
-              <Text
-                style={[
-                  styles.postTitle,
-                  {
-                    color: colorMode === "light" ? "black" : "white",
-                    flex: 7.5,
-                  },
-                ]}
-                numberOfLines={1}
-              >
-                tushar hi
-              </Text>
-              <Text
-                style={[
-                  styles.postTime,
-                  {
-                    flex: 1.5,
-                    color: colorMode === "light" ? "black" : "white",
-                  },
-                ]}
-              >
-                10:45pm
-              </Text>
-            </View>
-
-            <View>
-              <Text
-                style={[
-                  styles.postContent,
-                  { color: colorMode === "light" ? "black" : "white" },
-                ]}
-                numberOfLines={4}
-              >
-                ugtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtg
-              </Text>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 4,
-                }}
-              >
-                <Pressable>
-                  <Text
-                    style={[
-                      styles.postHashTags,
-                      {
-                        color: colorMode === "light" ? "black" : "white",
-                        backgroundColor:
-                          colorMode === "light" ? "#F0F0F0" : "#262629",
-                        paddingHorizontal: 10,
-                        paddingVertical: 3,
-                        borderRadius: 15,
-                      },
-                    ]}
-                  >
-                    #tushar#life
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.postContainer,
-              {
-                backgroundColor: colorMode === "light" ? "white" : "#161618",
-              },
-            ]}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
-              <Text
-                style={[
-                  styles.postTitle,
-                  {
-                    color: colorMode === "light" ? "black" : "white",
-                    flex: 7.5,
-                  },
-                ]}
-                numberOfLines={1}
-              >
-                tushar hi
-              </Text>
-              <Text
-                style={[
-                  styles.postTime,
-                  {
-                    flex: 1.5,
-                    color: colorMode === "light" ? "black" : "white",
-                  },
-                ]}
-              >
-                10:45pm
-              </Text>
-            </View>
-
-            <View>
-              <Text
-                style={[
-                  styles.postContent,
-                  { color: colorMode === "light" ? "black" : "white" },
-                ]}
-                numberOfLines={4}
-              >
-                ugtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtg
-              </Text>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 4,
-                }}
-              >
-                <Pressable>
-                  <Text
-                    style={[
-                      styles.postHashTags,
-                      {
-                        color: colorMode === "light" ? "black" : "white",
-                        backgroundColor:
-                          colorMode === "light" ? "#F0F0F0" : "#262629",
-                        paddingHorizontal: 10,
-                        paddingVertical: 3,
-                        borderRadius: 15,
-                      },
-                    ]}
-                  >
-                    #tushar#life
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[
-              styles.postContainer,
-              {
-                backgroundColor: colorMode === "light" ? "white" : "#161618",
-              },
-            ]}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 2,
-              }}
-            >
-              <Text
-                style={[
-                  styles.postTitle,
-                  {
-                    color: colorMode === "light" ? "black" : "white",
-                    flex: 7.5,
-                  },
-                ]}
-                numberOfLines={1}
-              >
-                tushar hi
-              </Text>
-              <Text
-                style={[
-                  styles.postTime,
-                  {
-                    flex: 1.5,
-                    color: colorMode === "light" ? "black" : "white",
-                  },
-                ]}
-              >
-                10:45pm
-              </Text>
-            </View>
-
-            <View>
-              <Text
-                style={[
-                  styles.postContent,
-                  { color: colorMode === "light" ? "black" : "white" },
-                ]}
-                numberOfLines={4}
-              >
-                ugtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtg
-              </Text>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 4,
-                }}
-              >
-                <Pressable>
-                  <Text
-                    style={[
-                      styles.postHashTags,
-                      {
-                        color: colorMode === "light" ? "black" : "white",
-                        backgroundColor:
-                          colorMode === "light" ? "#F0F0F0" : "#262629",
-                        paddingHorizontal: 10,
-                        paddingVertical: 3,
-                        borderRadius: 15,
-                      },
-                    ]}
-                  >
-                    #tushar#life
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-          </Pressable>
+                    <Image
+                      source={{ uri: post.trackAlbumCover }}
+                      style={{ width: 50, height: 50, borderRadius: 6 }}
+                    />
+                    <View style={{ display: "flex", flexDirection: "column" }}>
+                      <Text
+                        style={{
+                          color: colorMode === "light" ? "black" : "white",
+                          fontSize: 14,
+                          fontWeight: 700,
+                        }}
+                      >
+                        {post.trackName}
+                      </Text>
+                      <Text
+                        style={{
+                          color: colorMode === "light" ? "black" : "white",
+                          fontSize: 12,
+                        }}
+                      >
+                        {post.trackArtist}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              ) : (
+                ""
+              )}
+            </Pressable>
+          ))}
         </View>
       </Animated.ScrollView>
+      <Modal
+        animationType="fade"
+        visible={viewPostVisible}
+        transparent={true}
+        onRequestClose={() => setViewPostVisible(false)}
+      >
+        <ViewPost
+          currentIndex={postIndex}
+          posts={album.posts}
+          setViewPostVisible={setViewPostVisible}
+          viewPostVisible={viewPostVisible}
+        />
+      </Modal>
     </LinearGradient>
   );
 };

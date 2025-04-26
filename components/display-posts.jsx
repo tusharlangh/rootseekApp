@@ -12,6 +12,7 @@ import { useColorMode } from "native-base";
 import { useContext, useState } from "react";
 import ViewPost from "./viewPost";
 import { PostsContext } from "./search";
+import { AddLibraryIcon } from "./icons";
 
 const DisplayPosts = ({ groupedPostsByDate, setSearch }) => {
   const { groupedPosts: posts } = useContext(PostsContext);
@@ -185,34 +186,45 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch }) => {
                         style={{
                           display: "flex",
                           flexDirection: "row",
+                          justifyContent: "space-between",
                           alignItems: "center",
-                          gap: 10,
                         }}
                       >
-                        <Image
-                          source={{ uri: post.trackAlbumCover }}
-                          style={{ width: 50, height: 50, borderRadius: 6 }}
-                        />
                         <View
-                          style={{ display: "flex", flexDirection: "column" }}
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 10,
+                          }}
                         >
-                          <Text
-                            style={{
-                              color: colorMode === "light" ? "black" : "white",
-                              fontSize: 14,
-                              fontWeight: 700,
-                            }}
+                          <Image
+                            source={{ uri: post.trackAlbumCover }}
+                            style={{ width: 50, height: 50, borderRadius: 6 }}
+                          />
+                          <View
+                            style={{ display: "flex", flexDirection: "column" }}
                           >
-                            {post.trackName}
-                          </Text>
-                          <Text
-                            style={{
-                              color: colorMode === "light" ? "black" : "white",
-                              fontSize: 12,
-                            }}
-                          >
-                            {post.trackArtist}
-                          </Text>
+                            <Text
+                              style={{
+                                color:
+                                  colorMode === "light" ? "black" : "white",
+                                fontSize: 14,
+                                fontWeight: 700,
+                              }}
+                            >
+                              {post.trackName}
+                            </Text>
+                            <Text
+                              style={{
+                                color:
+                                  colorMode === "light" ? "black" : "white",
+                                fontSize: 12,
+                              }}
+                            >
+                              {post.trackArtist}
+                            </Text>
+                          </View>
                         </View>
                       </View>
                     ) : (

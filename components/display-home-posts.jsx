@@ -7,10 +7,13 @@ import {
   ActivityIndicator,
   Modal,
   Pressable,
+  Dimensions,
 } from "react-native";
 import { useColorMode } from "native-base";
 import { useState } from "react";
 import ViewPost from "./viewPost";
+
+const { height, width } = Dimensions.get("window");
 
 const DisplayHomePosts = ({ posts }) => {
   const { colorMode } = useColorMode();
@@ -19,13 +22,24 @@ const DisplayHomePosts = ({ posts }) => {
   const [postIndex, setPostIndex] = useState(0);
   const [viewPostVisible, setViewPostVisible] = useState(false);
 
-  if (!posts) {
+  if (!posts || posts.length === 0) {
     return (
-      <View style={{ height: "100%", width: "100%" }}>
-        <ActivityIndicator
-          size="small"
-          style={{ height: "100%", width: "100%" }}
-        />
+      <View style={{ height: "100%", width: "100%", paddingBottom: 100 }}>
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
+          }}
+        >
+          <Text style={{ textAlign: "center", fontSize: 22, fontWeight: 700 }}>
+            Add roots
+          </Text>
+          <Text style={{ textAlign: "center", fontSize: 16, fontWeight: 400 }}>
+            Roots will emphasize your life
+          </Text>
+        </View>
       </View>
     );
   }

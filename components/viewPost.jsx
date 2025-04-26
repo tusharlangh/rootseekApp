@@ -18,15 +18,23 @@ import {
   ShareIcon,
   ThreeDotsIcon,
   AddLibraryIcon,
+  CheckmarkIcon,
 } from "./icons";
 import axios from "axios";
 import { Audio } from "expo-av";
 import { PostsContext } from "./search";
+import BottomPage from "./bottom-page";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { DefualtCover } from "../additional";
 
 const { width, height } = Dimensions.get("window");
 
-const ViewPost = ({ currentIndex, setViewPostVisible, viewPostVisible }) => {
-  const { groupedPosts: posts } = useContext(PostsContext);
+const ViewPost = ({
+  currentIndex,
+  setViewPostVisible,
+  viewPostVisible,
+  posts,
+}) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#0D0D0D" : "#8E8D93";
   const bgColor = colorMode === "light" ? "#ECEBEF" : "black";
@@ -38,6 +46,11 @@ const ViewPost = ({ currentIndex, setViewPostVisible, viewPostVisible }) => {
 
   const [mute, setMute] = useState(false);
   const [sound, setSound] = useState(null);
+
+  const [albums, setAlbums] = useState([]);
+  const [isAddToLibraryModal, setIsAddToLibraryModal] = useState(false);
+  const [checkedMarked, setCheckedMarked] = useState(null);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     const fetchSong = async () => {
@@ -58,6 +71,24 @@ const ViewPost = ({ currentIndex, setViewPostVisible, viewPostVisible }) => {
     };
     fetchSong();
   }, [currIndex]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const token = await AsyncStorage.getItem("token");
+      try {
+        const response = await axios.get(
+          "http://localhost:5002/library/albums-all",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setAlbums(response.data);
+      } catch (error) {}
+    };
+    fetchPosts();
+  }, []);
 
   const stopPreviousSound = async () => {
     if (sound) {
@@ -122,6 +153,30 @@ const ViewPost = ({ currentIndex, setViewPostVisible, viewPostVisible }) => {
       }
     }
   }).current;
+
+  const AddToSelectedAlbum = async () => {
+    const token = await AsyncStorage.getItem("token");
+
+    try {
+      const response = await axios.patch(
+        `http://localhost:5002/library/albums/${checkedMarked}/add-post`,
+        {
+          post: selectedPost,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setIsAddToLibraryModal(false);
+      setCheckedMarked(null);
+      setSelectedPost(null);
+      console.log(response.data.message);
+    } catch (error) {
+      console.log(error.data);
+    }
+  };
 
   return (
     <View>
@@ -329,6 +384,10 @@ const ViewPost = ({ currentIndex, setViewPostVisible, viewPostVisible }) => {
                     alignItems: "center",
                     marginTop: 4,
                   }}
+                  onPress={() => {
+                    setIsAddToLibraryModal(true);
+                    setSelectedPost(item);
+                  }}
                 >
                   <AddLibraryIcon
                     size={28}
@@ -444,6 +503,151 @@ const ViewPost = ({ currentIndex, setViewPostVisible, viewPostVisible }) => {
           </View>
         )}
       />
+      <BottomPage
+        isModalVisible={isAddToLibraryModal}
+        setIsModalVisible={setIsAddToLibraryModal}
+        height={90}
+      >
+        <View style={{ height: "100%" }}>
+          <View
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                width: 40,
+                height: 5,
+                borderRadius: 10,
+                backgroundColor: "rgb(192, 192, 192)",
+                marginTop: -10,
+              }}
+            ></View>
+          </View>
+
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 18,
+              fontWeight: 600,
+              marginTop: 10,
+            }}
+          >
+            Pick an album or goal to add to
+          </Text>
+
+          <View>
+            {albums.map((album, index) => (
+              <Pressable
+                key={index}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: 12,
+                  marginTop: 20,
+                  backgroundColor:
+                    checkedMarked === album._id ? "rgba(255,255,255,0.25)" : "",
+                  borderRadius: 8,
+                }}
+                onPress={() => {
+                  if (checkedMarked) {
+                    setCheckedMarked(null);
+                  } else {
+                    setCheckedMarked(album._id);
+                  }
+                }}
+              >
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  {album.picture === "" && (
+                    <Image
+                      source={DefualtCover}
+                      style={{
+                        height: 50,
+                        width: 50,
+                        borderRadius: 4,
+                      }}
+                    />
+                  )}
+                  <View style={{ marginLeft: 8 }}>
+                    <Text
+                      style={{
+                        color: textColor,
+                        fontSize: 16,
+                        fontWeight: 500,
+                      }}
+                    >
+                      {album.title}
+                    </Text>
+                    <Text>{album.totalPosts} roots</Text>
+                  </View>
+                </View>
+
+                {checkedMarked === album._id ? (
+                  <Pressable style={{}} onPress={() => setCheckedMarked(null)}>
+                    <CheckmarkIcon size={24} color={textColor} />
+                  </Pressable>
+                ) : (
+                  <Pressable
+                    style={{
+                      height: 20,
+                      width: 20,
+                      borderWidth: 2,
+                      borderRadius: 10,
+                      borderColor: textColor,
+                      marginRight: 2,
+                    }}
+                    onPress={() => setCheckedMarked(album._id)}
+                  ></Pressable>
+                )}
+              </Pressable>
+            ))}
+          </View>
+          <View
+            style={{
+              alignSelf: "center",
+              position: "absolute",
+              bottom: 80,
+              shadowColor: "black",
+              shadowOffset: { width: 6, height: 4 },
+              shadowOpacity: 0.3,
+              shadowRadius: 10,
+              elevation: 6,
+            }}
+          >
+            <Pressable
+              style={{
+                paddingHorizontal: 18,
+                paddingVertical: 10,
+                backgroundColor: textColor,
+                borderRadius: 16,
+              }}
+              onPress={AddToSelectedAlbum}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: bgColor,
+                  fontSize: 18,
+                  fontWeight: 600,
+                }}
+              >
+                Done
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </BottomPage>
     </View>
   );
 };

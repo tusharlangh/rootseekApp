@@ -24,12 +24,13 @@ import BottomPage from "../bottom-page";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewAlbum from "./view-album";
+import DisplayAlbumsGoals from "./display-albums-goals";
 
 const Library = () => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
-  const width = 190;
+
   const options = ["Albums", "Goals"];
 
   const [createAlbumVisible, setCreateAlbumVisible] = useState(false);
@@ -63,7 +64,7 @@ const Library = () => {
     }
     try {
       const response = await axios.get(
-        "http://localhost:5002/library/creatre-default-album",
+        "http://localhost:5002/library/create-default-album",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -148,76 +149,46 @@ const Library = () => {
           </ScrollView>
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: 2,
-              alignItems: "center",
-              padding: 10,
-            }}
-          >
-            <FilterIcon size={20} color={textColor} />
-            <Text style={{ color: textColor, fontSize: 16 }}>Filter</Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              marginBottom: 100,
-            }}
-          >
-            {albums.map((album, index) => (
-              <Pressable
-                key={index}
-                style={{ padding: 10, position: "relative" }}
-                onPress={() => {
-                  setSelectedAlbum(album);
-                  setIsModalVisible(true);
+        {albums.length === 0 ? (
+          <View style={{ width: "100%", height: "100%" }}>
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "75%",
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 22,
+                  fontWeight: 700,
+                  color: textColor,
                 }}
               >
-                {album.picture === "" && (
-                  <Image
-                    source={DefualtCover}
-                    style={{ height: width, width: width, borderRadius: 12 }}
-                  />
-                )}
-
-                <View
-                  style={{
-                    marginLeft: 6,
-                    position: "absolute",
-                    bottom: 30,
-                    left: 18,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 24,
-                      fontWeight: 600,
-                      marginTop: 6,
-                      color: "rgba(255,255,255,0.8)",
-                    }}
-                  >
-                    {album.title}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 300,
-                      color: "rgba(255,255,255,0.8)",
-                    }}
-                  >
-                    {album.totalPosts} memories
-                  </Text>
-                </View>
-              </Pressable>
-            ))}
+                Create albums or goals
+              </Text>
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 16,
+                  fontWeight: 400,
+                  color: textColor,
+                }}
+              >
+                Reach your goals
+              </Text>
+            </View>
           </View>
-        </ScrollView>
+        ) : (
+          <DisplayAlbumsGoals
+            albums={albums}
+            setIsModalVisible={setIsModalVisible}
+            setSelectedAlbum={setSelectedAlbum}
+          />
+        )}
+
         <BottomPage
           isModalVisible={createAlbumVisible}
           setIsModalVisible={setCreateAlbumVisible}
