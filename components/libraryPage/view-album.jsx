@@ -16,6 +16,8 @@ import { Animated } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import ViewPost from "../viewPost";
+import BottomPage from "../bottom-page";
+import EditModal from "./edit-modal";
 
 const { width, height } = Dimensions.get("window");
 const ViewAlbum = ({ album, setIsModalVisible }) => {
@@ -28,6 +30,8 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
 
   const [viewPostVisible, setViewPostVisible] = useState(false);
   const [postIndex, setPostIndex] = useState(0);
+
+  const [editAlbumVisible, setEditAlbumVisible] = useState(false);
 
   useEffect(() => {
     //a normal useeffect will not work since scrollY is an changing object. The object remains same but the content inside of it is changing. Adding an event listener will attach with the value inside so whenever it changes it will call the useeffect.
@@ -136,6 +140,7 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
                   : "rgba(65, 65, 65, 0.9)",
             },
           ]}
+          onPress={() => setEditAlbumVisible(true)}
         >
           <Text
             style={[
@@ -483,6 +488,13 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
           viewPostVisible={viewPostVisible}
         />
       </Modal>
+      <BottomPage
+        height={92}
+        isModalVisible={editAlbumVisible}
+        setIsModalVisible={setEditAlbumVisible}
+      >
+        <EditModal album={album} setEditAlbumVisible={setEditAlbumVisible} />
+      </BottomPage>
     </LinearGradient>
   );
 };
