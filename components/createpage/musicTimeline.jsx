@@ -133,21 +133,20 @@ const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
     <View style={[styles.container]}>
       <View
         style={{
+          width: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          marginBottom: 20,
         }}
       >
         <View
           style={{
-            height: 2,
             width: 40,
-            backgroundColor:
-              colorMode === "light"
-                ? "rgba(172, 172, 172, 0.9)"
-                : "rgba(38, 43, 43, 0.9)",
-            marginBottom: 20,
+            height: 5,
             borderRadius: 10,
+            backgroundColor: "rgb(192, 192, 192)",
+            marginTop: -10,
           }}
         ></View>
       </View>

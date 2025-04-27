@@ -278,32 +278,6 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
         </Animated.View>
       </Animated.View>
 
-      {album.totalPosts === 0 && (
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 4,
-            justifyContent: "center",
-            alignItems: "center",
-            paddingHorizontal: 10,
-            paddingVertical: 6,
-            borderRadius: 15,
-            alignSelf: "center",
-            backgroundColor: textColor,
-            shadowColor: "black",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.1,
-            shadowRadius: 10,
-            elevation: 6,
-            marginTop: 30,
-          }}
-        >
-          <AddIcon size={18} color={bgColor} />
-          <Text style={{ color: bgColor, fontWeight: 700 }}>
-            Add roots to this album
-          </Text>
-        </View>
-      )}
       <Animated.ScrollView
         scrollEventThrottle={16} //every 16 miliseconds the scroll value will be checked.
         onScroll={Animated.event(
@@ -334,6 +308,30 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
             paddingBottom: 90,
           }}
         >
+          {album.totalPosts === 0 && (
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 4,
+                justifyContent: "center",
+                alignItems: "center",
+                paddingHorizontal: 10,
+                paddingVertical: 6,
+                borderRadius: 15,
+                alignSelf: "center",
+                shadowColor: "black",
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.1,
+                shadowRadius: 10,
+                elevation: 6,
+                marginTop: 30,
+              }}
+            >
+              <Text style={{ color: textColor, fontWeight: 500, fontSize: 16 }}>
+                Add roots to this album
+              </Text>
+            </View>
+          )}
           {album.posts.map((post, index) => (
             <Pressable
               key={index}

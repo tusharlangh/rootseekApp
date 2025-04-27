@@ -10,18 +10,24 @@ const TagsModal = ({ tags, handleTags }) => {
 
   return (
     <View>
-      <View style={styles.center}>
+      <View
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: 20,
+        }}
+      >
         <View
-          style={[
-            styles.line,
-            {
-              backgroundColor:
-                colorMode === "light"
-                  ? "rgba(172, 172, 172, 0.9)"
-                  : "rgba(38, 43, 43, 0.1)",
-            },
-          ]}
-        />
+          style={{
+            width: 40,
+            height: 5,
+            borderRadius: 10,
+            backgroundColor: "rgb(192, 192, 192)",
+            marginTop: -10,
+          }}
+        ></View>
       </View>
 
       <Text style={[styles.label, { color: textColor }]}>Enter tags:</Text>

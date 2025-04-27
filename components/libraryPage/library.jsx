@@ -52,9 +52,10 @@ const Library = () => {
         );
         setAlbums(response.data);
       } catch (error) {}
+      r;
     };
     fetchPosts();
-  }, []);
+  }, [createAlbumVisible, isModalVisible]);
 
   const createAlbum = async () => {
     const token = await AsyncStorage.getItem("token");

@@ -294,7 +294,10 @@ const Search = () => {
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              style={{ marginTop: 10 }}
+              style={{
+                marginTop: 10,
+                zIndex: 1,
+              }}
             >
               <View
                 style={{

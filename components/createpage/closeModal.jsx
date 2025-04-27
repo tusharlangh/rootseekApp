@@ -1,28 +1,29 @@
 import { useColorMode } from "native-base";
 import { View, TouchableOpacity, Text } from "react-native";
+import { CancelIcon, TrashIcon } from "../icons";
 
 const CloseModal = ({ setIsCloseModalVisible, handleClose }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
 
   return (
-    <View>
+    <View style={{ marginHorizontal: -20 }}>
       <View>
         <Text
           style={{
             color: textColor,
             fontSize: 18,
-            fontWeight: 500,
+            fontWeight: 600,
             textAlign: "center",
           }}
         >
-          If you leave, your post will not be saved.
+          If you leave, your root will not be saved
         </Text>
         <View
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: 20,
+
             marginTop: 20,
           }}
         >
@@ -31,7 +32,19 @@ const CloseModal = ({ setIsCloseModalVisible, handleClose }) => {
               setIsCloseModalVisible(false);
               handleClose();
             }}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              borderTopWidth: 1,
+              borderColor: colorMode === "light" ? "#DCDCDC" : "#242323",
+              width: "100%",
+              padding: 14,
+              gap: 10,
+            }}
           >
+            <TrashIcon size={26} color="red" />
             <Text
               style={{
                 textAlign: "center",
@@ -43,9 +56,28 @@ const CloseModal = ({ setIsCloseModalVisible, handleClose }) => {
               Discard post
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setIsCloseModalVisible(false)}>
+
+          <TouchableOpacity
+            onPress={() => setIsCloseModalVisible(false)}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              borderTopWidth: 1,
+              borderColor: colorMode === "light" ? "#DCDCDC" : "#242323",
+              width: "100%",
+              padding: 14,
+              gap: 10,
+            }}
+          >
             <Text
-              style={{ textAlign: "center", fontSize: 16, fontWeight: 400 }}
+              style={{
+                textAlign: "center",
+                fontSize: 16,
+                fontWeight: 500,
+                color: textColor,
+              }}
             >
               Cancel
             </Text>

@@ -49,7 +49,7 @@ const ViewPost = ({
 
   const [albums, setAlbums] = useState([]);
   const [isAddToLibraryModal, setIsAddToLibraryModal] = useState(false);
-  const [checkedMarked, setCheckedMarked] = useState(null);
+  const [checkedMarked, setCheckedMarked] = useState(posts[currIndex].albumId);
   const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
@@ -170,7 +170,6 @@ const ViewPost = ({
         }
       );
       setIsAddToLibraryModal(false);
-      setCheckedMarked(null);
       setSelectedPost(null);
       console.log(response.data.message);
     } catch (error) {
@@ -389,12 +388,25 @@ const ViewPost = ({
                     setSelectedPost(item);
                   }}
                 >
-                  <AddLibraryIcon
-                    size={28}
-                    color={
-                      colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"
-                    }
-                  />
+                  {!item.albumId ? (
+                    <AddLibraryIcon
+                      size={28}
+                      color={
+                        colorMode === "light"
+                          ? "black"
+                          : "rgba(255,255,255,0.8)"
+                      }
+                    />
+                  ) : (
+                    <CheckmarkIcon
+                      size={28}
+                      color={
+                        colorMode === "light"
+                          ? "black"
+                          : "rgba(255,255,255,0.8)"
+                      }
+                    />
+                  )}
                 </Pressable>
                 <Pressable
                   style={{
@@ -534,6 +546,7 @@ const ViewPost = ({
               fontSize: 18,
               fontWeight: 600,
               marginTop: 10,
+              color: colorMode === "light" ? "black" : "white",
             }}
           >
             Pick an album or goal to add to
@@ -582,14 +595,16 @@ const ViewPost = ({
                   <View style={{ marginLeft: 8 }}>
                     <Text
                       style={{
-                        color: textColor,
+                        color: colorMode === "light" ? "black" : "white",
                         fontSize: 16,
                         fontWeight: 500,
                       }}
                     >
                       {album.title}
                     </Text>
-                    <Text>{album.totalPosts} roots</Text>
+                    <Text style={{ color: textColor }}>
+                      {album.totalPosts} roots
+                    </Text>
                   </View>
                 </View>
 
@@ -629,7 +644,7 @@ const ViewPost = ({
               style={{
                 paddingHorizontal: 18,
                 paddingVertical: 10,
-                backgroundColor: textColor,
+                backgroundColor: colorMode === "light" ? "black" : "white",
                 borderRadius: 16,
               }}
               onPress={AddToSelectedAlbum}
