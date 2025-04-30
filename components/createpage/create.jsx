@@ -229,7 +229,7 @@ const Create = ({ visible, onClose }) => {
       <BottomPage
         isModalVisible={isCloseModalVisible}
         setIsModalVisible={setIsCloseModalVisible}
-        height={19}
+        height={22}
       >
         <CloseModal
           setIsCloseModalVisible={setIsCloseModalVisible}

@@ -9,13 +9,21 @@ import {
   FlatList,
 } from "react-native";
 import DisplayPosts from "./display-posts";
-import { createContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { SearchIconOutline, ShuffleIcon } from "./icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useColorMode } from "native-base";
 import ShuffledPost from "./shuffledPost";
 import moment from "moment";
+import { RefreshValue } from "./navbar";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const PostsContext = createContext();
 
@@ -33,6 +41,15 @@ const Search = () => {
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
 
   const [selectedFilter, setSelectedFilter] = useState("all");
+
+  const { refreshValue, setRefreshValue } = useContext(RefreshValue);
+
+  useFocusEffect(
+    useCallback(() => {
+      setRefreshValue((prev) => prev + 1);
+    }, [])
+  );
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -56,7 +73,7 @@ const Search = () => {
       }
     };
     fetchPosts();
-  }, [search]);
+  }, [search, refreshValue]);
 
   const assignGradientColors = (posts, isLight) => {
     const palette = isLight

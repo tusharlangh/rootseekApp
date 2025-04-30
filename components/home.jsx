@@ -11,13 +11,15 @@ import DisplayPosts from "./display-posts";
 import { useFonts } from "expo-font";
 import { GrandHotel_400Regular } from "@expo-google-fonts/grand-hotel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import axios, { Axios } from "axios";
 import { useColorMode } from "native-base";
 import { AddIcon, CloseIcon, ShuffleIcon } from "./icons";
 import Create from "./createpage/create";
 import ViewPost from "./viewPost";
 import DisplayHomePosts from "./display-home-posts";
+import { RefreshValue } from "./navbar";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -30,8 +32,16 @@ const Home = () => {
   const textColor = colorMode === "light" ? "black" : "white";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
 
+  const { refreshValue, setRefreshValue } = useContext(RefreshValue);
+
   const [createVisible, setCreateVisible] = useState(false);
   const [shufflePostVisible, setShufflePostVisible] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      setRefreshValue((prev) => prev + 1);
+    }, [])
+  );
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -57,7 +67,7 @@ const Home = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [refreshValue, createVisible]);
 
   const activateShufflePost = async () => {
     try {

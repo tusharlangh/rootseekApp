@@ -12,10 +12,13 @@ import {
 } from "react-native";
 import { DefualtCover } from "../../additional";
 import { BlurView } from "expo-blur";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CancelIcon } from "../icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import pickImage from "../createpage/ImagePicker";
+import { getNativeSourceAndFullInitialStatusForLoadAsync } from "expo-av/build/AV";
+import { RefreshValue } from "../navbar";
 
 const EditModal = ({ album, setEditAlbumVisible }) => {
   const { colorMode } = useColorMode();
@@ -25,27 +28,47 @@ const EditModal = ({ album, setEditAlbumVisible }) => {
   const [title, setTitle] = useState(album.title);
   const [description, setDescription] = useState(album.description);
   const [posts, setPosts] = useState(album.posts);
+  const [picture, setPicture] = useState(album.picture);
+
+  const { refreshValue, setRefreshValue } = useContext(RefreshValue);
+
+  const __dirname =
+    "file:///Users/tusharlanghnoda/Desktop/Projects/RootSeek/rootseek/server";
 
   const saveChanges = async () => {
     const token = await AsyncStorage.getItem("token");
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+
+    formData.append("posts", JSON.stringify(posts));
+
+    if (picture !== album.picture) {
+      formData.append("picture", {
+        uri: picture,
+        name: "image.jpg",
+        type: "image/jpeg",
+      });
+    }
+
     try {
       const response = await axios.patch(
         `http://localhost:5002/library/album/edit/${album._id}`,
-        {
-          title: title,
-          description: description,
-          posts,
-        },
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
+
       setEditAlbumVisible(false);
+      setRefreshValue((prev) => prev + 1);
       console.log(response.data.message);
     } catch (error) {
-      console.log(error.message);
+      console.log(error.response?.data?.message || "Unknown error");
     }
   };
 
@@ -69,39 +92,43 @@ const EditModal = ({ album, setEditAlbumVisible }) => {
     }
   };
 
+  const openPickImage = () => {
+    pickImage(setPicture);
+  };
+
   return (
-    <View>
+    <View style={{ height: "100%" }}>
       <View
         style={{
+          width: "100%",
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: "center",
           alignItems: "center",
-          marginBottom: 10,
         }}
       >
-        <TouchableOpacity onPress={() => setEditAlbumVisible(false)}>
-          <Text style={{ color: textColor, fontSize: 14, fontWeight: 400 }}>
-            Cancel
-          </Text>
-        </TouchableOpacity>
-
-        <Text
+        <View
           style={{
-            color: textColor,
-            fontSize: 16,
-            fontWeight: 600,
-            marginRight: 10,
+            width: 40,
+            height: 5,
+            borderRadius: 10,
+            backgroundColor: "rgb(192, 192, 192)",
+            marginTop: -10,
           }}
-        >
-          Edit album
-        </Text>
-        <TouchableOpacity onPress={saveChanges}>
-          <Text style={{ color: textColor, fontSize: 14, fontWeight: 400 }}>
-            Save
-          </Text>
-        </TouchableOpacity>
+        ></View>
       </View>
+
+      <Text
+        style={{
+          color: textColor,
+          fontSize: 16,
+          fontWeight: 600,
+          textAlign: "center",
+          marginTop: 10,
+        }}
+      >
+        Edit album
+      </Text>
+
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{
@@ -116,9 +143,20 @@ const EditModal = ({ album, setEditAlbumVisible }) => {
             marginTop: 24,
           }}
         >
-          {album.picture === "" && (
+          {!picture ? (
             <Image
               source={DefualtCover}
+              style={{
+                height: 200,
+                width: 200,
+                borderRadius: 12,
+              }}
+            />
+          ) : (
+            <Image
+              source={{
+                uri: album.picture === picture ? __dirname + picture : picture,
+              }}
               style={{
                 height: 200,
                 width: 200,
@@ -131,8 +169,8 @@ const EditModal = ({ album, setEditAlbumVisible }) => {
               style={{
                 borderRadius: 20,
                 overflow: "hidden", // Ensures blur effect stays within borders
-                marginLeft: 10,
               }}
+              onPress={openPickImage}
             >
               <View
                 style={{
@@ -248,6 +286,39 @@ const EditModal = ({ album, setEditAlbumVisible }) => {
           ))}
         </View>
       </ScrollView>
+      <View
+        style={{
+          alignSelf: "center",
+          position: "absolute",
+          bottom: 60,
+          shadowColor: "black",
+          shadowOffset: { width: 6, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 10,
+          elevation: 6,
+        }}
+      >
+        <TouchableOpacity
+          style={{
+            paddingHorizontal: 18,
+            paddingVertical: 10,
+            backgroundColor: colorMode === "light" ? "black" : "white",
+            borderRadius: 16,
+          }}
+          onPress={saveChanges}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              color: bgColor,
+              fontSize: 18,
+              fontWeight: 600,
+            }}
+          >
+            Save
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -262,7 +333,6 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
     position: "absolute",
   },
   blurCard: {

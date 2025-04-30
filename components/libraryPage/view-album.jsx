@@ -13,14 +13,21 @@ import { AddIcon, LeftArrowIcon, ShareIcon, ThreeDotsIcon } from "../icons";
 import { DefualtCover } from "../../additional";
 import { BlurView } from "expo-blur";
 import { Animated } from "react-native";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import ViewPost from "../viewPost";
 import BottomPage from "../bottom-page";
 import EditModal from "./edit-modal";
+import { RefreshValue } from "../navbar";
+import { AlbumsContext } from "./library";
 
 const { width, height } = Dimensions.get("window");
-const ViewAlbum = ({ album, setIsModalVisible }) => {
+
+const ViewAlbum = ({ albumIndex, setIsModalVisible }) => {
+  const { refreshValue, setRefreshValue } = useContext(RefreshValue);
+  const { albums } = useContext(AlbumsContext);
+  const album = albums[albumIndex];
+
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
@@ -67,6 +74,9 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
     const ht = hashTags.split("#").filter((h) => h.length > 0);
     return ht;
   };
+
+  const __dirname =
+    "file:///Users/tusharlanghnoda/Desktop/Projects/RootSeek/rootseek/server";
 
   return (
     <LinearGradient
@@ -181,9 +191,28 @@ const ViewAlbum = ({ album, setIsModalVisible }) => {
             elevation: 6,
           }}
         >
-          {album.picture === "" && (
+          {!album.picture ? (
             <Animated.Image
               source={DefualtCover}
+              style={{
+                height: 250,
+                width: 250,
+                borderRadius: 12,
+
+                transform: [
+                  {
+                    scale: scrollY.interpolate({
+                      inputRange: [0, 400],
+                      outputRange: [1, 0.5],
+                      extrapolate: "clamp",
+                    }),
+                  },
+                ],
+              }}
+            />
+          ) : (
+            <Animated.Image
+              source={{ uri: __dirname + album.picture }}
               style={{
                 height: 250,
                 width: 250,

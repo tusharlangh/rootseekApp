@@ -8,6 +8,9 @@ import {
   Image,
   Dimensions,
   Pressable,
+  StyleSheet,
+  Animated,
+  Easing,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FlatList } from "react-native";
@@ -26,6 +29,9 @@ import { PostsContext } from "./search";
 import BottomPage from "./bottom-page";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DefualtCover } from "../additional";
+import { RefreshValue } from "./navbar";
+import ContentWithoutPicture from "./contentWithoutPicture";
+import ContentWithPicture from "./contentWithPicture";
 
 const { width, height } = Dimensions.get("window");
 
@@ -37,7 +43,7 @@ const ViewPost = ({
 }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#0D0D0D" : "#8E8D93";
-  const bgColor = colorMode === "light" ? "#ECEBEF" : "black";
+  const bgColor = "black";
   const __dirname =
     "file:///Users/tusharlanghnoda/Desktop/Projects/RootSeek/rootseek/server";
 
@@ -51,6 +57,38 @@ const ViewPost = ({
   const [isAddToLibraryModal, setIsAddToLibraryModal] = useState(false);
   const [checkedMarked, setCheckedMarked] = useState(posts[currIndex].albumId);
   const [selectedPost, setSelectedPost] = useState(null);
+
+  const { refreshValue, setRefreshValue } = useContext(RefreshValue);
+
+  const [showMoreContent, setShowMoreContent] = useState(false);
+  const animatedController = useRef(new Animated.Value(0)).current;
+  const [contentHeight, setContentHeight] = useState(0);
+
+  const toggleContent = () => {
+    Animated.spring(animatedController, {
+      toValue: showMoreContent ? 0 : 1,
+      friction: 8,
+      tension: 40,
+    }).start(() => {
+      setShowMoreContent(!showMoreContent);
+    });
+  };
+
+  const translateYInterpolate = animatedController.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -200],
+  });
+
+  const opacityInterpolate = animatedController.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.7, 1],
+  });
+
+  useEffect(() => {
+    if (posts[currIndex]) {
+      setCheckedMarked(posts[currIndex].albumId);
+    }
+  }, [currIndex]);
 
   useEffect(() => {
     const fetchSong = async () => {
@@ -134,15 +172,6 @@ const ViewPost = ({
   */
   }
 
-  const FormatTime = (post) => {
-    const formattedTime = new Date(post.date).toLocaleDateString("en-US", {
-      month: "long",
-      day: "2-digit",
-      year: "numeric",
-    });
-    return formattedTime;
-  };
-
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 90 };
 
   const onViewableItemsChanged = useRef(({ viewableItems }) => {
@@ -150,6 +179,7 @@ const ViewPost = ({
       const index = viewableItems[0].index;
       if (index !== currIndex) {
         setCurrIndex(index);
+        setRefreshValue((prev) => prev + 1);
       }
     }
   }).current;
@@ -171,6 +201,7 @@ const ViewPost = ({
       );
       setIsAddToLibraryModal(false);
       setSelectedPost(null);
+      setRefreshValue((prev) => prev + 1);
       console.log(response.data.message);
     } catch (error) {
       console.log(error.data);
@@ -196,324 +227,34 @@ const ViewPost = ({
         })}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
-        renderItem={({ item }) => (
-          <View
-            style={{
-              backgroundColor: bgColor,
-              width,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-            }}
-          >
-            <View
-              style={{
-                position: "absolute",
-                top: 70,
-                zIndex: 100,
-              }}
-            >
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                }}
-              >
-                <Pressable
-                  style={[
-                    {
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      paddingLeft: 20,
-                    },
-                  ]}
-                  onPress={() => {
-                    stopPreviousSound();
-                    setViewPostVisible(false);
-                  }}
-                >
-                  <LeftArrowIcon
-                    size={28}
-                    color={colorMode === "light" ? "black" : "white"}
-                  />
-                </Pressable>
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontWeight: 700,
-                    color: colorMode === "light" ? "black" : "white",
-                    paddingRight: 42,
-                  }}
-                >
-                  {FormatTime(item)}
-                </Text>
-                <Text></Text>
-              </View>
-            </View>
-            <LinearGradient
-              colors={[item.gradientColor, bgColor, bgColor]}
-              style={{
-                height,
-                width,
-                position: "relative",
-              }}
-            >
-              <Image
-                source={{
-                  uri: __dirname + item.picture,
-                }}
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  objectFit: "cover",
-                  position: "absolute",
-                }}
-              />
-            </LinearGradient>
-
-            <BlurView
-              intensity={0}
-              tint={colorMode === "light" ? "light" : "dark"}
-              style={{
-                gap: 10,
-                paddingHorizontal: 20,
-                borderRadius: 30,
-                overflow: "hidden",
-                padding: 30,
-                marginBottom: 30,
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                left: 0,
-              }}
-            >
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                  gap: 20,
-                }}
-              >
-                <View
-                  style={[
-                    {
-                      width: "100%",
-                      justifyContent: "space-between",
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      marginBottom: 14,
-                    },
-                  ]}
-                >
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      fontSize: 18,
-                      fontWeight: "600",
-                      color:
-                        colorMode === "light"
-                          ? "black"
-                          : "rgba(255,255,255,0.8)",
-                    }}
-                  >
-                    {item.hashTags}
-                  </Text>
-                  <Pressable style={[{}]}>
-                    <ThreeDotsIcon
-                      size={28}
-                      color={
-                        colorMode === "light"
-                          ? "black"
-                          : "rgba(255,255,255,0.8)"
-                      }
-                    />
-                  </Pressable>
-                </View>
-              </View>
-              <Text
-                style={{
-                  fontSize: 38,
-                  fontWeight: "600",
-                  color:
-                    colorMode === "light"
-                      ? "rgba(0, 0, 0, 0.8)"
-                      : "rgba(245, 245, 245, 0.9)",
-                  letterSpacing: -1,
-                }}
-              >
-                {item.title}
-              </Text>
-              <View style={{ maxHeight: 200 }}>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: "400",
-                      color:
-                        colorMode === "light"
-                          ? "rgba(0, 0, 0, 0.9)"
-                          : "rgba(245, 245, 245, 0.9)",
-                    }}
-                  >
-                    {item.content}
-                  </Text>
-                </ScrollView>
-              </View>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 30,
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                  marginTop: 0,
-                  marginBottom: 10,
-                }}
-              >
-                <Pressable
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginTop: 4,
-                  }}
-                  onPress={() => {
-                    setIsAddToLibraryModal(true);
-                    setSelectedPost(item);
-                  }}
-                >
-                  {!item.albumId ? (
-                    <AddLibraryIcon
-                      size={28}
-                      color={
-                        colorMode === "light"
-                          ? "black"
-                          : "rgba(255,255,255,0.8)"
-                      }
-                    />
-                  ) : (
-                    <CheckmarkIcon
-                      size={28}
-                      color={
-                        colorMode === "light"
-                          ? "black"
-                          : "rgba(255,255,255,0.8)"
-                      }
-                    />
-                  )}
-                </Pressable>
-                <Pressable
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <ShareIcon
-                    size={28}
-                    color={
-                      colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"
-                    }
-                  />
-                </Pressable>
-              </View>
-              {item.trackId !== "undefined" && (
-                <View
-                  style={{
-                    width: "100%",
-                    height: 1,
-                    backgroundColor:
-                      colorMode === "light" ? "#D4D5DA" : "#282828",
-                    marginBottom: 10,
-                  }}
-                ></View>
-              )}
-
-              {item.trackId !== "undefined" && (
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: 14,
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <View
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 14,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Image
-                      source={{ uri: item.trackAlbumCover }}
-                      style={{
-                        width: 58,
-                        height: 58,
-                        borderRadius: 6,
-                      }}
-                    />
-                    <View>
-                      <Text
-                        style={{
-                          fontWeight: 600,
-                          fontSize: 18,
-                          color: colorMode === "light" ? "black" : "white",
-                          width: 200,
-                        }}
-                        numberOfLines={1}
-                      >
-                        {item.trackName}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          color: colorMode === "light" ? "black" : "white",
-                        }}
-                      >
-                        {item.trackArtist}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <Pressable onPress={toggleMute}>
-                    {item.trackId !== "undefined" ? (
-                      mute ? (
-                        <VolumeDownIcon
-                          size={28}
-                          color={
-                            colorMode === "light"
-                              ? "black"
-                              : "rgba(255,255,255,0.8)"
-                          }
-                        />
-                      ) : (
-                        <VolumeUpIcon
-                          size={28}
-                          color={
-                            colorMode === "light"
-                              ? "black"
-                              : "rgba(255,255,255,0.8)"
-                          }
-                        />
-                      )
-                    ) : (
-                      ""
-                    )}
-                  </Pressable>
-                </View>
-              )}
-            </BlurView>
-          </View>
-        )}
+        renderItem={({ item }) =>
+          !item.picture ? (
+            <ContentWithoutPicture
+              item={item}
+              toggleMute={toggleMute}
+              mute={mute}
+              stopPreviousSound={stopPreviousSound}
+              setIsAddToLibraryModal={setIsAddToLibraryModal}
+              setSelectedPost={setSelectedPost}
+              setViewPostVisible={setViewPostVisible}
+            />
+          ) : (
+            <ContentWithPicture
+              item={item}
+              toggleMute={toggleMute}
+              translateYInterpolate={translateYInterpolate}
+              opacityInterpolate={opacityInterpolate}
+              showMoreContent={showMoreContent}
+              mute={mute}
+              stopPreviousSound={stopPreviousSound}
+              toggleContent={toggleContent}
+              setIsAddToLibraryModal={setIsAddToLibraryModal}
+              setSelectedPost={setSelectedPost}
+              setViewPostVisible={setViewPostVisible}
+              setContentHeight={setContentHeight}
+            />
+          )
+        }
       />
       <BottomPage
         isModalVisible={isAddToLibraryModal}
@@ -580,16 +321,18 @@ const ViewPost = ({
                     display: "flex",
                     flexDirection: "row",
                     alignItems: "center",
+                    gap: 5,
                   }}
                 >
-                  {album.picture === "" && (
+                  {!album.picture ? (
                     <Image
                       source={DefualtCover}
-                      style={{
-                        height: 50,
-                        width: 50,
-                        borderRadius: 4,
-                      }}
+                      style={{ height: 50, width: 50, borderRadius: 4 }}
+                    />
+                  ) : (
+                    <Image
+                      source={{ uri: __dirname + album.picture }}
+                      style={{ height: 50, width: 50, borderRadius: 4 }}
                     />
                   )}
                   <View style={{ marginLeft: 8 }}>
@@ -632,7 +375,7 @@ const ViewPost = ({
             style={{
               alignSelf: "center",
               position: "absolute",
-              bottom: 80,
+              bottom: 60,
               shadowColor: "black",
               shadowOffset: { width: 6, height: 4 },
               shadowOpacity: 0.3,
