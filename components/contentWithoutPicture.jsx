@@ -32,7 +32,7 @@ const ContentWithoutPicture = ({
 }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#0D0D0D" : "#8E8D93";
-  const bgColor = "black";
+  const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
 
   const FormatTime = (post) => {
     const formattedTime = new Date(post.date).toLocaleDateString("en-US", {
@@ -102,7 +102,13 @@ const ContentWithoutPicture = ({
         </View>
       </View>
       <LinearGradient
-        colors={[item.gradientColor, bgColor, bgColor]}
+        colors={[
+          colorMode === "light"
+            ? item.linearGradient.light
+            : item.linearGradient.dark,
+          bgColor,
+          bgColor,
+        ]}
         style={{
           height,
           width,
@@ -157,14 +163,50 @@ const ContentWithoutPicture = ({
             >
               {item.hashTags}
             </Text>
-            <Pressable style={[{}]}>
-              <ThreeDotsIcon
-                size={28}
-                color={
-                  colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"
-                }
-              />
-            </Pressable>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: 14,
+                alignItems: "center",
+              }}
+            >
+              <Pressable
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  setIsAddToLibraryModal(true);
+                  setSelectedPost(item);
+                }}
+              >
+                {!item.albumId ? (
+                  <AddLibraryIcon
+                    size={28}
+                    color={
+                      colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"
+                    }
+                  />
+                ) : (
+                  <CheckmarkIcon
+                    size={28}
+                    color={
+                      colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"
+                    }
+                  />
+                )}
+              </Pressable>
+              <Pressable style={[{}]}>
+                <ThreeDotsIcon
+                  size={28}
+                  color={
+                    colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"
+                  }
+                />
+              </Pressable>
+            </View>
           </View>
         </View>
         <Text
@@ -180,7 +222,7 @@ const ContentWithoutPicture = ({
         >
           {item.title}
         </Text>
-        <View style={{ maxHeight: 200 }}>
+        <View style={{ maxHeight: 300 }}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <Text
               style={{
@@ -206,48 +248,7 @@ const ContentWithoutPicture = ({
             marginTop: 0,
             marginBottom: 10,
           }}
-        >
-          <Pressable
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 4,
-            }}
-            onPress={() => {
-              setIsAddToLibraryModal(true);
-              setSelectedPost(item);
-            }}
-          >
-            {!item.albumId ? (
-              <AddLibraryIcon
-                size={28}
-                color={
-                  colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"
-                }
-              />
-            ) : (
-              <CheckmarkIcon
-                size={28}
-                color={
-                  colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"
-                }
-              />
-            )}
-          </Pressable>
-          <Pressable
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <ShareIcon
-              size={28}
-              color={colorMode === "light" ? "black" : "rgba(255,255,255,0.8)"}
-            />
-          </Pressable>
-        </View>
+        ></View>
         {item.trackId !== "undefined" && (
           <View
             style={{

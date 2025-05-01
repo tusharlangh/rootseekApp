@@ -45,7 +45,7 @@ const Navbar = () => {
           tabBar={(props) => (
             <>
               <BlurView
-                intensity={10}
+                intensity={20}
                 style={{
                   position: "absolute",
                   bottom: 0,

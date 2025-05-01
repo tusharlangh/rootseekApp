@@ -395,7 +395,7 @@ const ViewPost = ({
               <Text
                 style={{
                   textAlign: "center",
-                  color: bgColor,
+                  color: colorMode === "light" ? "white" : "black",
                   fontSize: 18,
                   fontWeight: 600,
                 }}

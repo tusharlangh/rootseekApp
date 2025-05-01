@@ -49,7 +49,7 @@ const ContentWithPicture = ({
 }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#0D0D0D" : "#8E8D93";
-  const bgColor = "black";
+  const bgColor = "#1D1E1F";
   const __dirname =
     "file:///Users/tusharlanghnoda/Desktop/Projects/RootSeek/rootseek/server";
 
@@ -85,7 +85,7 @@ const ContentWithPicture = ({
       }}
     >
       <LinearGradient
-        colors={[item.picture ? bgColor : item.gradientColor, bgColor, bgColor]}
+        colors={[bgColor, bgColor, bgColor]}
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
         style={StyleSheet.absoluteFill}
@@ -123,10 +123,7 @@ const ContentWithPicture = ({
                 setViewPostVisible(false);
               }}
             >
-              <LeftArrowIcon
-                size={24}
-                color={colorMode === "light" ? "black" : "white"}
-              />
+              <LeftArrowIcon size={24} color="white" />
             </Pressable>
           </View>
 
@@ -134,7 +131,7 @@ const ContentWithPicture = ({
             style={{
               fontSize: 18,
               fontWeight: 700,
-              color: colorMode === "light" ? "black" : "white",
+              color: "white",
               marginRight: 42,
               padding: 4,
               borderRadius: 10,
@@ -184,7 +181,11 @@ const ContentWithPicture = ({
             <View style={{ position: "relative" }}>
               <Pressable
                 style={{ position: "relative" }}
-                onPress={toggleContent}
+                onPress={() => {
+                  if (item.content.length > 280) {
+                    toggleContent();
+                  }
+                }}
               >
                 <Image
                   source={{
@@ -293,7 +294,9 @@ const ContentWithPicture = ({
             </View>
 
             <Animated.View
-              style={{ transform: [{ translateY: translateYInterpolate }] }}
+              style={{
+                transform: [{ translateY: translateYInterpolate }],
+              }}
             >
               <LinearGradient
                 colors={contentAreaGradient}
@@ -326,14 +329,12 @@ const ContentWithPicture = ({
                       style={{
                         fontSize: 18,
                         fontWeight: "600",
-                        color:
-                          colorMode === "light"
-                            ? "black"
-                            : "rgba(255,255,255,1)",
+                        color: "white",
                       }}
                     >
                       {item.hashTags}
                     </Text>
+
                     <View
                       style={{
                         display: "flex",
@@ -360,14 +361,7 @@ const ContentWithPicture = ({
                         )}
                       </Pressable>
                       <Pressable style={[{}]}>
-                        <ThreeDotsIcon
-                          size={28}
-                          color={
-                            colorMode === "light"
-                              ? "black"
-                              : "rgba(255,255,255,0.8)"
-                          }
-                        />
+                        <ThreeDotsIcon size={28} color="white" />
                       </Pressable>
                     </View>
                   </View>

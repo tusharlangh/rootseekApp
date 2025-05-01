@@ -1,15 +1,17 @@
-import LoginNavigator from './components/login-section/login-navigator';
+import LoginNavigator from "./components/login-section/login-navigator";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Navbar from './components/navbar';
+import Navbar from "./components/navbar";
 import { Box, NativeBaseProvider, extendTheme } from "native-base";
-import { useState, useEffect } from 'react';
-import { Appearance } from 'react-native';
+import { useState, useEffect } from "react";
+import { Appearance } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [theme, setTheme] = useState({ mode: Appearance.getColorScheme() || "light" });
+  const [theme, setTheme] = useState({
+    mode: Appearance.getColorScheme() || "light",
+  });
 
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
@@ -26,10 +28,10 @@ export default function App() {
   return (
     <NativeBaseProvider theme={nativeBaseTheme}>
       <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="User" component={LoginNavigator} />
-            <Stack.Screen name="Navbar" component={Navbar} />
-          </Stack.Navigator>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {/*<Stack.Screen name="User" component={LoginNavigator} />*/}
+          <Stack.Screen name="Navbar" component={Navbar} />
+        </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
   );

@@ -79,6 +79,7 @@ const EditModal = ({ album, setEditAlbumVisible }) => {
         `http://localhost:5002/library/album/post-delete/${album._id}`,
         {
           postId: postId,
+          posts: posts,
         },
         {
           headers: {

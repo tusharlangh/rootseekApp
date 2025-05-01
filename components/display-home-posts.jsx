@@ -61,8 +61,7 @@ const DisplayHomePosts = ({ posts }) => {
   return (
     <View style={{ flex: 1, padding: 2 }}>
       <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
+        horizontal
         style={{
           flex: 1,
           marginTop: 12,
@@ -87,6 +86,7 @@ const DisplayHomePosts = ({ posts }) => {
                   {
                     backgroundColor:
                       colorMode === "light" ? "white" : "#161618",
+                    width: width - 20,
                   },
                 ]}
                 onPress={() => {
