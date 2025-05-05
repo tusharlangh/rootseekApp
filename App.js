@@ -29,7 +29,7 @@ export default function App() {
     <NativeBaseProvider theme={nativeBaseTheme}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {/*<Stack.Screen name="User" component={LoginNavigator} />*/}
+          <Stack.Screen name="User" component={LoginNavigator} />
           <Stack.Screen name="Navbar" component={Navbar} />
         </Stack.Navigator>
       </NavigationContainer>

@@ -54,7 +54,7 @@ const Navbar = () => {
                   height: 80,
                   backgroundColor:
                     colorMode === "light"
-                      ? "rgba(242,241,245,0.95)"
+                      ? "rgba(247,247,249,0.95)"
                       : "rgba(0,0,0,0.86)",
                 }}
               />

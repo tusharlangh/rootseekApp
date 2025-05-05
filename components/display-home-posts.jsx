@@ -18,31 +18,9 @@ const { height, width } = Dimensions.get("window");
 const DisplayHomePosts = ({ posts }) => {
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#8A898D" : "#8E8D93";
-  const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
+  const bgColor = colorMode === "light" ? "#F7F7F9" : "black";
   const [postIndex, setPostIndex] = useState(0);
   const [viewPostVisible, setViewPostVisible] = useState(false);
-
-  if (!posts || posts.length === 0) {
-    return (
-      <View style={{ height: "100%", width: "100%", paddingBottom: 100 }}>
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flex: 1,
-          }}
-        >
-          <Text style={{ textAlign: "center", fontSize: 22, fontWeight: 700 }}>
-            Add roots
-          </Text>
-          <Text style={{ textAlign: "center", fontSize: 16, fontWeight: 400 }}>
-            Roots will emphasize your life
-          </Text>
-        </View>
-      </View>
-    );
-  }
 
   const FormatTime = (post) => {
     const formattedTime = new Date(post.date).toLocaleTimeString("en-US", {
@@ -62,6 +40,7 @@ const DisplayHomePosts = ({ posts }) => {
     <View style={{ flex: 1, padding: 2 }}>
       <ScrollView
         horizontal
+        showsHorizontalScrollIndicator={false}
         style={{
           flex: 1,
           marginTop: 12,
@@ -71,13 +50,13 @@ const DisplayHomePosts = ({ posts }) => {
         <View
           style={{
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
             flex: 1,
             gap: 10,
             paddingBottom: 30,
           }}
         >
-          <View style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <View style={{ display: "flex", flexDirection: "row", gap: 8 }}>
             {posts.map((post, index) => (
               <Pressable
                 key={index}
@@ -86,7 +65,7 @@ const DisplayHomePosts = ({ posts }) => {
                   {
                     backgroundColor:
                       colorMode === "light" ? "white" : "#161618",
-                    width: width - 20,
+                    width: 250,
                   },
                 ]}
                 onPress={() => {
@@ -107,7 +86,7 @@ const DisplayHomePosts = ({ posts }) => {
                       styles.postTitle,
                       {
                         color: colorMode === "light" ? "black" : "white",
-                        flex: 7.5,
+                        flex: 3.5,
                       },
                     ]}
                     numberOfLines={1}
@@ -131,9 +110,9 @@ const DisplayHomePosts = ({ posts }) => {
                   <Text
                     style={[
                       styles.postContent,
-                      { color: colorMode === "light" ? "black" : "white" },
+                      { color: colorMode === "light" ? "#3D3D3D" : "white" },
                     ]}
-                    numberOfLines={4}
+                    numberOfLines={2}
                   >
                     {post.content}
                   </Text>
@@ -153,7 +132,7 @@ const DisplayHomePosts = ({ posts }) => {
                             {
                               color: colorMode === "light" ? "black" : "white",
                               backgroundColor:
-                                colorMode === "light" ? "#F0F0F0" : "#262629",
+                                colorMode === "light" ? "#EEEEEE" : "#262629",
                               paddingHorizontal: 10,
                               paddingVertical: 3,
                               borderRadius: 15,
@@ -165,42 +144,6 @@ const DisplayHomePosts = ({ posts }) => {
                       ))}
                   </View>
                 </View>
-                {post.trackId !== "undefined" ? (
-                  <View
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 10,
-                    }}
-                  >
-                    <Image
-                      source={{ uri: post.trackAlbumCover }}
-                      style={{ width: 50, height: 50, borderRadius: 6 }}
-                    />
-                    <View style={{ display: "flex", flexDirection: "column" }}>
-                      <Text
-                        style={{
-                          color: colorMode === "light" ? "black" : "white",
-                          fontSize: 14,
-                          fontWeight: 700,
-                        }}
-                      >
-                        {post.trackName}
-                      </Text>
-                      <Text
-                        style={{
-                          color: colorMode === "light" ? "black" : "white",
-                          fontSize: 12,
-                        }}
-                      >
-                        {post.trackArtist}
-                      </Text>
-                    </View>
-                  </View>
-                ) : (
-                  ""
-                )}
               </Pressable>
             ))}
           </View>
