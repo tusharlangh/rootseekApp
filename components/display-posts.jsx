@@ -7,20 +7,30 @@ import {
   ActivityIndicator,
   Modal,
   Pressable,
+  Animated,
 } from "react-native";
 import { useColorMode } from "native-base";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ViewPost from "./viewPost";
 import { PostsContext } from "./search";
 import { AddLibraryIcon } from "./icons";
 
-const DisplayPosts = ({ groupedPostsByDate, setSearch }) => {
+const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
   const { groupedPosts: posts } = useContext(PostsContext);
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#8A898D" : "#8E8D93";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
   const [postIndex, setPostIndex] = useState(0);
   const [viewPostVisible, setViewPostVisible] = useState(false);
+
+  useEffect(() => {
+    const id = animatedValue.addListener(({ value }) => {
+      console.log(value);
+    });
+    return () => {
+      animatedValue.removeListener(id);
+    };
+  }, [animatedValue]);
 
   if (!posts) {
     return (
@@ -49,14 +59,17 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch }) => {
 
   return (
     <View style={{ flex: 1, padding: 2 }}>
-      <ScrollView
+      <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         style={{
           flex: 1,
           marginTop: 12,
-          backgroundColor: bgColor,
         }}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: animatedValue } } }],
+          { useNativeDriver: true }
+        )}
       >
         <View
           style={{
@@ -90,7 +103,9 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch }) => {
                       styles.postContainer,
                       {
                         backgroundColor:
-                          colorMode === "light" ? "white" : "#161618",
+                          colorMode === "light"
+                            ? "rgba(255,255,255,0.5)"
+                            : "#161618",
                         marginBottom:
                           index === groupedPostsByDate.length - 1 &&
                           innerIndex === p.data.length - 1
@@ -167,7 +182,7 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch }) => {
                                       colorMode === "light" ? "black" : "white",
                                     backgroundColor:
                                       colorMode === "light"
-                                        ? "#F0F0F0"
+                                        ? "rgba(213, 213, 213, 0.3)"
                                         : "#262629",
                                     paddingHorizontal: 10,
                                     paddingVertical: 3,
@@ -236,7 +251,7 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch }) => {
             </View>
           ))}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
       <Modal
         animationType="fade"
         visible={viewPostVisible}

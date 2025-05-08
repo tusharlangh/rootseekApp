@@ -44,7 +44,6 @@ const DisplayHomePosts = ({ posts }) => {
         style={{
           flex: 1,
           marginTop: 12,
-          backgroundColor: bgColor,
         }}
       >
         <View
@@ -54,6 +53,7 @@ const DisplayHomePosts = ({ posts }) => {
             flex: 1,
             gap: 10,
             paddingBottom: 30,
+            paddingHorizontal: 10,
           }}
         >
           <View style={{ display: "flex", flexDirection: "row", gap: 8 }}>
@@ -64,7 +64,9 @@ const DisplayHomePosts = ({ posts }) => {
                   styles.postContainer,
                   {
                     backgroundColor:
-                      colorMode === "light" ? "white" : "#161618",
+                      colorMode === "light"
+                        ? "rgba(255,255,255,0.5)"
+                        : "#161618",
                     width: 250,
                   },
                 ]}

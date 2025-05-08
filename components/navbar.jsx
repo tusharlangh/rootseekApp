@@ -4,8 +4,11 @@ import {
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
 import { useColorMode } from "native-base";
-import { View } from "react-native";
+import { Modal, Pressable, View } from "react-native";
 import {
+  CreateIcon,
+  CreateIconOutline,
+  CreateIconSolid,
   HomeIconOutline,
   HomeIconSolid,
   LibraryOutline,
@@ -19,12 +22,15 @@ import Search from "./search";
 import { LinearGradient } from "expo-linear-gradient";
 import Library from "./libraryPage/library";
 import { BlurView } from "expo-blur";
+import Create from "./createpage/create";
 
 const Tab = createBottomTabNavigator();
 
 export const RefreshValue = createContext();
 
 const Navbar = () => {
+  const [viewPostVisible, setViewPostVisible] = useState(false);
+
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const outlineTextColor =
@@ -45,17 +51,22 @@ const Navbar = () => {
           tabBar={(props) => (
             <>
               <BlurView
-                intensity={20}
+                intensity={100}
                 style={{
                   position: "absolute",
                   bottom: 0,
                   left: 0,
                   right: 0,
                   height: 80,
-                  backgroundColor:
-                    colorMode === "light"
-                      ? "rgba(247,247,249,0.95)"
-                      : "rgba(0,0,0,0.86)",
+                  backgroundColor: "rgba(255,255,255,0.85)",
+                  borderTopLeftRadius: 20,
+                  borderTopRightRadius: 20,
+                  shadowColor: "black",
+                  shadowOffset: { width: 6, height: 4 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 30,
+                  elevation: 6,
+                  overflow: "hidden",
                 }}
               />
 
@@ -64,8 +75,8 @@ const Navbar = () => {
           )}
           screenOptions={{
             headerShown: false,
+            tabBarShowLabel: false,
             tabBarLabelStyle: {
-              color: textColor,
               paddingRight: -10,
               textAlign: "center",
             },
@@ -84,9 +95,9 @@ const Navbar = () => {
             options={{
               tabBarIcon: ({ focused }) =>
                 focused ? (
-                  <HomeIconSolid size={24} color={textColor} />
+                  <HomeIconSolid size={26} color={textColor} />
                 ) : (
-                  <HomeIconOutline size={24} color={outlineTextColor} />
+                  <HomeIconOutline size={26} color={outlineTextColor} />
                 ),
             }}
           />
@@ -96,25 +107,39 @@ const Navbar = () => {
             options={{
               tabBarIcon: ({ focused }) =>
                 focused ? (
-                  <SearchIconSolid size={24} color={textColor} />
+                  <SearchIconSolid size={26} color={textColor} />
                 ) : (
-                  <SearchIconOutline size={24} color={outlineTextColor} />
+                  <SearchIconOutline size={26} color={outlineTextColor} />
                 ),
             }}
           />
           <Tab.Screen
-            name="Library"
-            component={Library}
+            name="Create"
+            component={Home}
             options={{
-              tabBarIcon: ({ focused }) =>
-                focused ? (
-                  <LibrarySolid size={24} color={textColor} />
-                ) : (
-                  <LibraryOutline size={24} color={outlineTextColor} />
-                ),
+              tabBarIcon: (props) => (
+                <Pressable
+                  {...props}
+                  onPress={() => setViewPostVisible(true)}
+                  style={{ alignItems: "center", justifyContent: "center" }}
+                >
+                  <CreateIcon size={28} color={outlineTextColor} />
+                </Pressable>
+              ),
             }}
           />
         </Tab.Navigator>
+        <Modal
+          visible={viewPostVisible}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setViewPostVisible(false)}
+        >
+          <Create
+            visible={viewPostVisible}
+            onClose={() => setViewPostVisible(false)}
+          />
+        </Modal>
       </RefreshValue.Provider>
     </View>
   );

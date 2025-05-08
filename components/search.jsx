@@ -7,6 +7,8 @@ import {
   Text,
   ScrollView,
   FlatList,
+  Animated,
+  ActivityIndicator,
 } from "react-native";
 import DisplayPosts from "./display-posts";
 import {
@@ -14,6 +16,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { SearchIconOutline, ShuffleIcon } from "./icons";
@@ -26,6 +29,7 @@ import { RefreshValue } from "./navbar";
 import { useFocusEffect } from "@react-navigation/native";
 import { GrandHotel_400Regular } from "@expo-google-fonts/grand-hotel";
 import { useFonts } from "expo-font";
+import { LinearGradient } from "expo-linear-gradient";
 
 export const PostsContext = createContext();
 
@@ -45,6 +49,39 @@ const Search = () => {
   const [selectedFilter, setSelectedFilter] = useState("all");
 
   const { refreshValue, setRefreshValue } = useContext(RefreshValue);
+
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const colorChangeValue = useRef(new Animated.Value(0)).current;
+
+  const options = [
+    {
+      name: "All",
+      id: "all",
+    },
+    {
+      name: "This week",
+      id: "week",
+    },
+    {
+      name: "This month",
+      id: "month",
+    },
+    {
+      name: "This year",
+      id: "year",
+    },
+    {
+      name: "Custom",
+      id: "custom",
+    },
+  ];
+
+  const [hashtagAnimMap, setHashtagAnimMap] = useState(
+    options.reduce((acc, option) => {
+      acc[option.id] = new Animated.Value(0);
+      return acc;
+    }, {})
+  );
 
   let [fontsLoaded] = useFonts({
     GrandHotel_400Regular,
@@ -179,161 +216,195 @@ const Search = () => {
     setGroupedPosts(posts);
   }, [selectedFilter, posts]);
 
-  const options = [
-    {
-      name: "All",
-      id: "all",
-    },
-    {
-      name: "This week",
-      id: "week",
-    },
-    {
-      name: "This month",
-      id: "month",
-    },
-    {
-      name: "This year",
-      id: "year",
-    },
-    {
-      name: "Custom",
-      id: "custom",
-    },
-  ];
+  const translateY = animatedValue.interpolate({
+    inputRange: [0, 180],
+    outputRange: [0, -50],
+    extrapolate: "clamp",
+  });
+
+  const opacity = animatedValue.interpolate({
+    inputRange: [0, 180],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
+
+  useEffect(() => {
+    animateHashtag("all");
+  }, []);
+
+  const animateHashtag = (id) => {
+    const anim = hashtagAnimMap[id];
+    anim.setValue(0);
+    Animated.timing(anim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  };
 
   return (
     <PostsContext.Provider value={{ groupedPosts, setGroupedPosts }}>
-      <View style={[styles.container, { backgroundColor: bgColor }]}>
-        <View
-          style={{ position: "absolute", bottom: 100, right: 10, zIndex: 100 }}
-        >
-          <Pressable
+      <LinearGradient
+        colors={["#F9FAFF", "#EAF0FF", "#FCEEF5"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ height: "100%" }}
+      >
+        <View style={[styles.container]}>
+          <Animated.View
             style={[
-              styles.closeButton,
-              {
-                backgroundColor:
-                  colorMode === "light"
-                    ? "rgba(207, 206, 206, 0.6)"
-                    : "rgba(255, 255, 255, 0.8)",
-                padding: 14,
-              },
+              styles.nestedContainer,
+              { transform: [{ translateY: translateY }] },
             ]}
-            onPress={activateShufflePost}
           >
-            <ShuffleIcon size={32} color="rgba(0, 0, 0, 0.8)" />
-          </Pressable>
-        </View>
-
-        <View style={styles.nestedContainer}>
-          <View
-            style={{
-              position: "relative",
-              paddingHorizontal: 2,
-            }}
-          >
-            <TextInput
-              style={[
-                styles.searchBar,
-                {
-                  backgroundColor:
-                    colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
-                  color: textColor,
-                  borderColor: colorMode === "light" ? "#F0F0F0" : "#121212",
-                },
-              ]}
-              placeholder="Search post"
-              placeholderTextColor={
-                colorMode === "light" ? "#494949" : "#97989F"
-              }
-              value={search}
-              onChangeText={setSearch}
-            />
-            <View style={{ position: "absolute", top: 12, left: 12 }}>
-              <SearchIconOutline
-                size={18}
-                color={colorMode === "light" ? "black" : "white"}
-              />
-            </View>
-          </View>
-          <View>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
+            <Animated.View
               style={{
-                marginTop: 10,
-                zIndex: 1,
+                position: "relative",
+                paddingHorizontal: 2,
+                opacity: opacity,
               }}
             >
-              <View
+              <TextInput
+                style={[
+                  styles.searchBar,
+                  {
+                    backgroundColor:
+                      colorMode === "light"
+                        ? "rgba(255,255,255,0.5)"
+                        : "#1C1C1E",
+                    color: textColor,
+                    shadowColor: "rgba(0,0,0,0.7)",
+                    shadowOffset: { width: 0, height: 0 },
+                    shadowOpacity: 0.07,
+                    shadowRadius: 10,
+                    elevation: 6,
+                  },
+                ]}
+                placeholder="Search"
+                placeholderTextColor={
+                  colorMode === "light" ? "#494949" : "#97989F"
+                }
+                value={search}
+                onChangeText={setSearch}
+              />
+              <View style={{ position: "absolute", top: 12, left: 12 }}>
+                <SearchIconOutline
+                  size={18}
+                  color={colorMode === "light" ? "black" : "white"}
+                />
+              </View>
+            </Animated.View>
+            <View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
                 style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 10,
-                  paddingHorizontal: 2,
+                  marginTop: 10,
+                  zIndex: 1,
                 }}
               >
-                {options.map((option, index) => (
-                  <Pressable
-                    key={index}
-                    style={{
-                      backgroundColor:
-                        colorMode === "light"
-                          ? selectedFilter === option.id
-                            ? "#1C1C1E"
-                            : "#E4E3E8"
-                          : selectedFilter === option.id
-                          ? "#E4E3E8"
-                          : "#1C1C1E",
-                      borderRadius: 16,
-                      paddingHorizontal: 12,
-                      paddingVertical: 6,
-                      justifyContent: "center",
-                    }}
-                    onPress={() => setSelectedFilter(option.id)}
-                  >
-                    <Text
-                      style={{
-                        color:
-                          colorMode === "light"
-                            ? selectedFilter === option.id
-                              ? "white"
-                              : "black"
-                            : selectedFilter === option.id
-                            ? "black"
-                            : "white",
-                        fontSize: 16,
-                      }}
-                    >
-                      {option.name}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
-            </ScrollView>
-          </View>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 10,
+                    paddingHorizontal: 2,
+                  }}
+                >
+                  {options.map((option, index) => {
+                    const bgColor = hashtagAnimMap[option.id].interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ["rgba(255,255,255,0.5)", "rgba(0,0,0, 1)"],
+                    });
 
-          <View style={{ flex: 1, height: "100%" }}>
-            <DisplayPosts
-              groupedPostsByDate={groupPostsByDate(posts)}
-              setSearch={setSearch}
+                    return (
+                      <Animated.View
+                        key={index}
+                        style={{
+                          borderRadius: 16,
+                          backgroundColor:
+                            selectedFilter === option.id
+                              ? bgColor
+                              : "rgba(255,255,255,0.5)",
+                        }}
+                      >
+                        <Pressable
+                          style={{
+                            paddingHorizontal: 12,
+                            paddingVertical: 6,
+                            justifyContent: "center",
+                          }}
+                          onPress={() => {
+                            setSelectedFilter(option.id);
+                            animateHashtag(option.id);
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color:
+                                colorMode === "light"
+                                  ? selectedFilter === option.id
+                                    ? "white"
+                                    : "black"
+                                  : selectedFilter === option.id
+                                  ? "black"
+                                  : "white",
+                              fontSize: 16,
+                            }}
+                          >
+                            {option.name}
+                          </Text>
+                        </Pressable>
+                      </Animated.View>
+                    );
+                  })}
+                </View>
+              </ScrollView>
+            </View>
+
+            <View style={{ flex: 1, height: "100%" }}>
+              {!posts ||
+              posts.length === 0 ||
+              !groupPostsByDate(posts) ||
+              groupPostsByDate(posts).length === 0 ? (
+                <View
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%",
+                    paddingBottom: 60,
+                  }}
+                >
+                  <Text style={{ fontSize: 20, fontWeight: 600 }}>
+                    Try searching something else
+                  </Text>
+                  <Text>No result found.</Text>
+                </View>
+              ) : (
+                <DisplayPosts
+                  groupedPostsByDate={groupPostsByDate(posts)}
+                  setSearch={setSearch}
+                  animatedValue={animatedValue}
+                />
+              )}
+            </View>
+          </Animated.View>
+
+          <Modal
+            visible={shufflePostVisible}
+            animationType="none"
+            transparent={true}
+            onRequestClose={() => setShufflePostVisible(false)}
+          >
+            <ShuffledPost
+              post={shufflePosts[shuffleRandomNumber]}
+              setViewPostVisible={setShufflePostVisible}
+              viewPostVisible={shufflePostVisible}
             />
-          </View>
+          </Modal>
         </View>
-
-        <Modal
-          visible={shufflePostVisible}
-          animationType="none"
-          transparent={true}
-          onRequestClose={() => setShufflePostVisible(false)}
-        >
-          <ShuffledPost
-            post={shufflePosts[shuffleRandomNumber]}
-            setViewPostVisible={setShufflePostVisible}
-            viewPostVisible={shufflePostVisible}
-          />
-        </Modal>
-      </View>
+      </LinearGradient>
     </PostsContext.Provider>
   );
 };

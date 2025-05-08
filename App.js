@@ -10,16 +10,8 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [theme, setTheme] = useState({
-    mode: Appearance.getColorScheme() || "light",
+    mode: "light",
   });
-
-  useEffect(() => {
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setTheme({ mode: colorScheme || "light" });
-    });
-
-    return () => subscription.remove();
-  }, []);
 
   const nativeBaseTheme = extendTheme({
     config: { initialColorMode: theme.mode },
