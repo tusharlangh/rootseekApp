@@ -12,10 +12,32 @@ import {
 import { useColorMode } from "native-base";
 import { useState } from "react";
 import ViewPost from "./viewPost";
+import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
+import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
+import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
+import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
+import FuturaCyrillicDemi from "../assets/fonts/FuturaCyrillicDemi.ttf";
+import HelveticaNowDisplayRegular from "../assets/fonts/HelveticaNowDisplay-Regular.ttf";
+import HelveticaNowDisplayBold from "../assets/fonts/HelveticaNowDisplay-Bold.ttf";
+import HelveticaNowDisplayMedium from "../assets/fonts/HelveticaNowDisplay-Medium.ttf";
+import HelveticaNowDisplayExtraBold from "../assets/fonts/HelveticaNowDisplay-ExtraBold.ttf";
+import { useFonts } from "expo-font";
 
 const { height, width } = Dimensions.get("window");
 
 const DisplayHomePosts = ({ posts }) => {
+  let [fontsLoaded] = useFonts({
+    FuturaCyrillicBold,
+    FuturaCyrillicMedium,
+    FuturaCyrillicLight,
+    FuturaCyrillicBook,
+    FuturaCyrillicDemi,
+    HelveticaNowDisplayRegular,
+    HelveticaNowDisplayBold,
+    HelveticaNowDisplayMedium,
+    HelveticaNowDisplayExtraBold,
+  });
+
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#8A898D" : "#8E8D93";
   const bgColor = colorMode === "light" ? "#F7F7F9" : "black";
@@ -89,6 +111,7 @@ const DisplayHomePosts = ({ posts }) => {
                       {
                         color: colorMode === "light" ? "black" : "white",
                         flex: 3.5,
+                        fontFamily: "HelveticaNowDisplayBold",
                       },
                     ]}
                     numberOfLines={1}
@@ -101,6 +124,7 @@ const DisplayHomePosts = ({ posts }) => {
                       {
                         flex: 1.5,
                         color: colorMode === "light" ? "black" : "white",
+                        fontFamily: "HelveticaNowDisplayMedium",
                       },
                     ]}
                   >
@@ -112,7 +136,10 @@ const DisplayHomePosts = ({ posts }) => {
                   <Text
                     style={[
                       styles.postContent,
-                      { color: colorMode === "light" ? "#3D3D3D" : "white" },
+                      {
+                        color: colorMode === "light" ? "#3D3D3D" : "white",
+                        fontFamily: "HelveticaNowDisplayMedium",
+                      },
                     ]}
                     numberOfLines={2}
                   >
@@ -138,6 +165,7 @@ const DisplayHomePosts = ({ posts }) => {
                               paddingHorizontal: 10,
                               paddingVertical: 3,
                               borderRadius: 15,
+                              fontFamily: "HelveticaNowDisplayMedium",
                             },
                           ]}
                         >
@@ -172,7 +200,7 @@ const styles = StyleSheet.create({
     position: "relative",
     display: "flex",
     flexDirection: "column",
-    gap: 16,
+    gap: 4,
     padding: 18,
     borderRadius: 10,
   },
@@ -181,8 +209,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   postContent: {
-    fontWeight: "400",
-    fontSize: 14,
+    fontSize: 15,
     color: "#B3B3B3",
   },
   postHashTags: {

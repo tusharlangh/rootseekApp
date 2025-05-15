@@ -28,12 +28,27 @@ import moment from "moment";
 import { RefreshValue } from "./navbar";
 import { useFocusEffect } from "@react-navigation/native";
 import { GrandHotel_400Regular } from "@expo-google-fonts/grand-hotel";
-import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
+import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
+import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
+import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
+import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
+import FuturaCyrillicDemi from "../assets/fonts/FuturaCyrillicDemi.ttf";
+import FuturaCyrillicHeavy from "../assets/fonts/FuturaCyrillicHeavy.ttf";
+import { useFonts } from "expo-font";
 
 export const PostsContext = createContext();
 
 const Search = () => {
+  let [fontsLoaded] = useFonts({
+    GrandHotel_400Regular,
+    FuturaCyrillicBold,
+    FuturaCyrillicMedium,
+    FuturaCyrillicLight,
+    FuturaCyrillicBook,
+    FuturaCyrillicDemi,
+    FuturaCyrillicHeavy,
+  });
   const [search, setSearch] = useState("");
   const [posts, setPosts] = useState([]);
   const [groupedPosts, setGroupedPosts] = useState([]);
@@ -82,10 +97,6 @@ const Search = () => {
       return acc;
     }, {})
   );
-
-  let [fontsLoaded] = useFonts({
-    GrandHotel_400Regular,
-  });
 
   useFocusEffect(
     useCallback(() => {
@@ -278,6 +289,7 @@ const Search = () => {
                     shadowOpacity: 0.07,
                     shadowRadius: 10,
                     elevation: 6,
+                    fontFamily: "FuturaCyrillicBook",
                   },
                 ]}
                 placeholder="Search"
@@ -350,6 +362,7 @@ const Search = () => {
                                   ? "black"
                                   : "white",
                               fontSize: 16,
+                              fontFamily: "FuturaCyrillicDemi",
                             }}
                           >
                             {option.name}

@@ -14,8 +14,23 @@ import { useContext, useEffect, useRef, useState } from "react";
 import ViewPost from "./viewPost";
 import { PostsContext } from "./search";
 import { AddLibraryIcon } from "./icons";
+import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
+import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
+import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
+import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
+import FuturaCyrillicDemi from "../assets/fonts/FuturaCyrillicDemi.ttf";
+import FuturaCyrillicHeavy from "../assets/fonts/FuturaCyrillicHeavy.ttf";
+import { useFonts } from "expo-font";
 
 const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
+  let [fontsLoaded] = useFonts({
+    FuturaCyrillicBold,
+    FuturaCyrillicMedium,
+    FuturaCyrillicLight,
+    FuturaCyrillicBook,
+    FuturaCyrillicDemi,
+    FuturaCyrillicHeavy,
+  });
   const { groupedPosts: posts } = useContext(PostsContext);
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#8A898D" : "#8E8D93";
@@ -89,6 +104,7 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                   marginBottom: 10,
                   marginTop: 12,
                   marginLeft: 4,
+                  fontFamily: "FuturaCyrillicDemi",
                 }}
               >
                 {p.title}
@@ -132,6 +148,7 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                           {
                             color: colorMode === "light" ? "black" : "white",
                             flex: 7.5,
+                            fontFamily: "FuturaCyrillicDemi",
                           },
                         ]}
                         numberOfLines={1}
@@ -144,6 +161,7 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                           {
                             flex: 1.5,
                             color: colorMode === "light" ? "black" : "white",
+                            fontFamily: "FuturaCyrillicMedium",
                           },
                         ]}
                       >
@@ -155,7 +173,10 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                       <Text
                         style={[
                           styles.postContent,
-                          { color: colorMode === "light" ? "black" : "white" },
+                          {
+                            color: colorMode === "light" ? "#3D3D3D" : "white",
+                            fontFamily: "FuturaCyrillicBook",
+                          },
                         ]}
                         numberOfLines={4}
                       >
@@ -187,6 +208,7 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                                     paddingHorizontal: 10,
                                     paddingVertical: 3,
                                     borderRadius: 15,
+                                    fontFamily: "FuturaCyrillicDemi",
                                   },
                                 ]}
                               >
@@ -224,8 +246,9 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                               style={{
                                 color:
                                   colorMode === "light" ? "black" : "white",
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: 700,
+                                fontFamily: "FuturaCyrillicDemi",
                               }}
                             >
                               {post.trackName}
@@ -234,7 +257,8 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                               style={{
                                 color:
                                   colorMode === "light" ? "black" : "white",
-                                fontSize: 12,
+                                fontSize: 14,
+                                fontFamily: "FuturaCyrillicBook",
                               }}
                             >
                               {post.trackArtist}
@@ -284,7 +308,7 @@ const styles = StyleSheet.create({
   },
   postContent: {
     fontWeight: "400",
-    fontSize: 14,
+    fontSize: 17,
     color: "#B3B3B3",
   },
   postHashTags: {

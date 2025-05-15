@@ -8,12 +8,14 @@ import {
   Modal,
   Image,
   FlatList,
+  Dimensions,
+  Animated,
 } from "react-native";
 import DisplayPosts from "./display-posts";
 import { useFonts } from "expo-font";
 import { GrandHotel_400Regular } from "@expo-google-fonts/grand-hotel";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import axios, { Axios } from "axios";
 import { useColorMode } from "native-base";
 import {
@@ -35,14 +37,34 @@ import { useFocusEffect } from "@react-navigation/native";
 import SwipePage from "./swipe-page";
 import StoryViewer from "./StoryViewer";
 import { LinearGradient } from "expo-linear-gradient";
+import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
+import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
+import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
+import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
+import HelveticaNowDisplayRegular from "../assets/fonts/HelveticaNowDisplay-Regular.ttf";
+import HelveticaNowDisplayBold from "../assets/fonts/HelveticaNowDisplay-Bold.ttf";
+import HelveticaNowDisplayMedium from "../assets/fonts/HelveticaNowDisplay-Medium.ttf";
+import HelveticaNowDisplayExtraBold from "../assets/fonts/HelveticaNowDisplay-ExtraBold.ttf";
+
+const { width, height } = Dimensions.get("window");
 
 const Home = () => {
+  let [fontsLoaded] = useFonts({
+    GrandHotel_400Regular,
+    FuturaCyrillicBold,
+    FuturaCyrillicMedium,
+    FuturaCyrillicLight,
+    FuturaCyrillicBook,
+    HelveticaNowDisplayRegular,
+    HelveticaNowDisplayBold,
+    HelveticaNowDisplayMedium,
+    HelveticaNowDisplayExtraBold,
+  });
+
   const [posts, setPosts] = useState([]);
   const [shufflePosts, setShufflePosts] = useState([]);
   const [shuffleRandomNumber, setShuffleRandomNumber] = useState(0);
-  let [fontsLoaded] = useFonts({
-    GrandHotel_400Regular,
-  });
+
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const bgColor = colorMode === "light" ? "#F7F7F9" : "black";
@@ -159,27 +181,6 @@ const Home = () => {
     fetchThemeThreads();
   }, []);
 
-  if (!fontsLoaded) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={textColor} />
-      </View>
-    );
-  }
-
-  const FormatTime = (post) => {
-    const formattedTime = new Date(post.date).toLocaleDateString("en-US", {
-      month: "short",
-      day: "2-digit",
-    });
-    return formattedTime;
-  };
-
-  const getHashTags = (hashTags) => {
-    const ht = hashTags.split("#").filter((h) => h.length > 0);
-    return ht;
-  };
-
   const getStoriesRaw = async (posts, theme) => {
     try {
       setStoriesLoading(true);
@@ -214,6 +215,26 @@ const Home = () => {
       setViewPostVisible(true);
     }
   }, [storiesLoading]);
+
+  const flatListData = [
+    {
+      title: "Insight",
+      data: Object.values(patternInsights)[0],
+      color: "#232E54",
+    },
+    {
+      title: "What you are good at",
+      data: Object.values(patternInsights)[1],
+      color: "#544023",
+    },
+    {
+      title: "What to improve on",
+      data: Object.values(patternInsights)[2],
+      color: "#234554",
+    },
+  ];
+
+  const scrollX = useRef(new Animated.Value(0)).current;
 
   return (
     <LinearGradient
@@ -261,7 +282,7 @@ const Home = () => {
                 gap: 8,
               }}
             >
-              <View style={{ marginTop: 5 }}>
+              <View style={{ marginTop: 3 }}>
                 <RecentlyMadeIcon size={24} color="rgba(0,0,0,0.8)" />
               </View>
 
@@ -269,13 +290,14 @@ const Home = () => {
                 style={[
                   {
                     color: "rgba(0,0,0,0.8)",
-                    fontSize: 28,
-                    fontWeight: 700,
-                    marginBottom: -5,
+                    fontSize: 26,
+                    fontWeight: 800,
+
+                    fontFamily: "HelveticaNowDisplayExtraBold",
                   },
                 ]}
               >
-                Recently made
+                Recently Made
               </Text>
             </View>
 
@@ -370,33 +392,40 @@ const Home = () => {
                   style={[
                     {
                       color: "rgba(0,0,0,0.8)",
-                      fontSize: 28,
-                      fontWeight: 700,
+                      fontSize: 26,
+                      fontWeight: 400,
+                      fontFamily: "HelveticaNowDisplayExtraBold",
                     },
                   ]}
                 >
-                  Pattern insights
+                  Pattern Insight
                 </Text>
               </View>
-
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: 10,
-                    paddingHorizontal: 10,
-                  }}
-                >
+              <FlatList
+                data={flatListData}
+                keyExtractor={(_, index) => index.toString()}
+                horizontal
+                snapToInterval={320}
+                snapToAlignment="start"
+                decelerationRate="fast"
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  paddingHorizontal: (width - 300) / 2,
+                }}
+                onScroll={Animated.event(
+                  [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                  { useNativeDriver: false }
+                )}
+                renderItem={({ item }) => (
                   <View
                     style={{
+                      width: 300,
+                      marginRight: 20,
                       borderRadius: 20,
                       backgroundColor:
                         colorMode === "light" ? "white" : "#D2A13F",
                       padding: 25,
                       marginTop: 12,
-                      width: 300,
-                      marginRight: 10,
                       shadowColor: "rgba(0,0,0,0.7)",
                       shadowOffset: { width: 0, height: 0 },
                       shadowOpacity: 0.07,
@@ -412,13 +441,14 @@ const Home = () => {
                     >
                       <Text
                         style={{
-                          color: "#232E54",
+                          color: item.color,
                           fontSize: 24,
                           fontWeight: 600,
                           marginBottom: 10,
+                          fontFamily: "HelveticaNowDisplayBold",
                         }}
                       >
-                        Insight
+                        {item.title}
                       </Text>
 
                       <ScrollView
@@ -427,9 +457,9 @@ const Home = () => {
                       >
                         <Text
                           style={{
-                            color: "#232E54",
+                            color: item.color,
                             fontSize: 16,
-                            lineHeight: 20,
+                            fontFamily: "HelveticaNowDisplayMedium",
                           }}
                         >
                           {patternLoading ? (
@@ -443,118 +473,64 @@ const Home = () => {
                               <ActivityIndicator size="small" color="#544023" />
                             </View>
                           ) : (
-                            Object.values(patternInsights)[0]
+                            item.data
                           )}
                         </Text>
                       </ScrollView>
                     </View>
                   </View>
-
-                  <View
-                    style={{
-                      borderRadius: 20,
-                      backgroundColor:
-                        colorMode === "light" ? "white" : "#816731",
-                      padding: 25,
-                      marginTop: 12,
-                      width: 300,
-                      marginRight: 10,
-                      shadowColor: "rgba(0,0,0,0.7)",
-                      shadowOffset: { width: 0, height: 0 },
-                      shadowOpacity: 0.07,
-                      shadowRadius: 10,
-                      elevation: 6,
-                    }}
-                  >
-                    <View
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <Text
+                )}
+              />
+              <View
+                style={{
+                  display: "flex",
+                  width,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 20,
+                }}
+              >
+                <View style={{ display: "flex", flexDirection: "row", gap: 4 }}>
+                  {flatListData.map((_, i) => {
+                    const inputRange = [(i - 1) * 320, i * 320, (i + 1) * 320];
+                    const opacity = scrollX.interpolate({
+                      inputRange,
+                      outputRange: [0.3, 0.8, 0.3],
+                      extrapolate: "clamp",
+                    });
+                    return (
+                      <Animated.View
+                        key={i}
                         style={{
-                          color: "#544023",
-                          fontSize: 24,
-                          fontWeight: 600,
-                          marginBottom: 10,
+                          height: 4,
+                          width: 40,
+                          backgroundColor: "rgb(194, 194, 194)",
+                          borderRadius: 4,
+                          overflow: "hidden",
+                          opacity,
                         }}
                       >
-                        What you are good at
-                      </Text>
-                      <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        style={{ maxHeight: 220 }}
-                      >
-                        <Text
+                        <Animated.View
                           style={{
-                            color: "#544023",
-                            fontSize: 16,
+                            height: "100%",
+                            width: "100%",
+                            transform: [
+                              {
+                                translateX: scrollX.interpolate({
+                                  inputRange,
+                                  outputRange: [-40, 0, 40],
+                                  extrapolate: "clamp",
+                                }),
+                              },
+                            ],
+                            backgroundColor: "black",
                           }}
-                        >
-                          {patternLoading ? (
-                            <ActivityIndicator size="small" color="#544023" />
-                          ) : (
-                            Object.values(patternInsights)[1]
-                          )}
-                        </Text>
-                      </ScrollView>
-                    </View>
-                  </View>
-
-                  <View
-                    style={{
-                      borderRadius: 20,
-                      backgroundColor:
-                        colorMode === "light" ? "white" : "#302C23",
-                      padding: 25,
-                      marginTop: 12,
-                      width: 300,
-                      marginRight: 10,
-                      shadowColor: "rgba(0,0,0,0.7)",
-                      shadowOffset: { width: 0, height: 0 },
-                      shadowOpacity: 0.07,
-                      shadowRadius: 10,
-                      elevation: 6,
-                    }}
-                  >
-                    <View
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: "#234554",
-                          fontSize: 24,
-                          fontWeight: 600,
-                          marginBottom: 10,
-                        }}
-                      >
-                        What to improve on
-                      </Text>
-                      <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        style={{ maxHeight: 220 }}
-                      >
-                        <Text
-                          style={{
-                            color: "#234554",
-                            fontSize: 16,
-                          }}
-                        >
-                          {patternLoading ? (
-                            <ActivityIndicator size="small" color="#234554" />
-                          ) : (
-                            Object.values(patternInsights)[2]
-                          )}
-                        </Text>
-                      </ScrollView>
-                    </View>
-                  </View>
+                        ></Animated.View>
+                      </Animated.View>
+                    );
+                  })}
                 </View>
-              </ScrollView>
+              </View>
             </View>
 
             <View style={{ marginBottom: 200 }}>
@@ -576,8 +552,9 @@ const Home = () => {
                   style={[
                     {
                       color: "rgba(0,0,0,0.8)",
-                      fontSize: 28,
+                      fontSize: 26,
                       fontWeight: 700,
+                      fontFamily: "HelveticaNowDisplayExtraBold",
                     },
                   ]}
                 >
@@ -619,6 +596,7 @@ const Home = () => {
                         style={{
                           fontSize: 20,
                           fontWeight: 600,
+                          fontFamily: "HelveticaNowDisplayBold",
                           color:
                             index === 0
                               ? "#482968"

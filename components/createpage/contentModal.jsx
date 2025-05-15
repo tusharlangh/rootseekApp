@@ -2,8 +2,23 @@ import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useColorMode } from "native-base";
+import FuturaCyrillicBold from "../../assets/fonts/FuturaCyrillicBold.ttf";
+import FuturaCyrillicMedium from "../../assets/fonts/FuturaCyrillicMedium.ttf";
+import FuturaCyrillicLight from "../../assets/fonts/FuturaCyrillicLight.ttf";
+import FuturaCyrillicBook from "../../assets/fonts/FuturaCyrillicBook.ttf";
+import FuturaCyrillicDemi from "../../assets/fonts/FuturaCyrillicDemi.ttf";
+import FuturaCyrillicHeavy from "../../assets/fonts/FuturaCyrillicHeavy.ttf";
+import { useFonts } from "expo-font";
 
 const ContentModal = ({ setContent, content }) => {
+  let [fontsLoaded] = useFonts({
+    FuturaCyrillicBold,
+    FuturaCyrillicMedium,
+    FuturaCyrillicLight,
+    FuturaCyrillicBook,
+    FuturaCyrillicDemi,
+    FuturaCyrillicHeavy,
+  }); 
   const [countChar, setCountChar] = useState(content.length);
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
@@ -40,8 +55,9 @@ const ContentModal = ({ setContent, content }) => {
               ? "rgba(0, 0, 0, 0.9)"
               : "rgba(245, 245, 245, 0.9)",
           fontWeight: 500,
-          fontSize: 14,
+          fontSize: 18,
           marginLeft: 10,
+          fontFamily: "FuturaCyrillicDemi",
         }}
       >
         Post content:
@@ -59,7 +75,11 @@ const ContentModal = ({ setContent, content }) => {
         ]}
       >
         <TextInput
-          style={{ color: textColor, fontSize: 16 }}
+          style={{
+            color: textColor,
+            fontSize: 18,
+            fontFamily: "FuturaCyrillicBook",
+          }}
           placeholder="Talk about your memory. What makes it a memory?"
           placeholderTextColor={
             colorMode === "light"
@@ -69,7 +89,7 @@ const ContentModal = ({ setContent, content }) => {
           multiline
           value={content}
           onChangeText={(text) => {
-            if (countChar < 2000 || text.length < content.length) {
+            if (countChar < 1000 || text.length < content.length) {
               setContent(text);
             }
           }}
@@ -77,13 +97,15 @@ const ContentModal = ({ setContent, content }) => {
       </BlurView>
       <Text
         style={{
+          fontSize: 16,
           color: textColor,
           textAlign: "right",
           marginRight: 10,
           marginTop: 4,
+          fontFamily: "FuturaCyrillicBook",
         }}
       >
-        {countChar}/2000
+        {countChar}/1000
       </Text>
     </View>
   );

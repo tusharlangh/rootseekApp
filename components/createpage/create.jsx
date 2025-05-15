@@ -19,10 +19,26 @@ import { TestPic } from "../../additional";
 import { BlurView } from "expo-blur";
 import BottomPage from "../bottom-page";
 import CloseModal from "./closeModal";
+import FuturaCyrillicBold from "../../assets/fonts/FuturaCyrillicBold.ttf";
+import FuturaCyrillicMedium from "../../assets/fonts/FuturaCyrillicMedium.ttf";
+import FuturaCyrillicLight from "../../assets/fonts/FuturaCyrillicLight.ttf";
+import FuturaCyrillicBook from "../../assets/fonts/FuturaCyrillicBook.ttf";
+import FuturaCyrillicDemi from "../../assets/fonts/FuturaCyrillicDemi.ttf";
+import FuturaCyrillicHeavy from "../../assets/fonts/FuturaCyrillicHeavy.ttf";
+import { useFonts } from "expo-font";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const Create = ({ visible, onClose }) => {
+  let [fontsLoaded] = useFonts({
+    FuturaCyrillicBold,
+    FuturaCyrillicMedium,
+    FuturaCyrillicLight,
+    FuturaCyrillicBook,
+    FuturaCyrillicDemi,
+    FuturaCyrillicHeavy,
+  });
+
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const bgColor = colorMode === "light" ? "white" : "black";
@@ -196,6 +212,7 @@ const Create = ({ visible, onClose }) => {
               style={[
                 styles.createButtonText,
                 {
+                  fontFamily: "FuturaCyrillicDemi",
                   color:
                     colorMode === "light"
                       ? "rgba(255,255,255,0.9)"
@@ -289,7 +306,7 @@ const styles = StyleSheet.create({
   },
   createButtonText: {
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "700",
   },
   closeButton: {

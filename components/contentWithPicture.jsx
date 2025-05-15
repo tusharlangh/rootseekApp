@@ -1,6 +1,5 @@
 import { BlurView } from "expo-blur";
 import { useColorMode } from "native-base";
-import { useContext, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -10,10 +9,8 @@ import {
   Pressable,
   StyleSheet,
   Animated,
-  Easing,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { FlatList } from "react-native";
 import {
   LeftArrowIcon,
   VolumeUpIcon,
@@ -23,13 +20,17 @@ import {
   AddLibraryIcon,
   CheckmarkIcon,
 } from "./icons";
-import axios from "axios";
-import { Audio } from "expo-av";
-import { PostsContext } from "./search";
-import BottomPage from "./bottom-page";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DefualtCover } from "../additional";
-import { RefreshValue } from "./navbar";
+import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
+import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
+import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
+import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
+import FuturaCyrillicDemi from "../assets/fonts/FuturaCyrillicDemi.ttf";
+import FuturaCyrillicHeavy from "../assets/fonts/FuturaCyrillicHeavy.ttf";
+import HelveticaNowDisplayRegular from "../assets/fonts/HelveticaNowDisplay-Regular.ttf";
+import HelveticaNowDisplayBold from "../assets/fonts/HelveticaNowDisplay-Bold.ttf";
+import HelveticaNowDisplayMedium from "../assets/fonts/HelveticaNowDisplay-Medium.ttf";
+import HelveticaNowDisplayExtraBold from "../assets/fonts/HelveticaNowDisplay-ExtraBold.ttf";
+import { useFonts } from "expo-font";
 
 const { width, height } = Dimensions.get("window");
 
@@ -47,6 +48,19 @@ const ContentWithPicture = ({
   setViewPostVisible,
   setContentHeight,
 }) => {
+  let [fontsLoaded] = useFonts({
+    FuturaCyrillicBold,
+    FuturaCyrillicMedium,
+    FuturaCyrillicLight,
+    FuturaCyrillicBook,
+    FuturaCyrillicDemi,
+    FuturaCyrillicHeavy,
+    HelveticaNowDisplayRegular,
+    HelveticaNowDisplayBold,
+    HelveticaNowDisplayMedium,
+    HelveticaNowDisplayExtraBold,
+  });
+
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#0D0D0D" : "#8E8D93";
   const bgColor = "#1D1E1F";
@@ -136,6 +150,7 @@ const ContentWithPicture = ({
               padding: 4,
               borderRadius: 10,
               paddingHorizontal: 6,
+              fontFamily: "HelveticaNowDisplayExtraBold",
             }}
           >
             {FormatTime(item)}
@@ -240,7 +255,7 @@ const ContentWithPicture = ({
                         <Text
                           style={{
                             fontWeight: 600,
-                            fontSize: 12,
+                            fontSize: 14,
                             color: "white",
                             width: 200,
                             shadowColor: "black",
@@ -248,6 +263,7 @@ const ContentWithPicture = ({
                             shadowOpacity: 0.3,
                             shadowRadius: 10,
                             elevation: 6,
+                            fontFamily: "HelveticaNowDisplayBold",
                           }}
                           numberOfLines={1}
                         >
@@ -255,13 +271,14 @@ const ContentWithPicture = ({
                         </Text>
                         <Text
                           style={{
-                            fontSize: 10,
+                            fontSize: 12,
                             color: "white",
                             shadowColor: "black",
                             shadowOffset: { width: 6, height: 4 },
                             shadowOpacity: 0.3,
                             shadowRadius: 10,
                             elevation: 6,
+                            fontFamily: "HelveticaNowDisplayMedium",
                           }}
                         >
                           {item.trackArtist}
@@ -330,6 +347,7 @@ const ContentWithPicture = ({
                         fontSize: 18,
                         fontWeight: "600",
                         color: "white",
+                        fontFamily: "HelveticaNowDisplayBold",
                       }}
                     >
                       {item.hashTags}
@@ -372,6 +390,7 @@ const ContentWithPicture = ({
                     fontWeight: "600",
                     color: "white",
                     letterSpacing: -1,
+                    fontFamily: "HelveticaNowDisplayBold",
                   }}
                   numberOfLines={1}
                 >
@@ -384,7 +403,8 @@ const ContentWithPicture = ({
                   >
                     <Animated.Text
                       style={{
-                        fontSize: 16,
+                        fontFamily: "HelveticaNowDisplayMedium",
+                        fontSize: 17,
                         fontWeight: "400",
                         color: "white",
                         opacity: opacityInterpolate,

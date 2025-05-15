@@ -18,6 +18,17 @@ import {
   AddLibraryIcon,
   CheckmarkIcon,
 } from "./icons";
+import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
+import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
+import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
+import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
+import FuturaCyrillicDemi from "../assets/fonts/FuturaCyrillicDemi.ttf";
+import FuturaCyrillicHeavy from "../assets/fonts/FuturaCyrillicHeavy.ttf";
+import HelveticaNowDisplayRegular from "../assets/fonts/HelveticaNowDisplay-Regular.ttf";
+import HelveticaNowDisplayBold from "../assets/fonts/HelveticaNowDisplay-Bold.ttf";
+import HelveticaNowDisplayMedium from "../assets/fonts/HelveticaNowDisplay-Medium.ttf";
+import HelveticaNowDisplayExtraBold from "../assets/fonts/HelveticaNowDisplay-ExtraBold.ttf";
+import { useFonts } from "expo-font";
 
 const { width, height } = Dimensions.get("window");
 
@@ -30,6 +41,18 @@ const ContentWithoutPicture = ({
   setSelectedPost,
   setViewPostVisible,
 }) => {
+  let [fontsLoaded] = useFonts({
+    FuturaCyrillicBold,
+    FuturaCyrillicMedium,
+    FuturaCyrillicLight,
+    FuturaCyrillicBook,
+    FuturaCyrillicDemi,
+    FuturaCyrillicHeavy,
+    HelveticaNowDisplayRegular,
+    HelveticaNowDisplayBold,
+    HelveticaNowDisplayMedium,
+    HelveticaNowDisplayExtraBold,
+  });
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#0D0D0D" : "#8E8D93";
   const bgColor = colorMode === "light" ? "#F2F1F5" : "black";
@@ -94,6 +117,7 @@ const ContentWithoutPicture = ({
               fontWeight: 700,
               color: colorMode === "light" ? "black" : "white",
               paddingRight: 42,
+              fontFamily: "HelveticaNowDisplayExtraBold",
             }}
           >
             {FormatTime(item)}
@@ -155,6 +179,7 @@ const ContentWithoutPicture = ({
             <Text
               numberOfLines={1}
               style={{
+                fontFamily: "HelveticaNowDisplayBold",
                 fontSize: 18,
                 fontWeight: "600",
                 color:
@@ -218,6 +243,7 @@ const ContentWithoutPicture = ({
                 ? "rgba(0, 0, 0, 0.8)"
                 : "rgba(245, 245, 245, 0.9)",
             letterSpacing: -1,
+            fontFamily: "HelveticaNowDisplayBold",
           }}
         >
           {item.title}
@@ -226,7 +252,8 @@ const ContentWithoutPicture = ({
           <ScrollView showsVerticalScrollIndicator={false}>
             <Text
               style={{
-                fontSize: 16,
+                fontFamily: "HelveticaNowDisplayMedium",
+                fontSize: 17,
                 fontWeight: "400",
                 color:
                   colorMode === "light"

@@ -16,8 +16,23 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Audio } from "expo-av";
 import { BlurView } from "expo-blur";
+import FuturaCyrillicBold from "../../assets/fonts/FuturaCyrillicBold.ttf";
+import FuturaCyrillicMedium from "../../assets/fonts/FuturaCyrillicMedium.ttf";
+import FuturaCyrillicLight from "../../assets/fonts/FuturaCyrillicLight.ttf";
+import FuturaCyrillicBook from "../../assets/fonts/FuturaCyrillicBook.ttf";
+import FuturaCyrillicDemi from "../../assets/fonts/FuturaCyrillicDemi.ttf";
+import FuturaCyrillicHeavy from "../../assets/fonts/FuturaCyrillicHeavy.ttf";
+import { useFonts } from "expo-font";
 
 const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
+  let [fontsLoaded] = useFonts({
+    FuturaCyrillicBold,
+    FuturaCyrillicMedium,
+    FuturaCyrillicLight,
+    FuturaCyrillicBook,
+    FuturaCyrillicDemi,
+    FuturaCyrillicHeavy,
+  });
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const songBg = "rgba(255,255,255,0.25)";
@@ -34,7 +49,7 @@ const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
     const fetchSongs = async () => {
       try {
         const respone = await axios.get(
-          `http://localhost:5002/deezer-proxy?q=${query}&limit=16`
+          `http://localhost:5002/deezer-proxy?q=${query}&limit=15`
         );
         setResults(respone.data.data);
       } catch (error) {
@@ -167,6 +182,7 @@ const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
               backgroundColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
               color: colorMode === "light" ? "black" : "white",
               borderColor: colorMode === "light" ? "#F0F0F0" : "#121212",
+              fontFamily: "FuturaCyrillicBook",
             },
           ]}
           placeholder="Search song"
@@ -225,15 +241,22 @@ const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
                   <Text
                     style={{
                       color: textColor,
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: 700,
                       width: 200,
+                      fontFamily: "FuturaCyrillicDemi",
                     }}
                     numberOfLines={1}
                   >
                     {song.title}
                   </Text>
-                  <Text style={{ color: textColor, fontSize: 14 }}>
+                  <Text
+                    style={{
+                      color: textColor,
+                      fontSize: 16,
+                      fontFamily: "FuturaCyrillicBook",
+                    }}
+                  >
                     {song.artist.name}
                   </Text>
                 </View>
