@@ -20,17 +20,11 @@ import {
   AddLibraryIcon,
   CheckmarkIcon,
 } from "./icons";
-import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
-import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
-import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
-import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
-import FuturaCyrillicDemi from "../assets/fonts/FuturaCyrillicDemi.ttf";
-import FuturaCyrillicHeavy from "../assets/fonts/FuturaCyrillicHeavy.ttf";
-import HelveticaNowDisplayRegular from "../assets/fonts/HelveticaNowDisplay-Regular.ttf";
-import HelveticaNowDisplayBold from "../assets/fonts/HelveticaNowDisplay-Bold.ttf";
-import HelveticaNowDisplayMedium from "../assets/fonts/HelveticaNowDisplay-Medium.ttf";
-import HelveticaNowDisplayExtraBold from "../assets/fonts/HelveticaNowDisplay-ExtraBold.ttf";
 import { useFonts } from "expo-font";
+import InterBold from "../assets/fonts/Inter-Bold.otf";
+import InterMedium from "../assets/fonts/Inter-Medium.otf";
+import InterSemiBold from "../assets/fonts/Inter-SemiBold.otf";
+import InterRegular from "../assets/fonts/Inter-Regular.otf";
 
 const { width, height } = Dimensions.get("window");
 
@@ -49,16 +43,10 @@ const ContentWithPicture = ({
   setContentHeight,
 }) => {
   let [fontsLoaded] = useFonts({
-    FuturaCyrillicBold,
-    FuturaCyrillicMedium,
-    FuturaCyrillicLight,
-    FuturaCyrillicBook,
-    FuturaCyrillicDemi,
-    FuturaCyrillicHeavy,
-    HelveticaNowDisplayRegular,
-    HelveticaNowDisplayBold,
-    HelveticaNowDisplayMedium,
-    HelveticaNowDisplayExtraBold,
+    InterBold,
+    InterMedium,
+    InterSemiBold,
+    InterRegular,
   });
 
   const { colorMode } = useColorMode();
@@ -89,11 +77,10 @@ const ContentWithPicture = ({
   const CARD_HEIGHT = (CARD_WIDTH * 5) / 4;
 
   return (
-    <View
+    <Animated.View
       style={{
         backgroundColor: bgColor,
         width,
-
         display: "flex",
         justifyContent: "flex-end",
       }}
@@ -150,7 +137,7 @@ const ContentWithPicture = ({
               padding: 4,
               borderRadius: 10,
               paddingHorizontal: 6,
-              fontFamily: "HelveticaNowDisplayExtraBold",
+              fontFamily: "InterSemiBold",
             }}
           >
             {FormatTime(item)}
@@ -263,7 +250,7 @@ const ContentWithPicture = ({
                             shadowOpacity: 0.3,
                             shadowRadius: 10,
                             elevation: 6,
-                            fontFamily: "HelveticaNowDisplayBold",
+                            fontFamily: "InterSemiBold",
                           }}
                           numberOfLines={1}
                         >
@@ -278,7 +265,7 @@ const ContentWithPicture = ({
                             shadowOpacity: 0.3,
                             shadowRadius: 10,
                             elevation: 6,
-                            fontFamily: "HelveticaNowDisplayMedium",
+                            fontFamily: "InterRegular",
                           }}
                         >
                           {item.trackArtist}
@@ -347,7 +334,7 @@ const ContentWithPicture = ({
                         fontSize: 18,
                         fontWeight: "600",
                         color: "white",
-                        fontFamily: "HelveticaNowDisplayBold",
+                        fontFamily: "InterSemiBold",
                       }}
                     >
                       {item.hashTags}
@@ -390,7 +377,7 @@ const ContentWithPicture = ({
                     fontWeight: "600",
                     color: "white",
                     letterSpacing: -1,
-                    fontFamily: "HelveticaNowDisplayBold",
+                    fontFamily: "InterSemiBold",
                   }}
                   numberOfLines={1}
                 >
@@ -403,11 +390,11 @@ const ContentWithPicture = ({
                   >
                     <Animated.Text
                       style={{
-                        fontFamily: "HelveticaNowDisplayMedium",
-                        fontSize: 17,
+                        fontSize: 16,
                         fontWeight: "400",
                         color: "white",
                         opacity: opacityInterpolate,
+                        fontFamily: "InterRegular",
                       }}
                       onLayout={(e) =>
                         setContentHeight(e.nativeEvent.layout.height)
@@ -422,7 +409,7 @@ const ContentWithPicture = ({
           </View>
         </View>
       </BlurView>
-    </View>
+    </Animated.View>
   );
 };
 

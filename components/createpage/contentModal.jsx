@@ -2,23 +2,10 @@ import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useColorMode } from "native-base";
-import FuturaCyrillicBold from "../../assets/fonts/FuturaCyrillicBold.ttf";
-import FuturaCyrillicMedium from "../../assets/fonts/FuturaCyrillicMedium.ttf";
-import FuturaCyrillicLight from "../../assets/fonts/FuturaCyrillicLight.ttf";
-import FuturaCyrillicBook from "../../assets/fonts/FuturaCyrillicBook.ttf";
-import FuturaCyrillicDemi from "../../assets/fonts/FuturaCyrillicDemi.ttf";
-import FuturaCyrillicHeavy from "../../assets/fonts/FuturaCyrillicHeavy.ttf";
 import { useFonts } from "expo-font";
 
 const ContentModal = ({ setContent, content }) => {
-  let [fontsLoaded] = useFonts({
-    FuturaCyrillicBold,
-    FuturaCyrillicMedium,
-    FuturaCyrillicLight,
-    FuturaCyrillicBook,
-    FuturaCyrillicDemi,
-    FuturaCyrillicHeavy,
-  }); 
+  let [fontsLoaded] = useFonts({});
   const [countChar, setCountChar] = useState(content.length);
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
@@ -55,9 +42,8 @@ const ContentModal = ({ setContent, content }) => {
               ? "rgba(0, 0, 0, 0.9)"
               : "rgba(245, 245, 245, 0.9)",
           fontWeight: 500,
-          fontSize: 18,
+          fontSize: 16,
           marginLeft: 10,
-          fontFamily: "FuturaCyrillicDemi",
         }}
       >
         Post content:
@@ -77,8 +63,7 @@ const ContentModal = ({ setContent, content }) => {
         <TextInput
           style={{
             color: textColor,
-            fontSize: 18,
-            fontFamily: "FuturaCyrillicBook",
+            fontSize: 15,
           }}
           placeholder="Talk about your memory. What makes it a memory?"
           placeholderTextColor={
@@ -102,7 +87,6 @@ const ContentModal = ({ setContent, content }) => {
           textAlign: "right",
           marginRight: 10,
           marginTop: 4,
-          fontFamily: "FuturaCyrillicBook",
         }}
       >
         {countChar}/1000

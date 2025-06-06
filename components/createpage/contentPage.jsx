@@ -29,12 +29,6 @@ import BottomPage from "../bottom-page";
 import { BlurView } from "expo-blur";
 import ContentModal from "./contentModal";
 import TagsModal from "./tagsModal";
-import FuturaCyrillicBold from "../../assets/fonts/FuturaCyrillicBold.ttf";
-import FuturaCyrillicMedium from "../../assets/fonts/FuturaCyrillicMedium.ttf";
-import FuturaCyrillicLight from "../../assets/fonts/FuturaCyrillicLight.ttf";
-import FuturaCyrillicBook from "../../assets/fonts/FuturaCyrillicBook.ttf";
-import FuturaCyrillicDemi from "../../assets/fonts/FuturaCyrillicDemi.ttf";
-import FuturaCyrillicHeavy from "../../assets/fonts/FuturaCyrillicHeavy.ttf";
 import { useFonts } from "expo-font";
 
 const ContentPage = ({
@@ -51,14 +45,7 @@ const ContentPage = ({
   tags,
   handleTags,
 }) => {
-  let [fontsLoaded] = useFonts({
-    FuturaCyrillicBold,
-    FuturaCyrillicMedium,
-    FuturaCyrillicLight,
-    FuturaCyrillicBook,
-    FuturaCyrillicDemi,
-    FuturaCyrillicHeavy,
-  });
+  let [fontsLoaded] = useFonts({});
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
@@ -94,15 +81,8 @@ const ContentPage = ({
                 backgroundColor: "rgba(38, 43, 43, 0.6)",
               }}
             >
-              <BlurView intensity={50} tint="default" style={{ padding: 10 }}>
-                <Text
-                  style={[
-                    styles.addImageText,
-                    { fontFamily: "FuturaCyrillicBold" },
-                  ]}
-                >
-                  Add Image
-                </Text>
+              <BlurView intensity={50} tint="default" style={{ padding: 8 }}>
+                <Text style={[styles.addImageText]}>Add Image</Text>
               </BlurView>
             </View>
           </Pressable>
@@ -138,7 +118,9 @@ const ContentPage = ({
             <TextInput
               style={[
                 styles.titleInput,
-                { color: textColor, fontFamily: "FuturaCyrillicDemi" },
+                {
+                  color: textColor,
+                },
               ]}
               value={title}
               onChangeText={setTitle}
@@ -182,9 +164,8 @@ const ContentPage = ({
                   style={{
                     color: textColor,
                     textAlign: "center",
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: 600,
-                    fontFamily: "FuturaCyrillicDemi",
                   }}
                 >
                   Add a content.
@@ -215,7 +196,6 @@ const ContentPage = ({
                 style={[
                   styles.directionTitle,
                   {
-                    fontFamily: "FuturaCyrillicDemi",
                     color:
                       colorMode === "light"
                         ? "rgba(0,0,0,0.4)"
@@ -225,12 +205,7 @@ const ContentPage = ({
               >
                 Add music
               </Text>
-              <Text
-                style={[
-                  styles.directionText,
-                  { color: textColor, fontFamily: "FuturaCyrillicDemi" },
-                ]}
-              >
+              <Text style={[styles.directionText, { color: textColor }]}>
                 Add your music to express your memory
               </Text>
               <BlurView
@@ -306,7 +281,6 @@ const ContentPage = ({
                 style={[
                   styles.directionTitle,
                   {
-                    fontFamily: "FuturaCyrillicDemi",
                     color:
                       colorMode === "light"
                         ? "rgba(0,0,0,0.4)"
@@ -316,12 +290,7 @@ const ContentPage = ({
               >
                 Tags
               </Text>
-              <Text
-                style={[
-                  styles.directionText,
-                  { color: textColor, fontFamily: "FuturaCyrillicDemi" },
-                ]}
-              >
+              <Text style={[styles.directionText, { color: textColor }]}>
                 Add tags for easy lookup
               </Text>
               <BlurView
@@ -413,7 +382,7 @@ const styles = StyleSheet.create({
   },
   directionText: {
     marginTop: 4,
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 600,
   },
   directionTitle: {
@@ -448,7 +417,7 @@ const styles = StyleSheet.create({
   addImageText: {
     color: "rgba(245, 245, 245, 0.9)",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 15,
   },
   imageButton: {
     display: "flex",

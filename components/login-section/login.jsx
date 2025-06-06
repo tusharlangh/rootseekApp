@@ -9,13 +9,19 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import { GrandHotel_400Regular } from "@expo-google-fonts/grand-hotel";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { EyeIconClosed, EyeIconOpen } from "../icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Box, useColorModeValue, useColorMode } from "native-base";
+import { LinearGradient } from "expo-linear-gradient";
+import { PhoneContext } from "../../App";
 
 const LoginPage = ({ navigation }) => {
+  const { usePhone } = useContext(PhoneContext);
+
+  const address = usePhone ? "192.168.1.80:5002" : "localhost:5002";
+
   let [fontsLoaded] = useFonts({
     GrandHotel_400Regular,
   });
@@ -46,7 +52,7 @@ const LoginPage = ({ navigation }) => {
     };
 
     axios
-      .post("http://localhost:5002/user/login", DataToSend)
+      .post(`http://${address}/user/login`, DataToSend)
       .then((response) => {
         if (response.data && response.data.token) {
           AsyncStorage.setItem("token", response.data.token);
@@ -64,99 +70,111 @@ const LoginPage = ({ navigation }) => {
   };
 
   return (
-    <Box flex={1} justifyContent="center" alignItems="center" bg={bgColor}>
-      <Text style={[styles.logo, { color: textColor }]}>RootSeek</Text>
+    <LinearGradient
+      colors={["#F9FAFF", "#EAF0FF", "#FCEEF5"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{ height: "100%" }}
+    >
+      <Box flex={1} justifyContent="center" alignItems="center">
+        <Text style={[styles.logo, { color: textColor }]}>RootSeek</Text>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={[styles.input, { color: textColor, borderColor: borderColor }]}
-          placeholder="E-mail address"
-          placeholderTextColor="#808080"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <View>
+        <View style={styles.inputContainer}>
           <TextInput
             style={[
               styles.input,
               { color: textColor, borderColor: borderColor },
             ]}
-            placeholder="Password"
+            placeholder="E-mail address"
             placeholderTextColor="#808080"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!seePassword}
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
             autoCapitalize="none"
           />
-          <View style={{ position: "absolute", right: 10, top: 9 }}>
-            <Pressable onPress={() => setSeePassword(!seePassword)}>
-              {seePassword ? (
-                <EyeIconOpen size={20} color={textColor} />
-              ) : (
-                <EyeIconClosed size={20} color={textColor} />
-              )}
+          <View>
+            <TextInput
+              style={[
+                styles.input,
+                { color: textColor, borderColor: borderColor },
+              ]}
+              placeholder="Password"
+              placeholderTextColor="#808080"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!seePassword}
+              autoCapitalize="none"
+            />
+            <View style={{ position: "absolute", right: 10, top: 9 }}>
+              <Pressable onPress={() => setSeePassword(!seePassword)}>
+                {seePassword ? (
+                  <EyeIconOpen size={20} color={textColor} />
+                ) : (
+                  <EyeIconClosed size={20} color={textColor} />
+                )}
+              </Pressable>
+            </View>
+          </View>
+
+          <Text style={[styles.forgotText, { color: textColor }]}>
+            Forgot your password?
+          </Text>
+
+          <TouchableOpacity
+            style={[
+              styles.loginBtn,
+              {
+                backgroundColor: textColor,
+              },
+            ]}
+            onPress={handleLogin}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator color={bgColor} />
+            ) : (
+              <Text
+                style={[
+                  styles.loginBtnText,
+                  { color: colorMode === "light" ? "white" : "black" },
+                ]}
+              >
+                Log in to your account
+              </Text>
+            )}
+          </TouchableOpacity>
+
+          <Text style={{ color: "red" }}>{error}</Text>
+
+          <View style={styles.orSection}>
+            <View style={[styles.line, { backgroundColor: textColor }]}></View>
+            <Text style={{ color: textColor }}>OR</Text>
+            <View style={[styles.line, { backgroundColor: textColor }]}></View>
+          </View>
+
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignContent: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={[styles.linkSignUp, { color: textColor }]}>
+              Don't have an account?{" "}
+            </Text>
+
+            <Pressable onPress={() => navigation.navigate("Sigin")}>
+              <Text
+                style={{ textDecorationLine: "underline", color: textColor }}
+              >
+                Sign in
+              </Text>
             </Pressable>
           </View>
         </View>
-
-        <Text style={[styles.forgotText, { color: textColor }]}>
-          Forgot your password?
-        </Text>
-
-        <TouchableOpacity
-          style={[
-            styles.loginBtn,
-            {
-              backgroundColor: textColor,
-            },
-          ]}
-          onPress={handleLogin}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <ActivityIndicator color={bgColor} />
-          ) : (
-            <Text
-              style={[
-                styles.loginBtnText,
-                { color: colorMode === "light" ? "white" : "black" },
-              ]}
-            >
-              Log in to your account
-            </Text>
-          )}
-        </TouchableOpacity>
-
-        <Text style={{ color: "red" }}>{error}</Text>
-
-        <View style={styles.orSection}>
-          <View style={[styles.line, { backgroundColor: textColor }]}></View>
-          <Text style={{ color: textColor }}>OR</Text>
-          <View style={[styles.line, { backgroundColor: textColor }]}></View>
-        </View>
-
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignContent: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text style={[styles.linkSignUp, { color: textColor }]}>
-            Don't have an account?{" "}
-          </Text>
-
-          <Pressable onPress={() => navigation.navigate("Sigin")}>
-            <Text style={{ textDecorationLine: "underline", color: textColor }}>
-              Sign in
-            </Text>
-          </Pressable>
-        </View>
-      </View>
-    </Box>
+      </Box>
+    </LinearGradient>
   );
 };
 

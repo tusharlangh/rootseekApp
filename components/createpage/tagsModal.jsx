@@ -2,23 +2,10 @@ import { BlurView } from "expo-blur";
 import { useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import { useColorMode } from "native-base";
-import FuturaCyrillicBold from "../../assets/fonts/FuturaCyrillicBold.ttf";
-import FuturaCyrillicMedium from "../../assets/fonts/FuturaCyrillicMedium.ttf";
-import FuturaCyrillicLight from "../../assets/fonts/FuturaCyrillicLight.ttf";
-import FuturaCyrillicBook from "../../assets/fonts/FuturaCyrillicBook.ttf";
-import FuturaCyrillicDemi from "../../assets/fonts/FuturaCyrillicDemi.ttf";
-import FuturaCyrillicHeavy from "../../assets/fonts/FuturaCyrillicHeavy.ttf";
 import { useFonts } from "expo-font";
 
 const TagsModal = ({ tags, handleTags }) => {
-  let [fontsLoaded] = useFonts({
-    FuturaCyrillicBold,
-    FuturaCyrillicMedium,
-    FuturaCyrillicLight,
-    FuturaCyrillicBook,
-    FuturaCyrillicDemi,
-    FuturaCyrillicHeavy,
-  });
+  let [fontsLoaded] = useFonts({});
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const count = tags.split("#").length - 1;
@@ -45,14 +32,7 @@ const TagsModal = ({ tags, handleTags }) => {
         ></View>
       </View>
 
-      <Text
-        style={[
-          styles.label,
-          { color: textColor, fontFamily: "FuturaCyrillicDemi" },
-        ]}
-      >
-        Enter tags:
-      </Text>
+      <Text style={[styles.label, { color: textColor }]}>Enter tags:</Text>
 
       <BlurView
         style={[
@@ -68,8 +48,7 @@ const TagsModal = ({ tags, handleTags }) => {
         <TextInput
           style={{
             color: textColor,
-            fontSize: 18,
-            fontFamily: "FuturaCyrillicBook",
+            fontSize: 15,
           }}
           placeholder="Please put '#' in front e.g. #rootseek..."
           placeholderTextColor={
@@ -101,14 +80,7 @@ const TagsModal = ({ tags, handleTags }) => {
         >
           {count}
         </Text>
-        <Text
-          style={[
-            styles.counter,
-            { color: textColor, fontFamily: "FuturaCyrillicBook" },
-          ]}
-        >
-          /10
-        </Text>
+        <Text style={[styles.counter, { color: textColor }]}>/10</Text>
       </View>
     </View>
   );
@@ -128,7 +100,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontWeight: "500",
-    fontSize: 18,
+    fontSize: 16,
     marginLeft: 10,
   },
   inputContainer: {

@@ -15,24 +15,10 @@ import { PlayIcon, PauseIcon, SearchIconOutline } from "../icons";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Audio } from "expo-av";
-import { BlurView } from "expo-blur";
-import FuturaCyrillicBold from "../../assets/fonts/FuturaCyrillicBold.ttf";
-import FuturaCyrillicMedium from "../../assets/fonts/FuturaCyrillicMedium.ttf";
-import FuturaCyrillicLight from "../../assets/fonts/FuturaCyrillicLight.ttf";
-import FuturaCyrillicBook from "../../assets/fonts/FuturaCyrillicBook.ttf";
-import FuturaCyrillicDemi from "../../assets/fonts/FuturaCyrillicDemi.ttf";
-import FuturaCyrillicHeavy from "../../assets/fonts/FuturaCyrillicHeavy.ttf";
 import { useFonts } from "expo-font";
 
 const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
-  let [fontsLoaded] = useFonts({
-    FuturaCyrillicBold,
-    FuturaCyrillicMedium,
-    FuturaCyrillicLight,
-    FuturaCyrillicBook,
-    FuturaCyrillicDemi,
-    FuturaCyrillicHeavy,
-  });
+  let [fontsLoaded] = useFonts({});
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const songBg = "rgba(255,255,255,0.25)";
@@ -182,7 +168,6 @@ const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
               backgroundColor: colorMode === "light" ? "#E4E3E8" : "#1C1C1E",
               color: colorMode === "light" ? "black" : "white",
               borderColor: colorMode === "light" ? "#F0F0F0" : "#121212",
-              fontFamily: "FuturaCyrillicBook",
             },
           ]}
           placeholder="Search song"
@@ -190,7 +175,7 @@ const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
           value={query}
           onChangeText={setQuery}
         />
-        <View style={{ position: "absolute", top: 12, left: 12 }}>
+        <View style={{ position: "absolute", top: 10, left: 12 }}>
           <SearchIconOutline
             size={18}
             color={colorMode === "light" ? "black" : "white"}
@@ -241,10 +226,9 @@ const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
                   <Text
                     style={{
                       color: textColor,
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: 700,
                       width: 200,
-                      fontFamily: "FuturaCyrillicDemi",
                     }}
                     numberOfLines={1}
                   >
@@ -253,8 +237,7 @@ const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
                   <Text
                     style={{
                       color: textColor,
-                      fontSize: 16,
-                      fontFamily: "FuturaCyrillicBook",
+                      fontSize: 14,
                     }}
                   >
                     {song.artist.name}
@@ -298,7 +281,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 14,
     fontWeight: 400,
-    fontSize: 18,
+    fontSize: 16,
     paddingLeft: 36,
     width: "100%",
   },

@@ -14,22 +14,18 @@ import { useContext, useEffect, useRef, useState } from "react";
 import ViewPost from "./viewPost";
 import { PostsContext } from "./search";
 import { AddLibraryIcon } from "./icons";
-import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
-import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
-import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
-import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
-import FuturaCyrillicDemi from "../assets/fonts/FuturaCyrillicDemi.ttf";
-import FuturaCyrillicHeavy from "../assets/fonts/FuturaCyrillicHeavy.ttf";
 import { useFonts } from "expo-font";
+import InterBold from "../assets/fonts/Inter-Bold.otf";
+import InterMedium from "../assets/fonts/Inter-Medium.otf";
+import InterSemiBold from "../assets/fonts/Inter-SemiBold.otf";
+import InterRegular from "../assets/fonts/Inter-Regular.otf";
 
 const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
   let [fontsLoaded] = useFonts({
-    FuturaCyrillicBold,
-    FuturaCyrillicMedium,
-    FuturaCyrillicLight,
-    FuturaCyrillicBook,
-    FuturaCyrillicDemi,
-    FuturaCyrillicHeavy,
+    InterBold,
+    InterMedium,
+    InterSemiBold,
+    InterRegular,
   });
   const { groupedPosts: posts } = useContext(PostsContext);
   const { colorMode } = useColorMode();
@@ -98,13 +94,13 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
             <View key={index}>
               <Text
                 style={{
-                  color: colorMode === "light" ? "black" : "white",
+                  color: colorMode === "light" ? "rgba(0,0,0,0.8)" : "white",
                   fontWeight: 500,
                   fontSize: 22,
                   marginBottom: 10,
                   marginTop: 12,
                   marginLeft: 4,
-                  fontFamily: "FuturaCyrillicDemi",
+                  fontFamily: "InterMedium",
                 }}
               >
                 {p.title}
@@ -120,7 +116,7 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                       {
                         backgroundColor:
                           colorMode === "light"
-                            ? "rgba(255,255,255,0.5)"
+                            ? "rgba(255,255,255,1)"
                             : "#161618",
                         marginBottom:
                           index === groupedPostsByDate.length - 1 &&
@@ -148,7 +144,7 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                           {
                             color: colorMode === "light" ? "black" : "white",
                             flex: 7.5,
-                            fontFamily: "FuturaCyrillicDemi",
+                            fontFamily: "InterSemiBold",
                           },
                         ]}
                         numberOfLines={1}
@@ -161,7 +157,7 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                           {
                             flex: 1.5,
                             color: colorMode === "light" ? "black" : "white",
-                            fontFamily: "FuturaCyrillicMedium",
+                            fontFamily: "InterRegular",
                           },
                         ]}
                       >
@@ -175,7 +171,7 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                           styles.postContent,
                           {
                             color: colorMode === "light" ? "#3D3D3D" : "white",
-                            fontFamily: "FuturaCyrillicBook",
+                            fontFamily: "InterRegular",
                           },
                         ]}
                         numberOfLines={4}
@@ -208,7 +204,7 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                                     paddingHorizontal: 10,
                                     paddingVertical: 3,
                                     borderRadius: 15,
-                                    fontFamily: "FuturaCyrillicDemi",
+                                    fontFamily: "InterRegular",
                                   },
                                 ]}
                               >
@@ -246,9 +242,9 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                               style={{
                                 color:
                                   colorMode === "light" ? "black" : "white",
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: 700,
-                                fontFamily: "FuturaCyrillicDemi",
+                                fontFamily: "InterSemiBold",
                               }}
                             >
                               {post.trackName}
@@ -257,8 +253,8 @@ const DisplayPosts = ({ groupedPostsByDate, setSearch, animatedValue }) => {
                               style={{
                                 color:
                                   colorMode === "light" ? "black" : "white",
-                                fontSize: 14,
-                                fontFamily: "FuturaCyrillicBook",
+                                fontSize: 12,
+                                fontFamily: "InterRegular",
                               }}
                             >
                               {post.trackArtist}
@@ -308,7 +304,7 @@ const styles = StyleSheet.create({
   },
   postContent: {
     fontWeight: "400",
-    fontSize: 17,
+    fontSize: 14,
     color: "#B3B3B3",
   },
   postHashTags: {

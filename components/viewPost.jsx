@@ -32,12 +32,6 @@ import { DefualtCover } from "../additional";
 import { RefreshValue } from "./navbar";
 import ContentWithoutPicture from "./contentWithoutPicture";
 import ContentWithPicture from "./contentWithPicture";
-import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
-import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
-import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
-import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
-import FuturaCyrillicDemi from "../assets/fonts/FuturaCyrillicDemi.ttf";
-import { useFonts } from "expo-font";
 
 const { width, height } = Dimensions.get("window");
 
@@ -47,14 +41,6 @@ const ViewPost = ({
   viewPostVisible,
   posts,
 }) => {
-  let [fontsLoaded] = useFonts({
-    FuturaCyrillicBold,
-    FuturaCyrillicMedium,
-    FuturaCyrillicLight,
-    FuturaCyrillicBook,
-    FuturaCyrillicDemi,
-  });
-
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "#0D0D0D" : "#8E8D93";
   const bgColor = "black";
@@ -238,7 +224,7 @@ const ViewPost = ({
           length: width,
           offset: width * index,
           index,
-        })} 
+        })}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         renderItem={({ item }) =>

@@ -37,33 +37,26 @@ import { useFocusEffect } from "@react-navigation/native";
 import SwipePage from "./swipe-page";
 import StoryViewer from "./StoryViewer";
 import { LinearGradient } from "expo-linear-gradient";
-import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
-import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
-import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
-import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
-import HelveticaNowDisplayRegular from "../assets/fonts/HelveticaNowDisplay-Regular.ttf";
-import HelveticaNowDisplayBold from "../assets/fonts/HelveticaNowDisplay-Bold.ttf";
-import HelveticaNowDisplayMedium from "../assets/fonts/HelveticaNowDisplay-Medium.ttf";
-import HelveticaNowDisplayExtraBold from "../assets/fonts/HelveticaNowDisplay-ExtraBold.ttf";
+import InterBold from "../assets/fonts/Inter-Bold.otf";
+import InterMedium from "../assets/fonts/Inter-Medium.otf";
+import InterSemiBold from "../assets/fonts/Inter-SemiBold.otf";
+import { PhoneContext } from "../App";
 
 const { width, height } = Dimensions.get("window");
 
 const Home = () => {
+  const { usePhone } = useContext(PhoneContext);
+
+  const address = usePhone ? "192.168.1.80:5002" : "localhost:5002";
+
   let [fontsLoaded] = useFonts({
     GrandHotel_400Regular,
-    FuturaCyrillicBold,
-    FuturaCyrillicMedium,
-    FuturaCyrillicLight,
-    FuturaCyrillicBook,
-    HelveticaNowDisplayRegular,
-    HelveticaNowDisplayBold,
-    HelveticaNowDisplayMedium,
-    HelveticaNowDisplayExtraBold,
+    InterBold,
+    InterMedium,
+    InterSemiBold,
   });
 
   const [posts, setPosts] = useState([]);
-  const [shufflePosts, setShufflePosts] = useState([]);
-  const [shuffleRandomNumber, setShuffleRandomNumber] = useState(0);
 
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
@@ -97,10 +90,6 @@ const Home = () => {
   );
 
   useEffect(() => {
-    console.log(selectedThemeText);
-  }, [selectedThemeText]);
-
-  useEffect(() => {
     const fetchPosts = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
@@ -110,7 +99,7 @@ const Home = () => {
           return;
         }
 
-        const response = await axios.get("http://localhost:5002/user/posts", {
+        const response = await axios.get(`http://${address}/user/posts`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -119,7 +108,6 @@ const Home = () => {
       } catch (error) {
         console.error("Error fetching posts:", error);
       } finally {
-        setIsLoading(false);
       }
     };
 
@@ -138,7 +126,7 @@ const Home = () => {
         }
 
         const response = await axios.get(
-          "http://localhost:5002/nlp/pattern-insights",
+          `http://${address}/nlp/pattern-insights`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -166,7 +154,7 @@ const Home = () => {
         }
 
         const response = await axios.get(
-          "http://localhost:5002/nlp/topThemePosts",
+          `http://${address}/nlp/topThemePosts`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -192,7 +180,7 @@ const Home = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:5002/nlp/stories",
+        `http://${address}/nlp/stories`,
         { posts: posts, theme: theme },
         {
           headers: {
@@ -218,23 +206,34 @@ const Home = () => {
 
   const flatListData = [
     {
-      title: "Insight",
+      title: "Insight One",
       data: Object.values(patternInsights)[0],
-      color: "#232E54",
+      color: "#0A1230",
+      bg: "white",
     },
     {
-      title: "What you are good at",
+      title: "Insight Two",
       data: Object.values(patternInsights)[1],
-      color: "#544023",
-    },
-    {
-      title: "What to improve on",
-      data: Object.values(patternInsights)[2],
-      color: "#234554",
+      color: "#0A302F",
+      bg: "white",
     },
   ];
 
   const scrollX = useRef(new Animated.Value(0)).current;
+
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  const translateY = scrollY.interpolate({
+    inputRange: [0, 180],
+    outputRange: [0, -40],
+    extrapolate: "clamp",
+  });
+
+  const opacity = scrollY.interpolate({
+    inputRange: [0, 180],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
 
   return (
     <LinearGradient
@@ -243,9 +242,20 @@ const Home = () => {
       end={{ x: 1, y: 1 }}
       style={{ height: "100%" }}
     >
-      <View style={[styles.container]}>
+      <Animated.View
+        style={[
+          styles.container,
+          {
+            transform: [
+              {
+                translateY: translateY,
+              },
+            ],
+          },
+        ]}
+      >
         <View style={styles.nestedContainer}>
-          <View
+          <Animated.View
             style={{
               display: "flex",
               alignItems: "center",
@@ -253,6 +263,7 @@ const Home = () => {
               justifyContent: "flex-end",
               marginBottom: 10,
               paddingHorizontal: 10,
+              opacity,
             }}
           >
             <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
@@ -271,8 +282,15 @@ const Home = () => {
                 <Text style={{ fontSize: 20, color: bgColor }}>T</Text>
               </View>
             </View>
-          </View>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          </Animated.View>
+
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+              { useNativeDriver: false }
+            )}
+          >
             <View
               style={{
                 display: "flex",
@@ -291,9 +309,9 @@ const Home = () => {
                   {
                     color: "rgba(0,0,0,0.8)",
                     fontSize: 26,
-                    fontWeight: 800,
-
-                    fontFamily: "HelveticaNowDisplayExtraBold",
+                    fontWeight: 700,
+                    paddingTop: 2,
+                    fontFamily: "InterBold",
                   },
                 ]}
               >
@@ -393,8 +411,8 @@ const Home = () => {
                     {
                       color: "rgba(0,0,0,0.8)",
                       fontSize: 26,
-                      fontWeight: 400,
-                      fontFamily: "HelveticaNowDisplayExtraBold",
+                      fontWeight: 700,
+                      fontFamily: "InterBold",
                     },
                   ]}
                 >
@@ -405,25 +423,25 @@ const Home = () => {
                 data={flatListData}
                 keyExtractor={(_, index) => index.toString()}
                 horizontal
-                snapToInterval={320}
+                showsHorizontalScrollIndicator={false}
+                snapToInterval={360}
                 snapToAlignment="start"
                 decelerationRate="fast"
-                showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{
-                  paddingHorizontal: (width - 300) / 2,
+                  paddingHorizontal: (width - 340) / 2,
                 }}
                 onScroll={Animated.event(
                   [{ nativeEvent: { contentOffset: { x: scrollX } } }],
                   { useNativeDriver: false }
                 )}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                   <View
                     style={{
-                      width: 300,
-                      marginRight: 20,
+                      width: 340,
+                      marginRight: index !== flatListData.length - 1 ? 20 : 0,
                       borderRadius: 20,
                       backgroundColor:
-                        colorMode === "light" ? "white" : "#D2A13F",
+                        colorMode === "light" ? item.bg : "#D2A13F",
                       padding: 25,
                       marginTop: 12,
                       shadowColor: "rgba(0,0,0,0.7)",
@@ -445,7 +463,7 @@ const Home = () => {
                           fontSize: 24,
                           fontWeight: 600,
                           marginBottom: 10,
-                          fontFamily: "HelveticaNowDisplayBold",
+                          fontFamily: "InterSemiBold",
                         }}
                       >
                         {item.title}
@@ -453,13 +471,12 @@ const Home = () => {
 
                       <ScrollView
                         showsVerticalScrollIndicator={false}
-                        style={{ maxHeight: 220 }}
+                        style={{ maxHeight: 210 }}
                       >
                         <Text
                           style={{
                             color: item.color,
-                            fontSize: 16,
-                            fontFamily: "HelveticaNowDisplayMedium",
+                            fontSize: 15,
                           }}
                         >
                           {patternLoading ? (
@@ -492,7 +509,7 @@ const Home = () => {
               >
                 <View style={{ display: "flex", flexDirection: "row", gap: 4 }}>
                   {flatListData.map((_, i) => {
-                    const inputRange = [(i - 1) * 320, i * 320, (i + 1) * 320];
+                    const inputRange = [(i - 1) * 360, i * 360, (i + 1) * 360];
                     const opacity = scrollX.interpolate({
                       inputRange,
                       outputRange: [0.3, 0.8, 0.3],
@@ -503,7 +520,7 @@ const Home = () => {
                         key={i}
                         style={{
                           height: 4,
-                          width: 40,
+                          width: 20,
                           backgroundColor: "rgb(194, 194, 194)",
                           borderRadius: 4,
                           overflow: "hidden",
@@ -518,7 +535,7 @@ const Home = () => {
                               {
                                 translateX: scrollX.interpolate({
                                   inputRange,
-                                  outputRange: [-40, 0, 40],
+                                  outputRange: [-20, 0, 20],
                                   extrapolate: "clamp",
                                 }),
                               },
@@ -554,7 +571,7 @@ const Home = () => {
                       color: "rgba(0,0,0,0.8)",
                       fontSize: 26,
                       fontWeight: 700,
-                      fontFamily: "HelveticaNowDisplayExtraBold",
+                      fontFamily: "InterBold",
                     },
                   ]}
                 >
@@ -596,7 +613,7 @@ const Home = () => {
                         style={{
                           fontSize: 20,
                           fontWeight: 600,
-                          fontFamily: "HelveticaNowDisplayBold",
+                          fontFamily: "InterSemiBold",
                           color:
                             index === 0
                               ? "#482968"
@@ -642,7 +659,7 @@ const Home = () => {
             </View>
           )}
         </Modal>
-      </View>
+      </Animated.View>
     </LinearGradient>
   );
 };
@@ -656,7 +673,7 @@ const styles = StyleSheet.create({
   },
   container: {
     height: "100%",
-    paddingTop: 60,
+    paddingTop: 50,
     paddingHorizontal: 0,
     position: "relative",
     flex: 1,

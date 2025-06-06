@@ -29,25 +29,26 @@ import { RefreshValue } from "./navbar";
 import { useFocusEffect } from "@react-navigation/native";
 import { GrandHotel_400Regular } from "@expo-google-fonts/grand-hotel";
 import { LinearGradient } from "expo-linear-gradient";
-import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
-import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
-import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
-import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
-import FuturaCyrillicDemi from "../assets/fonts/FuturaCyrillicDemi.ttf";
-import FuturaCyrillicHeavy from "../assets/fonts/FuturaCyrillicHeavy.ttf";
 import { useFonts } from "expo-font";
+import InterBold from "../assets/fonts/Inter-Bold.otf";
+import InterMedium from "../assets/fonts/Inter-Medium.otf";
+import InterSemiBold from "../assets/fonts/Inter-SemiBold.otf";
+import InterRegular from "../assets/fonts/Inter-Regular.otf";
+import { PhoneContext } from "../App";
 
 export const PostsContext = createContext();
 
 const Search = () => {
+  const { usePhone } = useContext(PhoneContext);
+
+  const address = usePhone ? "192.168.1.80:5002" : "localhost:5002";
+
   let [fontsLoaded] = useFonts({
     GrandHotel_400Regular,
-    FuturaCyrillicBold,
-    FuturaCyrillicMedium,
-    FuturaCyrillicLight,
-    FuturaCyrillicBook,
-    FuturaCyrillicDemi,
-    FuturaCyrillicHeavy,
+    InterBold,
+    InterMedium,
+    InterSemiBold,
+    InterRegular,
   });
   const [search, setSearch] = useState("");
   const [posts, setPosts] = useState([]);
@@ -114,7 +115,7 @@ const Search = () => {
         }
 
         const response = await axios.get(
-          `http://localhost:5002/search/posts?q=${encodeURIComponent(search)}`,
+          `http://${address}/search/posts?q=${encodeURIComponent(search)}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -136,7 +137,7 @@ const Search = () => {
         if (!token) {
           console.log("no token found.");
         }
-        const response = await axios.get("http://localhost:5002/posts/all", {
+        const response = await axios.get(`http://${address}/posts/all`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -280,16 +281,13 @@ const Search = () => {
                   styles.searchBar,
                   {
                     backgroundColor:
-                      colorMode === "light"
-                        ? "rgba(255,255,255,0.5)"
-                        : "#1C1C1E",
+                      colorMode === "light" ? "rgba(255,255,255,1)" : "black",
                     color: textColor,
-                    shadowColor: "rgba(0,0,0,0.7)",
+                    shadowColor: "rgba(0,0,0,0.5)",
                     shadowOffset: { width: 0, height: 0 },
                     shadowOpacity: 0.07,
-                    shadowRadius: 10,
                     elevation: 6,
-                    fontFamily: "FuturaCyrillicBook",
+                    fontFamily: "InterMedium",
                   },
                 ]}
                 placeholder="Search"
@@ -299,7 +297,7 @@ const Search = () => {
                 value={search}
                 onChangeText={setSearch}
               />
-              <View style={{ position: "absolute", top: 12, left: 12 }}>
+              <View style={{ position: "absolute", top: 10, left: 12 }}>
                 <SearchIconOutline
                   size={18}
                   color={colorMode === "light" ? "black" : "white"}
@@ -326,7 +324,7 @@ const Search = () => {
                   {options.map((option, index) => {
                     const bgColor = hashtagAnimMap[option.id].interpolate({
                       inputRange: [0, 1],
-                      outputRange: ["rgba(255,255,255,0.5)", "rgba(0,0,0, 1)"],
+                      outputRange: ["rgba(255,255,255,0.5)", "rgba(0,0,0,1)"],
                     });
 
                     return (
@@ -361,8 +359,8 @@ const Search = () => {
                                   : selectedFilter === option.id
                                   ? "black"
                                   : "white",
-                              fontSize: 16,
-                              fontFamily: "FuturaCyrillicDemi",
+                              fontSize: 15,
+                              fontFamily: "InterRegular",
                             }}
                           >
                             {option.name}
@@ -436,7 +434,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 14,
     fontWeight: 400,
-    fontSize: 18,
+    fontSize: 16,
     paddingLeft: 36,
   },
   closeButton: {

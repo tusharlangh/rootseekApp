@@ -23,24 +23,26 @@ import { LinearGradient } from "expo-linear-gradient";
 import Library from "./libraryPage/library";
 import { BlurView } from "expo-blur";
 import Create from "./createpage/create";
+import HelveticaNowDisplayRegular from "../assets/fonts/HelveticaNowDisplay-Regular.ttf";
+import HelveticaNowDisplayMedium from "../assets/fonts/HelveticaNowDisplay-Medium.ttf";
+import { useFonts } from "expo-font";
+import MainHome from "./homeScreen.jsx/mainHome";
 
 const Tab = createBottomTabNavigator();
 
 export const RefreshValue = createContext();
 
 const Navbar = () => {
+  let [fontsLoaded] = useFonts({
+    HelveticaNowDisplayRegular,
+    HelveticaNowDisplayMedium,
+  });
+
   const [viewPostVisible, setViewPostVisible] = useState(false);
 
-  const { colorMode } = useColorMode();
-  const textColor = colorMode === "light" ? "black" : "white";
-  const outlineTextColor =
-    colorMode === "light"
-      ? "rgba(49, 49, 49, 0.8)"
-      : "rgba(220, 220, 220, 0.8)";
-  const bgColor =
-    colorMode === "light"
-      ? ["transparent", "rgba(242,241,245,0.1)", "rgb(242,241,245)"]
-      : ["transparent", "rgba(0,0,0,0.9)", "black"];
+  const textColor = "white";
+
+  const outlineTextColor = "white";
 
   const [refreshValue, setRefreshValue] = useState(0);
 
@@ -58,9 +60,7 @@ const Navbar = () => {
                   left: 0,
                   right: 0,
                   height: 80,
-                  backgroundColor: "rgba(255,255,255,0.85)",
-                  borderTopLeftRadius: 20,
-                  borderTopRightRadius: 20,
+                  backgroundColor: "rgba(0, 0, 0, 1)",
                   shadowColor: "black",
                   shadowOffset: { width: 6, height: 4 },
                   shadowOpacity: 0.1,
@@ -82,16 +82,17 @@ const Navbar = () => {
             },
             tabBarStyle: {
               position: "absolute",
-              backgroundColor: "transparent",
+              backgroundColor: "black",
               elevation: 0,
-              borderTopWidth: 0,
+              borderTopWidth: 0.5,
               paddingTop: 10,
+              borderTopColor: "rgb(24,24,24)",
             },
           }}
         >
           <Tab.Screen
             name="Home"
-            component={Home}
+            component={MainHome}
             options={{
               tabBarIcon: ({ focused }) =>
                 focused ? (

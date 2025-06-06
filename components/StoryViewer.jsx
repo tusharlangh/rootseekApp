@@ -2,30 +2,20 @@ import { useRef, useState, useEffect } from "react";
 import { View, Text, Pressable, Dimensions, Animated } from "react-native";
 import { CloseIcon, LeftArrowIcon } from "./icons";
 import { LinearGradient } from "expo-linear-gradient";
-import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
-import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
-import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
-import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
-import FuturaCyrillicDemi from "../assets/fonts/FuturaCyrillicDemi.ttf";
-import HelveticaNowDisplayRegular from "../assets/fonts/HelveticaNowDisplay-Regular.ttf";
-import HelveticaNowDisplayBold from "../assets/fonts/HelveticaNowDisplay-Bold.ttf";
-import HelveticaNowDisplayMedium from "../assets/fonts/HelveticaNowDisplay-Medium.ttf";
-import HelveticaNowDisplayExtraBold from "../assets/fonts/HelveticaNowDisplay-ExtraBold.ttf";
 import { useFonts } from "expo-font";
+import InterBold from "../assets/fonts/Inter-Bold.otf";
+import InterMedium from "../assets/fonts/Inter-Medium.otf";
+import InterSemiBold from "../assets/fonts/Inter-SemiBold.otf";
+import InterRegular from "../assets/fonts/Inter-Regular.otf";
 
 const { width, height } = Dimensions.get("window");
 
 const StoryViewer = ({ storiesData, setViewPostVisible }) => {
   let [fontsLoaded] = useFonts({
-    FuturaCyrillicBold,
-    FuturaCyrillicMedium,
-    FuturaCyrillicLight,
-    FuturaCyrillicBook,
-    FuturaCyrillicDemi,
-    HelveticaNowDisplayRegular,
-    HelveticaNowDisplayBold,
-    HelveticaNowDisplayMedium,
-    HelveticaNowDisplayExtraBold,
+    InterBold,
+    InterMedium,
+    InterSemiBold,
+    InterRegular,
   });
 
   const [paused, setPaused] = useState(false);
@@ -221,7 +211,7 @@ const StoryViewer = ({ storiesData, setViewPostVisible }) => {
                 fontWeight: 600,
                 textAlign: "center",
                 color: "rgb(0,0,0)",
-                fontFamily: "HelveticaNowDisplayBold",
+                fontFamily: "InterSemiBold",
               }}
             >
               {narrative[currentIndex]}

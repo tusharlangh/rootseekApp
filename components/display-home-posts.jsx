@@ -12,30 +12,20 @@ import {
 import { useColorMode } from "native-base";
 import { useState } from "react";
 import ViewPost from "./viewPost";
-import FuturaCyrillicBold from "../assets/fonts/FuturaCyrillicBold.ttf";
-import FuturaCyrillicMedium from "../assets/fonts/FuturaCyrillicMedium.ttf";
-import FuturaCyrillicLight from "../assets/fonts/FuturaCyrillicLight.ttf";
-import FuturaCyrillicBook from "../assets/fonts/FuturaCyrillicBook.ttf";
-import FuturaCyrillicDemi from "../assets/fonts/FuturaCyrillicDemi.ttf";
-import HelveticaNowDisplayRegular from "../assets/fonts/HelveticaNowDisplay-Regular.ttf";
-import HelveticaNowDisplayBold from "../assets/fonts/HelveticaNowDisplay-Bold.ttf";
-import HelveticaNowDisplayMedium from "../assets/fonts/HelveticaNowDisplay-Medium.ttf";
-import HelveticaNowDisplayExtraBold from "../assets/fonts/HelveticaNowDisplay-ExtraBold.ttf";
 import { useFonts } from "expo-font";
+import InterBold from "../assets/fonts/Inter-Bold.otf";
+import InterMedium from "../assets/fonts/Inter-Medium.otf";
+import InterSemiBold from "../assets/fonts/Inter-SemiBold.otf";
+import InterRegular from "../assets/fonts/Inter-Regular.otf";
 
 const { height, width } = Dimensions.get("window");
 
 const DisplayHomePosts = ({ posts }) => {
   let [fontsLoaded] = useFonts({
-    FuturaCyrillicBold,
-    FuturaCyrillicMedium,
-    FuturaCyrillicLight,
-    FuturaCyrillicBook,
-    FuturaCyrillicDemi,
-    HelveticaNowDisplayRegular,
-    HelveticaNowDisplayBold,
-    HelveticaNowDisplayMedium,
-    HelveticaNowDisplayExtraBold,
+    InterBold,
+    InterMedium,
+    InterSemiBold,
+    InterRegular,
   });
 
   const { colorMode } = useColorMode();
@@ -86,9 +76,7 @@ const DisplayHomePosts = ({ posts }) => {
                   styles.postContainer,
                   {
                     backgroundColor:
-                      colorMode === "light"
-                        ? "rgba(255,255,255,0.5)"
-                        : "#161618",
+                      colorMode === "light" ? "rgba(255,255,255,1)" : "#161618",
                     width: 250,
                   },
                 ]}
@@ -111,7 +99,7 @@ const DisplayHomePosts = ({ posts }) => {
                       {
                         color: colorMode === "light" ? "black" : "white",
                         flex: 3.5,
-                        fontFamily: "HelveticaNowDisplayBold",
+                        fontFamily: "InterSemiBold",
                       },
                     ]}
                     numberOfLines={1}
@@ -124,7 +112,7 @@ const DisplayHomePosts = ({ posts }) => {
                       {
                         flex: 1.5,
                         color: colorMode === "light" ? "black" : "white",
-                        fontFamily: "HelveticaNowDisplayMedium",
+                        fontFamily: "InterRegular",
                       },
                     ]}
                   >
@@ -138,10 +126,10 @@ const DisplayHomePosts = ({ posts }) => {
                       styles.postContent,
                       {
                         color: colorMode === "light" ? "#3D3D3D" : "white",
-                        fontFamily: "HelveticaNowDisplayMedium",
+                        fontFamily: "InterRegular",
                       },
                     ]}
-                    numberOfLines={2}
+                    numberOfLines={3}
                   >
                     {post.content}
                   </Text>
@@ -165,7 +153,7 @@ const DisplayHomePosts = ({ posts }) => {
                               paddingHorizontal: 10,
                               paddingVertical: 3,
                               borderRadius: 15,
-                              fontFamily: "HelveticaNowDisplayMedium",
+                              fontFamily: "InterRegular",
                             },
                           ]}
                         >
@@ -206,10 +194,11 @@ const styles = StyleSheet.create({
   },
   postTitle: {
     fontWeight: "600",
-    fontSize: 20,
+    fontSize: 18,
   },
   postContent: {
-    fontSize: 15,
+    paddingVertical: 4,
+    fontSize: 14,
     color: "#B3B3B3",
   },
   postHashTags: {
