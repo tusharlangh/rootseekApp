@@ -11,7 +11,12 @@ import { RightArrow } from "../icons";
 
 const { height, width } = Dimensions.get("window");
 
-const DisplayRoots = ({ posts, setViewPostVisible, setCurrentIndex }) => {
+const DisplayRoots = ({
+  posts,
+  setViewPostVisible,
+  setCurrentIndex,
+  flatPosts,
+}) => {
   const getHashTags = (hashTags) => {
     const ht = hashTags.split("#").filter((h) => h.length > 0);
     return ht;
@@ -23,6 +28,10 @@ const DisplayRoots = ({ posts, setViewPostVisible, setCurrentIndex }) => {
       minute: "2-digit",
     });
     return formattedTime;
+  };
+
+  const getRootIndex = (selectedRootId) => {
+    return flatPosts.findIndex((root) => root._id === selectedRootId);
   };
 
   return posts.map((p, i) => (
@@ -41,7 +50,7 @@ const DisplayRoots = ({ posts, setViewPostVisible, setCurrentIndex }) => {
         <Pressable
           key={index}
           onPress={() => {
-            setCurrentIndex(index);
+            setCurrentIndex(getRootIndex(post._id));
             setViewPostVisible(true);
           }}
         >

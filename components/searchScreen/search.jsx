@@ -289,6 +289,7 @@ const Search = () => {
             posts={postsByDate}
             setViewPostVisible={setViewPostVisible}
             setCurrentIndex={setCurrentIndex}
+            flatPosts={flatPosts}
           />
         </View>
 
