@@ -30,6 +30,7 @@ import { BlurView } from "expo-blur";
 import ContentModal from "./contentModal";
 import TagsModal from "./tagsModal";
 import { useFonts } from "expo-font";
+import { theme } from "../../theme";
 
 const ContentPage = ({
   title,
@@ -69,7 +70,7 @@ const ContentPage = ({
           <Pressable
             style={{
               borderRadius: 20,
-              overflow: "hidden", // Ensures blur effect stays within borders
+              overflow: "hidden",
               marginLeft: 10,
             }}
             onPress={openPickImage}
@@ -78,7 +79,7 @@ const ContentPage = ({
               style={{
                 borderRadius: 20,
                 overflow: "hidden",
-                backgroundColor: "rgba(38, 43, 43, 0.6)",
+                backgroundColor: theme.create_screen.constant_bg,
               }}
             >
               <BlurView intensity={50} tint="default" style={{ padding: 8 }}>
@@ -90,63 +91,30 @@ const ContentPage = ({
 
         <BlurView
           intensity={80}
-          tint={colorMode === "light" ? "light" : "dark"}
+          tint={"dark"}
           style={[
             styles.backgroundBlur,
             {
-              backgroundColor:
-                colorMode === "light"
-                  ? "rgba(242,241,245,0.9)"
-                  : "rgba(0,0,0,0.9)",
+              backgroundColor: theme.create_screen.constant_bg,
             },
           ]}
         >
-          <BlurView
-            intensity={50}
-            tint="default"
-            style={[
-              styles.blurCard,
-              {
-                color: textColor,
-                backgroundColor:
-                  colorMode === "light"
-                    ? "rgba(255, 255, 255, 0.9)"
-                    : "rgba(38, 43, 43, 0.1)",
-              },
-            ]}
-          >
+          <BlurView intensity={50} tint="default" style={[styles.blurCard]}>
             <TextInput
               style={[
                 styles.titleInput,
                 {
-                  color: textColor,
+                  color: theme.create_screen.constant_bg_text_color,
                 },
               ]}
               value={title}
               onChangeText={setTitle}
               placeholder="Title"
-              placeholderTextColor={
-                colorMode === "light"
-                  ? "rgba(0, 0, 0, 0.9)"
-                  : "rgba(245, 245, 245, 0.9)"
-              }
+              placeholderTextColor={theme.create_screen.constant_bg_text_color}
               numberOfLines={1}
             />
           </BlurView>
-          <BlurView
-            intensity={50}
-            tint="default"
-            style={[
-              styles.blurCard,
-              {
-                color: textColor,
-                backgroundColor:
-                  colorMode === "light"
-                    ? "rgba(255, 255, 255, 0.9)"
-                    : "rgba(38, 43, 43, 0.1)",
-              },
-            ]}
-          >
+          <BlurView intensity={50} tint="default" style={[styles.blurCard]}>
             <Pressable onPress={() => setIsContentModalVisible(true)}>
               {content ? (
                 <Text
@@ -162,7 +130,7 @@ const ContentPage = ({
               ) : (
                 <Text
                   style={{
-                    color: textColor,
+                    color: theme.create_screen.constant_bg_text_color,
                     textAlign: "center",
                     fontSize: 16,
                     fontWeight: 600,
@@ -174,20 +142,7 @@ const ContentPage = ({
             </Pressable>
           </BlurView>
 
-          <BlurView
-            intensity={50}
-            tint="default"
-            style={[
-              styles.blurCard,
-              {
-                color: textColor,
-                backgroundColor:
-                  colorMode === "light"
-                    ? "rgba(255, 255, 255, 0.9)"
-                    : "rgba(38, 43, 43, 0.1)",
-              },
-            ]}
-          >
+          <BlurView intensity={50} tint="default" style={[styles.blurCard]}>
             <Pressable
               style={styles.selectionButton}
               onPress={() => setIsMusicModalVisible(true)}
@@ -196,16 +151,18 @@ const ContentPage = ({
                 style={[
                   styles.directionTitle,
                   {
-                    color:
-                      colorMode === "light"
-                        ? "rgba(0,0,0,0.4)"
-                        : "rgba(245, 245, 245, 0.6)",
+                    color: theme.create_screen.constant_bg_text_color,
                   },
                 ]}
               >
                 Add music
               </Text>
-              <Text style={[styles.directionText, { color: textColor }]}>
+              <Text
+                style={[
+                  styles.directionText,
+                  { color: theme.create_screen.sub_header },
+                ]}
+              >
                 Add your music to express your memory
               </Text>
               <BlurView
@@ -215,8 +172,7 @@ const ContentPage = ({
                   styles.blurNestedContainer,
                   {
                     padding: 50,
-                    backgroundColor:
-                      colorMode === "light" ? "#F2F1F5" : "#222222",
+                    backgroundColor: theme.create_screen.blur_nested_container,
                   },
                 ]}
               >
@@ -232,7 +188,7 @@ const ContentPage = ({
                     <View style={{ marginLeft: 10 }}>
                       <Text
                         style={{
-                          color: textColor,
+                          color: theme.create_screen.music_hashtag_icon_bg,
                           fontSize: 18,
                           fontWeight: 700,
                         }}
@@ -240,7 +196,12 @@ const ContentPage = ({
                       >
                         {selectedSong.title}
                       </Text>
-                      <Text style={{ color: textColor, fontSize: 16 }}>
+                      <Text
+                        style={{
+                          color: theme.create_screen.music_hashtag_icon_bg,
+                          fontSize: 16,
+                        }}
+                      >
                         {selectedSong.artist.name}
                       </Text>
                     </View>
@@ -248,31 +209,14 @@ const ContentPage = ({
                 ) : (
                   <Music
                     size={50}
-                    color={
-                      colorMode === "light"
-                        ? "rgba(0,0,0,0.7)"
-                        : "rgba(255, 255, 255, 0.9)"
-                    }
+                    color={theme.create_screen.music_hashtag_icon_bg}
                   />
                 )}
               </BlurView>
             </Pressable>
           </BlurView>
 
-          <BlurView
-            intensity={50}
-            tint="default"
-            style={[
-              styles.blurCard,
-              {
-                color: textColor,
-                backgroundColor:
-                  colorMode === "light"
-                    ? "rgba(255, 255, 255, 0.9)"
-                    : "rgba(38, 43, 43, 0.1)",
-              },
-            ]}
-          >
+          <BlurView intensity={50} tint="default" style={[styles.blurCard]}>
             <Pressable
               style={styles.selectionButton}
               onPress={() => setIsTagsModalVisible(true)}
@@ -281,16 +225,18 @@ const ContentPage = ({
                 style={[
                   styles.directionTitle,
                   {
-                    color:
-                      colorMode === "light"
-                        ? "rgba(0,0,0,0.4)"
-                        : "rgba(245, 245, 245, 0.6)",
+                    color: theme.create_screen.constant_bg_text_color,
                   },
                 ]}
               >
                 Tags
               </Text>
-              <Text style={[styles.directionText, { color: textColor }]}>
+              <Text
+                style={[
+                  styles.directionText,
+                  { color: theme.create_screen.sub_header },
+                ]}
+              >
                 Add tags for easy lookup
               </Text>
               <BlurView
@@ -299,8 +245,7 @@ const ContentPage = ({
                 style={[
                   styles.blurNestedContainer,
                   {
-                    backgroundColor:
-                      colorMode === "light" ? "#F2F1F5" : "#222222",
+                    backgroundColor: theme.create_screen.blur_nested_container,
                   },
                 ]}
               >
@@ -308,7 +253,9 @@ const ContentPage = ({
                   <View>
                     {getTags(tags).map((tag, index) => (
                       <Text
-                        style={{ color: textColor }}
+                        style={{
+                          color: theme.create_screen.constant_bg_text_color,
+                        }}
                         numberOfLines={1}
                         key={index}
                       >
@@ -319,11 +266,7 @@ const ContentPage = ({
                 ) : (
                   <Hashtag
                     size={50}
-                    color={
-                      colorMode === "light"
-                        ? "rgba(0,0,0,0.7)"
-                        : "rgba(255, 255, 255, 0.9)"
-                    }
+                    color={theme.create_screen.music_hashtag_icon_bg}
                   />
                 )}
               </BlurView>
@@ -404,6 +347,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderRadius: 30,
     padding: 12,
+    backgroundColor: theme.create_screen.constant_bg,
   },
   titleInput: {
     textAlign: "center",
@@ -415,7 +359,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   addImageText: {
-    color: "rgba(245, 245, 245, 0.9)",
+    color: theme.create_screen.constant_bg_text_color,
     fontWeight: "bold",
     fontSize: 15,
   },

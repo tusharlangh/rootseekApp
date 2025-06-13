@@ -5,12 +5,15 @@ import {
   RightArrow,
   ThreadThemeIcon,
 } from "../icons";
+import { theme } from "../../theme";
 
 const Header = ({ headerText, headerIcon }) => {
+  const defaultColor = theme.home_screen.header.default_icon;
+
   const icons = {
-    recentlyMade: <RecentlyMadeIcon color="white" size={22} />,
-    patternInsights: <PatternInsightsIcon color="white" size={22} />,
-    themeThreadView: <ThreadThemeIcon color="white" size={22} />,
+    recentlyMade: <RecentlyMadeIcon color={defaultColor} size={20} />,
+    patternInsights: <PatternInsightsIcon color={defaultColor} size={22} />,
+    themeThreadView: <ThreadThemeIcon color={defaultColor} size={22} />,
   };
 
   return (
@@ -22,7 +25,7 @@ const Header = ({ headerText, headerIcon }) => {
 
       <View style={stylesheet.RightArrowContainer}>
         <View style={{ marginLeft: 1 }}>
-          <RightArrow color="white" size={16} strokeWidth={5} />
+          <RightArrow color={defaultColor} size={16} strokeWidth={5} />
         </View>
       </View>
     </View>
@@ -38,7 +41,7 @@ const stylesheet = StyleSheet.create({
     paddingLeft: 10,
   },
   headerText: {
-    color: "white",
+    color: theme.home_screen.header.header_text,
     fontWeight: "700",
     fontSize: 22,
   },
@@ -49,7 +52,7 @@ const stylesheet = StyleSheet.create({
   },
   RightArrowContainer: {
     marginRight: 10,
-    backgroundColor: "rgb(24,24,24)",
+    backgroundColor: theme.home_screen.header.right_arrow_container,
     padding: 5,
     borderRadius: 20,
   },

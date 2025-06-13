@@ -1,4 +1,5 @@
 import { Text, View, StyleSheet } from "react-native";
+import { theme } from "../../theme";
 
 const PatternInsightsPosts = ({ posts }) => {
   return posts.map((item, index) => (
@@ -11,18 +12,18 @@ const PatternInsightsPosts = ({ posts }) => {
 
 const styles = StyleSheet.create({
   postContainer: {
-    backgroundColor: "rgb(24, 24, 24)",
+    backgroundColor: theme.home_screen.pattern_insights.background,
     padding: 16,
     borderRadius: 20,
     width: 260,
   },
   patternTitle: {
-    color: "white",
+    color: theme.home_screen.pattern_insights.pattern_title,
     fontSize: 16,
     fontWeight: "700",
   },
   patternData: {
-    color: "rgb(143, 143, 143)",
+    color: theme.home_screen.pattern_insights.pattern_data,
     fontSize: 14,
     marginTop: 4,
   },

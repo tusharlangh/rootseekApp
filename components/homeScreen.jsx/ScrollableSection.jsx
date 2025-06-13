@@ -8,16 +8,16 @@ const ScrollableSection = ({ children, gap = 10 }) => {
   const [layoutHeight, setLayoutHeight] = useState(0);
 
   const gradientColors = [
-    "rgba(0, 0, 0, 0)",
-    "rgba(0, 0, 0, 0)",
-    "rgba(0, 0, 0, 0)",
-    "rgba(0, 0, 0, 0)",
-    "rgba(0, 0, 0,0)",
-    "rgba(0, 0, 0,0)",
-    "rgba(0, 0, 0,0)",
-    "rgba(0, 0, 0,0)",
-    "rgba(0, 0, 0,0)",
-    "rgba(0, 0, 0, 0.4)",
+    "rgba(18,18,18,0)",
+    "rgba(18,18,18,0)",
+    "rgba(18,18,18,0)",
+    "rgba(18,18,18,0)",
+    "rgba(18,18,18,0)",
+    "rgba(18,18,18,0)",
+    "rgba(18,18,18,0)",
+    "rgba(18,18,18,0)",
+    "rgba(18,18,18,0)",
+    "rgba(18,18,18,0.6)",
   ];
 
   return (

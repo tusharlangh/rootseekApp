@@ -3,32 +3,32 @@ import {
   Text,
   StyleSheet,
   Pressable,
-  Modal,
   Animated,
   Dimensions,
-  TextInput,
   Image,
 } from "react-native";
 import { useColorMode } from "native-base";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import ContentPage from "./contentPage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { CloseIcon } from "../icons";
-import { TestPic } from "../../additional";
+
 import { BlurView } from "expo-blur";
 import BottomPage from "../bottom-page";
 import CloseModal from "./closeModal";
-import { useFonts } from "expo-font";
+
+import { theme } from "../../theme";
+import { PhoneContext } from "../../App";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const Create = ({ visible, onClose }) => {
-  let [fontsLoaded] = useFonts({});
+  const { usePhone } = useContext(PhoneContext);
+
+  const address = usePhone ? "192.168.1.80:5002" : "localhost:5002";
 
   const { colorMode } = useColorMode();
-  const textColor = colorMode === "light" ? "black" : "white";
-  const bgColor = colorMode === "light" ? "white" : "black";
 
   const [picture, setPicture] = useState(null);
   const [selectedSong, setSelectedSong] = useState({});
@@ -118,7 +118,7 @@ const Create = ({ visible, onClose }) => {
 
     try {
       const token = await AsyncStorage.getItem("token");
-      await axios.post("http://localhost:5002/user/create", formData, {
+      await axios.post(`http://${address}/user/create`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -137,7 +137,7 @@ const Create = ({ visible, onClose }) => {
       style={[
         styles.container,
         {
-          backgroundColor: bgColor,
+          backgroundColor: theme.main_background,
         },
       ]}
     >
@@ -164,15 +164,12 @@ const Create = ({ visible, onClose }) => {
           style={[
             styles.closeButton,
             {
-              backgroundColor:
-                colorMode === "light"
-                  ? "rgba(0,0,0,0.6)"
-                  : "rgba(255,255,255,0.4)",
+              backgroundColor: theme.create_screen.constant_bg,
             },
           ]}
           onPress={() => setIsCloseModalVisible(true)}
         >
-          <CloseIcon size={22} color="white" />
+          <CloseIcon size={22} color={theme.create_screen.create_button_icon} />
         </Pressable>
         <BlurView
           intensity={50}
@@ -183,14 +180,7 @@ const Create = ({ visible, onClose }) => {
             style={[
               styles.createButton,
               {
-                backgroundColor:
-                  colorMode === "light"
-                    ? send
-                      ? "rgba(0,0,0,0.6)"
-                      : "rgba(0,0,0,0.1)"
-                    : send
-                    ? "rgba(255,255,255,0.6)"
-                    : "rgba(96, 96, 96, 0.6)",
+                backgroundColor: theme.create_screen.constant_bg,
               },
             ]}
             onPress={createRoot}
@@ -199,10 +189,7 @@ const Create = ({ visible, onClose }) => {
               style={[
                 styles.createButtonText,
                 {
-                  color:
-                    colorMode === "light"
-                      ? "rgba(255,255,255,0.9)"
-                      : "rgba(0,0,0, 0.6)",
+                  color: "white",
                 },
               ]}
             >

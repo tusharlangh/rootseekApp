@@ -3,30 +3,22 @@ import {
   BottomTabBar,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
-import { useColorMode } from "native-base";
 import { Modal, Pressable, View } from "react-native";
 import {
   CreateIcon,
-  CreateIconOutline,
-  CreateIconSolid,
   HomeIconOutline,
   HomeIconSolid,
-  LibraryOutline,
-  LibrarySolid,
   SearchIconOutline,
   SearchIconSolid,
-  ShuffleIcon,
 } from "./icons";
-import Home from "./home";
-import Search from "./search";
 import { LinearGradient } from "expo-linear-gradient";
-import Library from "./libraryPage/library";
-import { BlurView } from "expo-blur";
 import Create from "./createpage/create";
 import HelveticaNowDisplayRegular from "../assets/fonts/HelveticaNowDisplay-Regular.ttf";
 import HelveticaNowDisplayMedium from "../assets/fonts/HelveticaNowDisplay-Medium.ttf";
 import { useFonts } from "expo-font";
-import MainHome from "./homeScreen.jsx/mainHome";
+import Home from "./homeScreen.jsx/home";
+import Search from "./searchScreen/search";
+import { theme } from "../theme";
 
 const Tab = createBottomTabNavigator();
 
@@ -46,27 +38,37 @@ const Navbar = () => {
 
   const [refreshValue, setRefreshValue] = useState(0);
 
+  const iconSize = 24;
+
   return (
     <View style={{ height: "100%" }}>
       <RefreshValue.Provider value={{ refreshValue, setRefreshValue }}>
         <Tab.Navigator
           tabBar={(props) => (
             <>
-              <BlurView
-                intensity={100}
+              <LinearGradient
+                pointerEvents="none"
+                colors={[
+                  "rgba(18,18,18,1)",
+                  "rgba(18,18,18,1)",
+                  "rgba(18,18,18,0.95)",
+                  "rgba(18,18,18,0.95)",
+                  "rgba(18,18,18,0.8)",
+                  "rgba(18,18,18,0.7)",
+                  "rgba(18,18,18,0.2)",
+                  "rgba(18,18,18,0.2)",
+
+                  "rgba(18,18,18,0)",
+                  "rgba(18,18,18,0)",
+                ]}
+                start={{ x: 0, y: 1 }}
+                end={{ x: 0, y: 0 }}
                 style={{
                   position: "absolute",
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: 80,
-                  backgroundColor: "rgba(0, 0, 0, 1)",
-                  shadowColor: "black",
-                  shadowOffset: { width: 6, height: 4 },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 30,
-                  elevation: 6,
-                  overflow: "hidden",
+                  height: 200,
                 }}
               />
 
@@ -75,30 +77,32 @@ const Navbar = () => {
           )}
           screenOptions={{
             headerShown: false,
-            tabBarShowLabel: false,
+            tabBarShowLabel: true,
             tabBarLabelStyle: {
               paddingRight: -10,
               textAlign: "center",
+              color: "white",
+              marginTop: 2,
             },
             tabBarStyle: {
               position: "absolute",
-              backgroundColor: "black",
+              backgroundColor: "transparent",
               elevation: 0,
-              borderTopWidth: 0.5,
-              paddingTop: 10,
-              borderTopColor: "rgb(24,24,24)",
+              paddingTop: 6,
+              borderTopWidth: 0,
+              borderTopColor: "transparent",
             },
           }}
         >
           <Tab.Screen
             name="Home"
-            component={MainHome}
+            component={Home}
             options={{
               tabBarIcon: ({ focused }) =>
                 focused ? (
-                  <HomeIconSolid size={26} color={textColor} />
+                  <HomeIconSolid size={iconSize} color={textColor} />
                 ) : (
-                  <HomeIconOutline size={26} color={outlineTextColor} />
+                  <HomeIconOutline size={iconSize} color={outlineTextColor} />
                 ),
             }}
           />
@@ -108,9 +112,9 @@ const Navbar = () => {
             options={{
               tabBarIcon: ({ focused }) =>
                 focused ? (
-                  <SearchIconSolid size={26} color={textColor} />
+                  <SearchIconSolid size={iconSize} color={textColor} />
                 ) : (
-                  <SearchIconOutline size={26} color={outlineTextColor} />
+                  <SearchIconOutline size={iconSize} color={outlineTextColor} />
                 ),
             }}
           />
@@ -124,7 +128,7 @@ const Navbar = () => {
                   onPress={() => setViewPostVisible(true)}
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
-                  <CreateIcon size={28} color={outlineTextColor} />
+                  <CreateIcon size={iconSize + 2} color={outlineTextColor} />
                 </Pressable>
               ),
             }}

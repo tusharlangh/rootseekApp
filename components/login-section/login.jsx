@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Box, useColorModeValue, useColorMode } from "native-base";
 import { LinearGradient } from "expo-linear-gradient";
 import { PhoneContext } from "../../App";
+import { theme } from "../../theme";
 
 const LoginPage = ({ navigation }) => {
   const { usePhone } = useContext(PhoneContext);
@@ -70,111 +71,102 @@ const LoginPage = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient
-      colors={["#F9FAFF", "#EAF0FF", "#FCEEF5"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={{ height: "100%" }}
+    <Box
+      flex={1}
+      justifyContent="center"
+      alignItems="center"
+      backgroundColor={theme.main_background}
     >
-      <Box flex={1} justifyContent="center" alignItems="center">
-        <Text style={[styles.logo, { color: textColor }]}>RootSeek</Text>
+      <Text style={[styles.logo, { color: "white" }]}>RootSeek</Text>
 
-        <View style={styles.inputContainer}>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={[
+            styles.input,
+            { color: "white", borderColor: "rgb(41,41,41)" },
+          ]}
+          placeholder="E-mail address"
+          placeholderTextColor="#808080"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <View>
           <TextInput
             style={[
               styles.input,
-              { color: textColor, borderColor: borderColor },
+              { color: "white", borderColor: "rgb(41,41,41)" },
             ]}
-            placeholder="E-mail address"
+            placeholder="Password"
             placeholderTextColor="#808080"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!seePassword}
             autoCapitalize="none"
           />
-          <View>
-            <TextInput
-              style={[
-                styles.input,
-                { color: textColor, borderColor: borderColor },
-              ]}
-              placeholder="Password"
-              placeholderTextColor="#808080"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!seePassword}
-              autoCapitalize="none"
-            />
-            <View style={{ position: "absolute", right: 10, top: 9 }}>
-              <Pressable onPress={() => setSeePassword(!seePassword)}>
-                {seePassword ? (
-                  <EyeIconOpen size={20} color={textColor} />
-                ) : (
-                  <EyeIconClosed size={20} color={textColor} />
-                )}
-              </Pressable>
-            </View>
-          </View>
-
-          <Text style={[styles.forgotText, { color: textColor }]}>
-            Forgot your password?
-          </Text>
-
-          <TouchableOpacity
-            style={[
-              styles.loginBtn,
-              {
-                backgroundColor: textColor,
-              },
-            ]}
-            onPress={handleLogin}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <ActivityIndicator color={bgColor} />
-            ) : (
-              <Text
-                style={[
-                  styles.loginBtnText,
-                  { color: colorMode === "light" ? "white" : "black" },
-                ]}
-              >
-                Log in to your account
-              </Text>
-            )}
-          </TouchableOpacity>
-
-          <Text style={{ color: "red" }}>{error}</Text>
-
-          <View style={styles.orSection}>
-            <View style={[styles.line, { backgroundColor: textColor }]}></View>
-            <Text style={{ color: textColor }}>OR</Text>
-            <View style={[styles.line, { backgroundColor: textColor }]}></View>
-          </View>
-
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignContent: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text style={[styles.linkSignUp, { color: textColor }]}>
-              Don't have an account?{" "}
-            </Text>
-
-            <Pressable onPress={() => navigation.navigate("Sigin")}>
-              <Text
-                style={{ textDecorationLine: "underline", color: textColor }}
-              >
-                Sign in
-              </Text>
+          <View style={{ position: "absolute", right: 10, top: 9 }}>
+            <Pressable onPress={() => setSeePassword(!seePassword)}>
+              {seePassword ? (
+                <EyeIconOpen size={20} color={"#808080"} />
+              ) : (
+                <EyeIconClosed size={20} color={"#808080"} />
+              )}
             </Pressable>
           </View>
         </View>
-      </Box>
-    </LinearGradient>
+
+        <Text style={[styles.forgotText, { color: "white" }]}>
+          Forgot your password?
+        </Text>
+
+        <TouchableOpacity
+          style={[
+            styles.loginBtn,
+            {
+              backgroundColor: "white",
+            },
+          ]}
+          onPress={handleLogin}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <ActivityIndicator color={bgColor} />
+          ) : (
+            <Text style={[styles.loginBtnText, { color: "black" }]}>
+              Log in to your account
+            </Text>
+          )}
+        </TouchableOpacity>
+
+        <Text style={{ color: "red" }}>{error}</Text>
+
+        <View style={styles.orSection}>
+          <View style={[styles.line, { backgroundColor: "white" }]}></View>
+          <Text style={{ color: "white" }}>OR</Text>
+          <View style={[styles.line, { backgroundColor: "white" }]}></View>
+        </View>
+
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignContent: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={[styles.linkSignUp, { color: "white" }]}>
+            Don't have an account?{" "}
+          </Text>
+
+          <Pressable onPress={() => navigation.navigate("Sigin")}>
+            <Text style={{ textDecorationLine: "underline", color: "white" }}>
+              Sign in
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    </Box>
   );
 };
 

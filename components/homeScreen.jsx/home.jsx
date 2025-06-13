@@ -23,8 +23,9 @@ import StoryViewer from "../StoryViewer";
 import RecentlyMadePosts from "./recentlyMadePosts";
 import PatternInsightsPosts from "./patternInsightsPosts";
 import ThemeThreadPosts from "./themeThreadPosts";
+import { theme } from "../../theme";
 
-const MainHome = () => {
+const Home = () => {
   const { usePhone } = useContext(PhoneContext);
 
   const address = usePhone ? "192.168.1.80:5002" : "localhost:5002";
@@ -187,7 +188,13 @@ const MainHome = () => {
   ];
 
   return (
-    <View style={{ flex: 1, paddingTop: 50, backgroundColor: "black" }}>
+    <View
+      style={{
+        flex: 1,
+        paddingTop: 50,
+        backgroundColor: theme.main_background,
+      }}
+    >
       <ScrollView>
         <Header headerText={"Recently Made"} headerIcon={"recentlyMade"} />
 
@@ -247,4 +254,4 @@ const MainHome = () => {
   );
 };
 
-export default MainHome;
+export default Home;

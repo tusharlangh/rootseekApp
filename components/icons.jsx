@@ -465,27 +465,6 @@ export const AddLibraryIcon = ({ size = 24, color = "black" }) => (
   </Svg>
 );
 
-export const FilterIcon = ({ size = 24, color = "black" }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-    {/* Down Arrow */}
-    <Path
-      d="M7 4v12M7 16l-3-3m3 3l3-3"
-      stroke={color}
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    {/* Up Arrow */}
-    <Path
-      d="M17 20V8m0 0l-3 3m3-3l3 3"
-      stroke={color}
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </Svg>
-);
-
 export const GoalsIcons = ({ size = 24, color = "black" }) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
@@ -630,5 +609,29 @@ export const CreateIcon = ({ size = 24, color = "black" }) => (
     fill={color}
   >
     <Path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+  </Svg>
+);
+
+export const SearchIcon = ({ color = "rgba(255,255,255,0.5)", size = 20 }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    height={size}
+    viewBox="0 -960 960 960"
+    width={size}
+    fill={color}
+  >
+    <Path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+  </Svg>
+);
+
+export const FilterIcon = ({ color = "black", size = 24 }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    height={size}
+    viewBox="0 -960 960 960"
+    width={size}
+    fill={color}
+  >
+    <Path d="M320-400q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm160 0q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm160 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z" />
   </Svg>
 );

@@ -12,13 +12,17 @@ import {
   Easing,
 } from "react-native";
 import { PlayIcon, PauseIcon, SearchIconOutline } from "../icons";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Audio } from "expo-av";
 import { useFonts } from "expo-font";
+import { PhoneContext } from "../../App";
 
 const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
-  let [fontsLoaded] = useFonts({});
+  const { usePhone } = useContext(PhoneContext);
+
+  const address = usePhone ? "192.168.1.80:5002" : "localhost:5002";
+
   const { colorMode } = useColorMode();
   const textColor = colorMode === "light" ? "black" : "white";
   const songBg = "rgba(255,255,255,0.25)";
@@ -35,7 +39,7 @@ const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
     const fetchSongs = async () => {
       try {
         const respone = await axios.get(
-          `http://localhost:5002/deezer-proxy?q=${query}&limit=15`
+          `http://${address}/deezer-proxy?q=${query}&limit=15`
         );
         setResults(respone.data.data);
       } catch (error) {
@@ -49,7 +53,7 @@ const MusicTimeline = ({ onSelectSong, onCloseSignal }) => {
     const fetchSong = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5002/deezer-search-song?trackId=${selectedSongId}`
+          `http://${address}/deezer-search-song?trackId=${selectedSongId}`
         );
         setSong(response.data);
       } catch (error) {

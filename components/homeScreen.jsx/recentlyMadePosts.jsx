@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
+import { theme } from "../../theme";
 
 const RecentlyMadePosts = ({ posts }) => {
   return posts.map((post, index) => (
@@ -9,10 +10,13 @@ const RecentlyMadePosts = ({ posts }) => {
         { borderRightWidth: index !== posts.length - 1 ? 1 : 0 },
       ]}
     >
-      <Text style={styles.postTitle} numberOfLines={1}>
-        {post.title}
-      </Text>
-      <Text style={styles.postContent} numberOfLines={3}>
+      <View style={styles.root_title_and_date_container}>
+        <Text style={styles.rootTitle} numberOfLines={1}>
+          {post.title}
+        </Text>
+        <Text style={[styles.rootDate]}>8h</Text>
+      </View>
+      <Text style={styles.rootContent} numberOfLines={3}>
         {post.content}
       </Text>
     </View>
@@ -21,20 +25,32 @@ const RecentlyMadePosts = ({ posts }) => {
 
 const styles = StyleSheet.create({
   postContainer: {
-    width: 200,
-    borderRightColor: "rgb(24,24,24)",
+    width: 250,
+    borderRightColor:
+      theme.home_screen.recently_made.root_sepearating_border_color,
     paddingRight: 18,
     justifyContent: "center",
   },
-  postTitle: {
-    color: "white",
-    fontWeight: "700",
-    fontSize: 15,
+  root_title_and_date_container: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 2,
+    justifyContent: "space-between",
   },
-  postContent: {
-    color: "rgb(180, 180, 180)",
-    fontSize: 12,
+  rootTitle: {
+    color: theme.constants.root_title,
+    fontWeight: "700",
+    fontSize: 16,
+    width: 170,
+  },
+  rootContent: {
+    color: theme.constants.root_content,
+    fontSize: 14,
     marginTop: 4,
+  },
+  rootDate: {
+    color: theme.constants.root_date,
   },
 });
 
