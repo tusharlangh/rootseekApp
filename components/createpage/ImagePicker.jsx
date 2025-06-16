@@ -1,7 +1,9 @@
 import * as ImagePicker from "expo-image-picker";
+import { useContext } from "react";
 import { Platform } from "react-native";
+import { RootCreationContext } from "./create";
 
-const pickImage = async (onSelectPicture) => {
+const pickImage = async (setPicture) => {
   if (Platform.OS !== "web") {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -18,7 +20,7 @@ const pickImage = async (onSelectPicture) => {
   });
 
   if (!result.canceled) {
-    onSelectPicture(result.assets[0].uri);
+    setPicture(result.assets[0].uri);
   }
 };
 

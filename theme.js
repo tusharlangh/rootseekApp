@@ -46,12 +46,60 @@ export const theme = {
     },
   },
   create_screen: {
-    constant_bg: "rgb(51,51,51)",
-    constant_bg_text_color: "white",
-    create_button_icon: "white",
-    sub_header: "rgb(187, 187, 187)",
-    blur_nested_container: "rgb(130, 130, 130)",
-    music_hashtag_icon_bg: "rgb(30,30,30)",
+    content_bottomsheet: {
+      header: "rgba(255, 255, 255, 0.9)",
+      input_container: "rgb(24,24,24)",
+      count_char_text: "white",
+      content_input: "white",
+    },
+    tags_bottomsheet: {
+      header: "rgba(255, 255, 255, 0.9)",
+      input_container: "rgb(24,24,24)",
+      counter: "white",
+      tags_input: "white",
+    },
+    track_bottomsheet: {
+      search_text: "white",
+      search_bg: "rgb(51,51,51)",
+      pause_and_play_icon: "white",
+      track_title: "white",
+      track_artist: "white",
+    },
+    content_input: {
+      blur_card: "rgb(51,51,51)",
+      content_text_input: "white",
+      content_text: "white",
+    },
+    tags_input: {
+      blur_card: "rgb(51,51,51)",
+      direction_title: "white",
+      direction_text: "white",
+      blur_nested_container: "rgb(130, 130, 130)",
+      tags_text: "rgb(30,30,30)",
+    },
+    title_input: {
+      blur_card: "rgb(51,51,51)",
+      title_input: "white",
+    },
+    track_input: {
+      blur_card: "rgb(51,51,51)",
+      direction_title: "white",
+      direction_text: "white",
+      blur_nested_container: "rgb(130, 130, 130)",
+      track_text: "rgb(30,30,30)",
+    },
+    root_form: {
+      background_blur: "rgb(51,51,51)",
+      add_image_text: "white",
+      image_container: "rgb(51,51,51)",
+    },
+    header: {
+      close_button: "rgb(51,51,51)",
+      create_button_container: "rgba(255,255,255, 0.6)",
+      header_container: "#E4E3E8",
+      create_button_text: "white",
+      create_button: "rgb(51,51,51)",
+    },
   },
   root_screen: {
     content_without_picture: {

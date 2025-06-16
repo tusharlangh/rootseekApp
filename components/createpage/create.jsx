@@ -1,34 +1,25 @@
+import { View, StyleSheet } from "react-native";
 import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  Animated,
-  Dimensions,
-  Image,
-} from "react-native";
-import { useColorMode } from "native-base";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import ContentPage from "./contentPage";
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { CloseIcon } from "../icons";
 
-import { BlurView } from "expo-blur";
-import BottomPage from "../bottom-page";
-import CloseModal from "./closeModal";
-
-import { theme } from "../../theme";
 import { PhoneContext } from "../../App";
+import Header from "./header";
+import DisplayImage from "./displayImage";
+import RootForm from "./rootForm";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
+export const RootCreationContext = createContext(null);
 
 const Create = ({ visible, onClose }) => {
   const { usePhone } = useContext(PhoneContext);
 
   const address = usePhone ? "192.168.1.80:5002" : "localhost:5002";
-
-  const { colorMode } = useColorMode();
 
   const [picture, setPicture] = useState(null);
   const [selectedSong, setSelectedSong] = useState({});
@@ -40,27 +31,8 @@ const Create = ({ visible, onClose }) => {
   const [send, setSend] = useState(false);
   const [isCloseModalVisible, setIsCloseModalVisible] = useState(false);
 
-  const translateX = useRef(new Animated.Value(SCREEN_WIDTH)).current;
-
-  useEffect(() => {
-    if (visible) {
-      translateX.setValue(SCREEN_WIDTH);
-      Animated.timing(translateX, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [visible]);
-
   const handleClose = () => {
-    Animated.timing(translateX, {
-      toValue: SCREEN_WIDTH,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
-      onClose();
-    });
+    onClose();
   };
 
   useEffect(() => {
@@ -71,26 +43,7 @@ const Create = ({ visible, onClose }) => {
     }
   });
 
-  const handlePictureSelect = useCallback((pic) => {
-    setPicture(pic);
-  }, []);
-
-  const handleSongSelect = useCallback((song) => {
-    setSelectedSong(song);
-  }, []);
-
-  function isAlphaWithHash(str) {
-    return /^[A-Za-z#]+$/.test(str);
-  }
-
-  const handleTags = useCallback((tags) => {
-    if (isAlphaWithHash(tags) || tags === "") {
-      setTags(tags);
-    }
-  }, []);
-
   const createRoot = async () => {
-    console.log("got in");
     if (title === "" || content === "") {
       console.log("Please fill up the title and the content.");
       return;
@@ -133,171 +86,39 @@ const Create = ({ visible, onClose }) => {
   };
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        {
-          backgroundColor: theme.main_background,
-        },
-      ]}
+    <RootCreationContext.Provider
+      value={{
+        title,
+        setTitle,
+        content,
+        setContent,
+        selectedSong,
+        setSelectedSong,
+        tags,
+        setTags,
+        picture,
+        setPicture,
+      }}
     >
-      <View intensity={500} tint="default" style={styles.absolute}>
-        <Image
-          source={{ uri: picture }}
-          style={[
-            styles.backgroundImage,
-            {
-              opacity: colorMode === "light" ? 0.9 : 0.8,
-            },
-          ]}
-          resizeMode="top"
-        />
-      </View>
+      <View style={[styles.container]}>
+        <DisplayImage picture={picture} />
 
-      <View
-        style={[
-          styles.header,
-          { borderBottomColor: colorMode === "light" ? "#E4E3E8" : "#3D3D41" },
-        ]}
-      >
-        <Pressable
-          style={[
-            styles.closeButton,
-            {
-              backgroundColor: theme.create_screen.constant_bg,
-            },
-          ]}
-          onPress={() => setIsCloseModalVisible(true)}
-        >
-          <CloseIcon size={22} color={theme.create_screen.create_button_icon} />
-        </Pressable>
-        <BlurView
-          intensity={50}
-          tint="systemChromeMaterialLight"
-          style={styles.createButtonBlur}
-        >
-          <Pressable
-            style={[
-              styles.createButton,
-              {
-                backgroundColor: theme.create_screen.constant_bg,
-              },
-            ]}
-            onPress={createRoot}
-          >
-            <Text
-              style={[
-                styles.createButtonText,
-                {
-                  color: "white",
-                },
-              ]}
-            >
-              {creating ? "Creating" : "Create"}
-            </Text>
-          </Pressable>
-        </BlurView>
-      </View>
+        <Header creating={creating} />
 
-      <View style={styles.content}>
-        <ContentPage
-          title={title}
-          setTitle={setTitle}
-          content={content}
-          setContent={setContent}
-          mood={mood}
-          setMood={setMood}
-          picture={picture}
-          setPicture={handlePictureSelect}
-          selectedSong={selectedSong}
-          setSelectedSong={handleSongSelect}
-          tags={tags}
-          handleTags={handleTags}
-        />
+        <View style={styles.content}>
+          <RootForm />
+        </View>
       </View>
-
-      <BottomPage
-        isModalVisible={isCloseModalVisible}
-        setIsModalVisible={setIsCloseModalVisible}
-        height={22}
-      >
-        <CloseModal
-          setIsCloseModalVisible={setIsCloseModalVisible}
-          handleClose={handleClose}
-        />
-      </BottomPage>
-    </Animated.View>
+    </RootCreationContext.Provider>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    width: "100%",
-    paddingTop: 60,
-    paddingHorizontal: 0,
-  },
-  blurView: {
-    width: "100%",
-    height: 300, // Adjust as needed
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10, // Optional: add rounded corners
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingBottom: 10,
-  },
-  createText: {
-    fontSize: 18,
-    fontWeight: "bold",
+    //backgroundColor: theme.main_background,
   },
   content: {
     flex: 1,
-    paddingVertical: 10,
-  },
-  footer: {
-    paddingTop: 20,
-    //borderTopWidth: 1,
-    paddingBottom: 50,
-  },
-  createButtonBlur: {
-    borderRadius: 30,
-    overflow: "hidden",
-    marginRight: 10,
-    backgroundColor: "rgba(255,255,255, 0.6)",
-  },
-  createButton: {
-    padding: 6,
-    borderRadius: 10,
-    paddingHorizontal: 12,
-  },
-  createButtonText: {
-    textAlign: "center",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  closeButton: {
-    marginLeft: 10,
-    backgroundColor: "rgba(0,0,0,0.6)",
-    padding: 6,
-    borderRadius: 50,
-  },
-  backgroundImage: {
-    width: "100%",
-    height: 400,
-  },
-  absolute: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    left: 0,
-    width: "100%",
   },
 });
 

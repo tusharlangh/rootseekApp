@@ -16,9 +16,10 @@ import Create from "./createpage/create";
 import HelveticaNowDisplayRegular from "../assets/fonts/HelveticaNowDisplay-Regular.ttf";
 import HelveticaNowDisplayMedium from "../assets/fonts/HelveticaNowDisplay-Medium.ttf";
 import { useFonts } from "expo-font";
-import Home from "./homeScreen.jsx/home";
+import Home from "./homeScreen/home";
 import Search from "./searchScreen/search";
 import { theme } from "../theme";
+import RootBottomSheet from "./rootBottomSheet";
 
 const Tab = createBottomTabNavigator();
 
@@ -30,7 +31,7 @@ const Navbar = () => {
     HelveticaNowDisplayMedium,
   });
 
-  const [viewPostVisible, setViewPostVisible] = useState(false);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const textColor = "white";
 
@@ -125,7 +126,7 @@ const Navbar = () => {
               tabBarIcon: (props) => (
                 <Pressable
                   {...props}
-                  onPress={() => setViewPostVisible(true)}
+                  onPress={() => setIsBottomSheetOpen(true)}
                   style={{ alignItems: "center", justifyContent: "center" }}
                 >
                   <CreateIcon size={iconSize + 2} color={outlineTextColor} />
@@ -134,17 +135,18 @@ const Navbar = () => {
             }}
           />
         </Tab.Navigator>
-        <Modal
-          visible={viewPostVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setViewPostVisible(false)}
+        <RootBottomSheet
+          snapHeight="100%"
+          isBottomSheetOpen={isBottomSheetOpen}
+          setIsBottomSheetOpen={setIsBottomSheetOpen}
+          enablePanDownToClose={false}
+          ifHandleComponent={true}
         >
           <Create
-            visible={viewPostVisible}
-            onClose={() => setViewPostVisible(false)}
+            visible={isBottomSheetOpen}
+            onClose={() => setIsBottomSheetOpen(false)}
           />
-        </Modal>
+        </RootBottomSheet>
       </RefreshValue.Provider>
     </View>
   );

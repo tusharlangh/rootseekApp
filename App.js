@@ -5,6 +5,7 @@ import Navbar from "./components/navbar";
 import { Box, NativeBaseProvider, extendTheme } from "native-base";
 import { useState, useEffect, createContext } from "react";
 import { Appearance } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,14 +24,16 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={nativeBaseTheme}>
-      <PhoneContext.Provider value={{ usePhone }}>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="User" component={LoginNavigator} />
-            <Stack.Screen name="Navbar" component={Navbar} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </PhoneContext.Provider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <PhoneContext.Provider value={{ usePhone }}>
+          <NavigationContainer>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="User" component={LoginNavigator} />
+              <Stack.Screen name="Navbar" component={Navbar} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </PhoneContext.Provider>
+      </GestureHandlerRootView>
     </NativeBaseProvider>
   );
 }
