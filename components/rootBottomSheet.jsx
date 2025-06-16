@@ -34,6 +34,7 @@ const RootBottomSheet = ({
 
   useEffect(() => {
     if (isBottomSheetOpen) bottomPageRef.current.expand();
+    else bottomPageRef.current.close();
   }, [isBottomSheetOpen]);
 
   return (

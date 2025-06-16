@@ -143,7 +143,7 @@ const Navbar = () => {
           ifHandleComponent={true}
         >
           <Create
-            visible={isBottomSheetOpen}
+            isBottomSheetOpen={isBottomSheetOpen}
             onClose={() => setIsBottomSheetOpen(false)}
           />
         </RootBottomSheet>

@@ -100,6 +100,11 @@ export const theme = {
       create_button_text: "white",
       create_button: "rgb(51,51,51)",
     },
+    close_create_screen: {
+      container: "rgb(51,51,51)",
+      pressable_container: "rgb(130,130,130)",
+      pressable_text: "white",
+    },
   },
   root_screen: {
     content_without_picture: {

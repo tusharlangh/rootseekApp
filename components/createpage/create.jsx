@@ -16,7 +16,7 @@ import RootForm from "./rootForm";
 
 export const RootCreationContext = createContext(null);
 
-const Create = ({ visible, onClose }) => {
+const Create = ({ isBottomSheetOpen, onClose }) => {
   const { usePhone } = useContext(PhoneContext);
 
   const address = usePhone ? "192.168.1.80:5002" : "localhost:5002";
@@ -29,11 +29,23 @@ const Create = ({ visible, onClose }) => {
   const [creating, setCreating] = useState(false);
   const [tags, setTags] = useState("");
   const [send, setSend] = useState(false);
-  const [isCloseModalVisible, setIsCloseModalVisible] = useState(false);
 
-  const handleClose = () => {
+  useEffect(() => {
+    if (!isBottomSheetOpen) {
+      setPicture(null);
+      setSelectedSong({});
+      setTitle("");
+      setContent("");
+      setMood("");
+      setCreating(false);
+      setTags("");
+      setSend(false);
+    }
+  }, [isBottomSheetOpen]);
+
+  const handleClose = useCallback(() => {
     onClose();
-  };
+  }, []);
 
   useEffect(() => {
     if (content && title) {
@@ -44,7 +56,7 @@ const Create = ({ visible, onClose }) => {
   });
 
   const createRoot = async () => {
-    if (title === "" || content === "") {
+    if (!send) {
       console.log("Please fill up the title and the content.");
       return;
     }
@@ -78,6 +90,14 @@ const Create = ({ visible, onClose }) => {
         },
       });
       handleClose();
+      setPicture(null);
+      setSelectedSong({});
+      setTitle("");
+      setContent("");
+      setMood("");
+      setCreating(false);
+      setTags("");
+      setSend(false);
     } catch (error) {
       console.error(error);
     } finally {
@@ -98,12 +118,18 @@ const Create = ({ visible, onClose }) => {
         setTags,
         picture,
         setPicture,
+        isBottomSheetOpen,
       }}
     >
       <View style={[styles.container]}>
         <DisplayImage picture={picture} />
 
-        <Header creating={creating} />
+        <Header
+          creating={creating}
+          createRoot={createRoot}
+          handleClose={handleClose}
+          send={send}
+        />
 
         <View style={styles.content}>
           <RootForm />
