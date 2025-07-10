@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useCallback, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useColorMode } from "native-base";
-import { RefreshValue } from "../navbar";
+import { GrowthTraceContext, RefreshValue } from "../navbar";
 import { useFocusEffect } from "@react-navigation/native";
 
 import { PhoneContext } from "../../App";
@@ -24,9 +24,13 @@ import RecentlyMadePosts from "./recentlyMadePosts";
 import PatternInsightsPosts from "./patternInsightsPosts";
 import ThemeThreadPosts from "./themeThreadPosts";
 import { theme } from "../../theme";
+import StoryView from "../storyViewer/storyView";
+import GrowthTrace from "../createpage/growthTrace/growthTrace";
 
 const Home = () => {
   const { usePhone } = useContext(PhoneContext);
+
+  const { growthTrace, setGrowthTrace } = useContext(GrowthTraceContext);
 
   const address = usePhone ? "192.168.1.80:5002" : "localhost:5002";
 
@@ -188,69 +192,73 @@ const Home = () => {
   ];
 
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingTop: 50,
-        backgroundColor: theme.main_background,
-      }}
-    >
-      <ScrollView>
-        <Header headerText={"Recently Made"} headerIcon={"recentlyMade"} />
-
-        <ScrollableSection gap={18}>
-          <RecentlyMadePosts posts={posts} />
-        </ScrollableSection>
-
-        <Header
-          headerText={"Pattern Insights"}
-          headerIcon={"patternInsights"}
-        />
-
-        <ScrollableSection>
-          <PatternInsightsPosts posts={flatListData} />
-        </ScrollableSection>
-
-        <Header
-          headerText={"Theme Thread View"}
-          headerIcon={"themeThreadView"}
-        />
-
-        <ScrollableSection>
-          <ThemeThreadPosts
-            posts={themesArray}
-            setSelectedTheme={setSelectedTheme}
-            setSelectedThemeText={setSelectedTheme}
-            getStoriesRaw={getStoriesRaw}
-          />
-        </ScrollableSection>
-      </ScrollView>
-
-      <Modal
-        animationType="fade"
-        visible={viewPostVisible}
-        transparent={false}
-        onRequestClose={() => setViewPostVisible(false)}
+    <>
+      {growthTrace && <GrowthTrace />}
+      <View
+        style={{
+          flex: 1,
+          paddingTop: 50,
+          backgroundColor: theme.main_background,
+        }}
       >
-        {storiesLoading === false && Object.entries(storiesData).length > 0 ? (
-          <StoryViewer
-            storiesData={storiesData}
-            setViewPostVisible={setViewPostVisible}
+        <ScrollView>
+          <Header headerText={"Recently Made"} headerIcon={"recentlyMade"} />
+
+          <ScrollableSection gap={18}>
+            <RecentlyMadePosts posts={posts} />
+          </ScrollableSection>
+
+          <Header
+            headerText={"Pattern Insights"}
+            headerIcon={"patternInsights"}
           />
-        ) : (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-              width: "100%",
-            }}
-          >
-            <ActivityIndicator size="large" color="black" />
-          </View>
-        )}
-      </Modal>
-    </View>
+
+          <ScrollableSection>
+            <PatternInsightsPosts posts={flatListData} />
+          </ScrollableSection>
+
+          <Header
+            headerText={"Theme Thread View"}
+            headerIcon={"themeThreadView"}
+          />
+
+          <ScrollableSection>
+            <ThemeThreadPosts
+              posts={themesArray}
+              setSelectedTheme={setSelectedTheme}
+              setSelectedThemeText={setSelectedTheme}
+              getStoriesRaw={getStoriesRaw}
+            />
+          </ScrollableSection>
+        </ScrollView>
+
+        <Modal
+          animationType="fade"
+          visible={viewPostVisible}
+          transparent={false}
+          onRequestClose={() => setViewPostVisible(false)}
+        >
+          {storiesLoading === false &&
+          Object.entries(storiesData).length > 0 ? (
+            <StoryView
+              storiesData={storiesData}
+              setViewPostVisible={setViewPostVisible}
+            />
+          ) : (
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                width: "100%",
+              }}
+            >
+              <ActivityIndicator size="large" color="black" />
+            </View>
+          )}
+        </Modal>
+      </View>
+    </>
   );
 };
 

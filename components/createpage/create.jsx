@@ -13,11 +13,14 @@ import { PhoneContext } from "../../App";
 import Header from "./header";
 import DisplayImage from "./displayImage";
 import RootForm from "./rootForm";
+import { GrowthTraceContext } from "../navbar";
 
 export const RootCreationContext = createContext(null);
 
 const Create = ({ isBottomSheetOpen, onClose }) => {
   const { usePhone } = useContext(PhoneContext);
+
+  const { setGrowthTrace } = useContext(GrowthTraceContext);
 
   const address = usePhone ? "192.168.1.80:5002" : "localhost:5002";
 
@@ -83,13 +86,18 @@ const Create = ({ isBottomSheetOpen, onClose }) => {
 
     try {
       const token = await AsyncStorage.getItem("token");
-      await axios.post(`http://${address}/user/create`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        `http://${address}/user/create`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       handleClose();
+      setGrowthTrace(true);
       setPicture(null);
       setSelectedSong({});
       setTitle("");

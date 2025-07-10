@@ -1,10 +1,13 @@
 import { useRef, useState, useEffect } from "react";
 import { View, Text, Pressable, Dimensions, Animated } from "react-native";
-import { CloseIcon } from "./icons";
+import { CloseIcon } from "../icons";
 import { LinearGradient } from "expo-linear-gradient";
 const { width, height } = Dimensions.get("window");
 
-const StoryViewer = ({ storiesData, setViewPostVisible }) => {
+import MilestoneCard from "./milestoneCard";
+import ProgressionCard from "./progressionCard";
+
+const StoryView = ({ storiesData, setViewPostVisible }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const narrative = Object.values(storiesData);
@@ -23,7 +26,11 @@ const StoryViewer = ({ storiesData, setViewPostVisible }) => {
 
   return (
     <LinearGradient
-      colors={narrative[currentIndex].linearGradient}
+      colors={
+        currentIndex === narrative.length - 1
+          ? ["white", "white"]
+          : narrative[currentIndex].linearGradient
+      }
       style={{
         flex: 1,
         height: "100%",
@@ -52,44 +59,14 @@ const StoryViewer = ({ storiesData, setViewPostVisible }) => {
         >
           <CloseIcon size={30} color="black" />
         </Pressable>
-        <View
-          style={{
-            width: 300,
-            marginHorizontal: "auto",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignContent: "center",
-            height: "100%",
-          }}
-        >
-          <View style={{ gap: 10 }}>
-            <Text
-              style={{
-                fontSize: 30,
-                fontWeight: 600,
-                textAlign: "center",
-                color: "black",
-              }}
-            >
-              {narrative[currentIndex].suspense}
-            </Text>
-
-            <Text
-              style={{
-                fontSize: 24,
-                fontWeight: 600,
-                textAlign: "center",
-                color: "black",
-              }}
-            >
-              {narrative[currentIndex].message}
-            </Text>
-          </View>
-        </View>
+        {currentIndex === narrative.length - 1 ? (
+          <ProgressionCard currentIndex={currentIndex} narrative={narrative} />
+        ) : (
+          <MilestoneCard currentIndex={currentIndex} narrative={narrative} />
+        )}
       </Pressable>
     </LinearGradient>
   );
 };
 
-export default StoryViewer;
+export default StoryView;

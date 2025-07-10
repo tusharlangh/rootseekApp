@@ -60,13 +60,7 @@ const ContentWithoutPicture = ({
         </View>
       </View>
       <LinearGradient
-        colors={[
-          colorMode === "light"
-            ? item.linearGradient.light
-            : item.linearGradient.dark,
-          bgColor,
-          bgColor,
-        ]}
+        colors={[item.linearGradient.light, bgColor, bgColor]}
         style={{
           height,
           width,

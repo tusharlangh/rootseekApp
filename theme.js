@@ -105,6 +105,16 @@ export const theme = {
       pressable_container: "rgb(130,130,130)",
       pressable_text: "white",
     },
+    back_drop: {
+      absolute: "rgba(24, 24, 24, 0.5)",
+      close_btn_container: "rgb(40,40,40)",
+      close_icon_color: "white",
+    },
+    growth_trace: {
+      growthTraceDimension: "rgb(40,40,40)",
+      header_text: "white",
+      trace_text: "white",
+    },
   },
   root_screen: {
     content_without_picture: {
