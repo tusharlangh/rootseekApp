@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { PhoneContext } from "../../../App";
 import HighlightedText from "./highlightedText";
+import ThreeDotLoader from "../../loadingScreen/threeDotLoading";
 
 const GrowthTrace = () => {
   const { usePhone } = useContext(PhoneContext);
@@ -42,10 +43,18 @@ const GrowthTrace = () => {
             Has something about you have changed? Lets figure out
           </Text>
 
-          {result.trace ? (
+          {result ? (
             <HighlightedText content={result.trace} />
           ) : (
-            <Text style={{ color: "white" }}>Loading...</Text>
+            <View
+              style={{
+                height: 100,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ThreeDotLoader />
+            </View>
           )}
         </View>
       </View>
@@ -70,6 +79,7 @@ const styles = StyleSheet.create({
     color: theme.create_screen.growth_trace.header_text,
     fontSize: 16,
     fontWeight: "700",
+    zIndex: 1000,
   },
 });
 
