@@ -21,8 +21,28 @@ import DisplayRoots from "./displayRoots";
 import moment from "moment";
 import { theme } from "../../theme";
 import ViewRoot from "../rootScreen/viewRoot";
+import ThreeDotLoader from "../loadingScreen/threeDotLoading";
 
 const { height, width } = Dimensions.get("window");
+
+const noRootLoading = () => (
+  <View
+    style={{
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 10,
+      height: height / 2,
+      gap: 4,
+    }}
+  >
+    <Text style={{ color: "white", fontWeight: "600", fontSize: 20 }}>
+      No roots found
+    </Text>
+    <Text style={{ color: "white", fontSize: 12 }}>
+      Haven't created any roots yet might want to now...
+    </Text>
+  </View>
+);
 
 const Search = () => {
   const { usePhone } = useContext(PhoneContext);
@@ -44,6 +64,8 @@ const Search = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useFocusEffect(
     useCallback(() => {
       setRefreshValue((prev) => prev + 1);
@@ -59,6 +81,8 @@ const Search = () => {
           return;
         }
 
+        setIsLoading(true);
+
         const response = await axios.get(
           `http://${address}/search/posts?q=${encodeURIComponent(search)}`,
           {
@@ -70,6 +94,8 @@ const Search = () => {
         setPosts(response.data);
       } catch (error) {
         console.error("Error fetching posts:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchPosts();
@@ -285,12 +311,20 @@ const Search = () => {
         </View>
 
         <View style={styles.rootsContainer}>
-          <DisplayRoots
-            posts={postsByDate}
-            setViewPostVisible={setViewPostVisible}
-            setCurrentIndex={setCurrentIndex}
-            flatPosts={flatPosts}
-          />
+          {posts.length === 0 && !isLoading ? (
+            noRootLoading()
+          ) : isLoading ? (
+            <View style={styles.threeDotLoadingContainer}>
+              <ThreeDotLoader />
+            </View>
+          ) : (
+            <DisplayRoots
+              posts={postsByDate}
+              setViewPostVisible={setViewPostVisible}
+              setCurrentIndex={setCurrentIndex}
+              flatPosts={flatPosts}
+            />
+          )}
         </View>
 
         <View style={{ height: 100 }} />
@@ -324,6 +358,12 @@ const styles = StyleSheet.create({
 
   rootsContainer: {
     marginTop: 30,
+  },
+
+  threeDotLoadingContainer: {
+    height: height / 2,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

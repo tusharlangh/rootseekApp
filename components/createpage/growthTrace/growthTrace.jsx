@@ -46,13 +46,7 @@ const GrowthTrace = () => {
           {result ? (
             <HighlightedText content={result.trace} />
           ) : (
-            <View
-              style={{
-                height: 100,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+            <View style={styles.threeDotLoadingContainer}>
               <ThreeDotLoader />
             </View>
           )}
@@ -80,6 +74,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     zIndex: 1000,
+  },
+  threeDotLoadingContainer: {
+    height: 100,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
