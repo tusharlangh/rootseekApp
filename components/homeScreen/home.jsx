@@ -26,6 +26,7 @@ import ThemeThreadPosts from "./themeThreadPosts";
 import { theme } from "../../theme";
 import StoryView from "../storyViewer/storyView";
 import GrowthTrace from "../createpage/growthTrace/growthTrace";
+import HomeLoading from "../loadingScreen/homeLoading";
 
 const Home = () => {
   const { usePhone } = useContext(PhoneContext);
@@ -35,6 +36,7 @@ const Home = () => {
   const address = usePhone ? "192.168.1.80:5002" : "localhost:5002";
 
   const [posts, setPosts] = useState([]);
+  const [postsLoading, setPostsLoading] = useState(false);
 
   const { refreshValue, setRefreshValue } = useContext(RefreshValue);
 
@@ -71,6 +73,8 @@ const Home = () => {
           return;
         }
 
+        setPostsLoading(true);
+
         const response = await axios.get(`http://${address}/user/posts`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -80,6 +84,7 @@ const Home = () => {
       } catch (error) {
         console.error("Error fetching posts:", error);
       } finally {
+        setPostsLoading(false);
       }
     };
 
@@ -89,13 +94,14 @@ const Home = () => {
   useEffect(() => {
     const fetchPatternInsights = async () => {
       try {
-        setPatternLoading(true);
         const token = await AsyncStorage.getItem("token");
 
         if (!token) {
           console.error("No token found");
           return;
         }
+
+        setPatternLoading(true);
 
         const response = await axios.get(
           `http://${address}/nlp/pattern-insights`,
@@ -191,9 +197,12 @@ const Home = () => {
     },
   ];
 
+  if (patternLoading || postsLoading) return <HomeLoading />;
+
   return (
     <>
       {growthTrace && <GrowthTrace />}
+
       <View
         style={{
           flex: 1,

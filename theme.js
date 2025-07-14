@@ -133,4 +133,9 @@ export const theme = {
       volume_icon_container: "rgba(0,0,0,0.6)",
     },
   },
+  loading_screen: {
+    no_roots_found_loading: {
+      no_root_text: "white",
+    },
+  },
 };

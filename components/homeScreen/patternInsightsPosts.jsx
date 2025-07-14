@@ -2,6 +2,20 @@ import { Text, View, StyleSheet } from "react-native";
 import { theme } from "../../theme";
 
 const PatternInsightsPosts = ({ posts }) => {
+  if (!posts || posts.length === 0) {
+    return (
+      <View
+        style={{
+          width: 300,
+        }}
+      >
+        <Text style={{ color: "white" }}>
+          No roots have been created for insights...
+        </Text>
+      </View>
+    );
+  }
+
   return posts.map((item, index) => (
     <View key={index} style={styles.postContainer}>
       <Text style={styles.patternTitle}>{item.title}</Text>

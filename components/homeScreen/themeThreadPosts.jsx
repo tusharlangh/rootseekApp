@@ -6,6 +6,20 @@ const ThemeThreadPosts = ({
   setSelectedThemeText,
   getStoriesRaw,
 }) => {
+  if (!posts || posts.length === 0) {
+    return (
+      <View
+        style={{
+          width: 300,
+        }}
+      >
+        <Text style={{ color: "white" }}>
+          No roots have been created for theme thread...
+        </Text>
+      </View>
+    );
+  }
+
   return posts.map(([theme, value], index) => (
     <View
       key={index}

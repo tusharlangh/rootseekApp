@@ -22,27 +22,9 @@ import moment from "moment";
 import { theme } from "../../theme";
 import ViewRoot from "../rootScreen/viewRoot";
 import ThreeDotLoader from "../loadingScreen/threeDotLoading";
+import NoRootsFoundLoading from "../loadingScreen/noRootsFoundLoading";
 
 const { height, width } = Dimensions.get("window");
-
-const noRootLoading = () => (
-  <View
-    style={{
-      justifyContent: "center",
-      alignItems: "center",
-      padding: 10,
-      height: height / 2,
-      gap: 4,
-    }}
-  >
-    <Text style={{ color: "white", fontWeight: "600", fontSize: 20 }}>
-      No roots found
-    </Text>
-    <Text style={{ color: "white", fontSize: 12 }}>
-      Haven't created any roots yet might want to now...
-    </Text>
-  </View>
-);
 
 const Search = () => {
   const { usePhone } = useContext(PhoneContext);
@@ -311,12 +293,20 @@ const Search = () => {
         </View>
 
         <View style={styles.rootsContainer}>
-          {posts.length === 0 && !isLoading ? (
-            noRootLoading()
-          ) : isLoading ? (
+          {isLoading ? (
             <View style={styles.threeDotLoadingContainer}>
               <ThreeDotLoader />
             </View>
+          ) : posts.length === 0 && search !== "" ? (
+            <NoRootsFoundLoading
+              subText={
+                "No roots found for your search. Maybe try different keywords..."
+              }
+            />
+          ) : posts.length === 0 ? (
+            <NoRootsFoundLoading
+              subText={"Haven't created any roots yet might want to now..."}
+            />
           ) : (
             <DisplayRoots
               posts={postsByDate}

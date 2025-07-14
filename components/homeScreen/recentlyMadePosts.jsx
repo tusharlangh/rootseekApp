@@ -2,6 +2,20 @@ import { View, Text, StyleSheet } from "react-native";
 import { theme } from "../../theme";
 
 const RecentlyMadePosts = ({ posts }) => {
+  if (!posts || posts.length === 0) {
+    return (
+      <View
+        style={{
+          width: 300,
+        }}
+      >
+        <Text style={{ color: "white" }}>
+          No recent activity. Have something in your mind, write a root...
+        </Text>
+      </View>
+    );
+  }
+
   return posts.map((post, index) => (
     <View
       key={index}

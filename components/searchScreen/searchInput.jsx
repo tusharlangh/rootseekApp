@@ -4,8 +4,6 @@ import { FilterIcon, SearchIcon, SearchIconOutline } from "../icons";
 import { theme } from "../../theme";
 
 const SearchInput = ({ stickyStyle, stickyShadow, search, setSearch }) => {
-  const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
   return (
     <Animated.View style={[styles.stickySearchBar, stickyStyle]}>
       <View style={styles.searchIcon}>
@@ -14,10 +12,10 @@ const SearchInput = ({ stickyStyle, stickyShadow, search, setSearch }) => {
           size={20}
         />
       </View>
-      <AnimatedPressable style={styles.filterIcon}>
+      <Pressable style={styles.filterIcon}>
         <FilterIcon color="white" size={24} />
-      </AnimatedPressable>
-      <AnimatedTextInput
+      </Pressable>
+      <TextInput
         placeholder="Search root"
         placeholderTextColor={theme.sticky_search.search_input.search_text}
         style={[styles.searchBarInput]}
@@ -58,7 +56,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     marginTop: 10,
     paddingLeft: 36,
-    color: theme.sticky_search.search_input.search_bg.search_text,
+    color: theme.sticky_search.search_input.search_text,
     fontWeight: "400",
   },
 });
