@@ -8,7 +8,14 @@ import Animated, {
 } from "react-native-reanimated";
 import SearchInput from "./searchInput";
 import StickyOptions from "./stickyOptions";
-import { StyleSheet, View, Text, Dimensions, Modal } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  Modal,
+  RefreshControl,
+} from "react-native";
 import { useCallback, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -54,32 +61,45 @@ const Search = () => {
     }, [])
   );
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-        if (!token) {
-          console.error("No token found");
-          return;
-        }
-
-        setIsLoading(true);
-
-        const response = await axios.get(
-          `http://${address}/search/posts?q=${encodeURIComponent(search)}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setPosts(response.data);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      } finally {
-        setIsLoading(false);
+  //fetch posts
+  const fetchPosts = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        console.error("No token found");
+        return;
       }
-    };
+
+      setIsLoading(true);
+
+      const response = await axios.get(
+        `http://${address}/search/posts?q=${encodeURIComponent(search)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPosts(response.data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      fetchPosts();
+      setRefreshing(false);
+    }, 2000);
+  });
+
+  //call fetchPosts()
+  useEffect(() => {
     fetchPosts();
   }, [search, refreshValue]);
 
@@ -215,13 +235,13 @@ const Search = () => {
               ? interpolate(
                   scrollDummyY.value,
                   [0, 110],
-                  [55, 10],
+                  [85, 50],
                   Extrapolation.CLAMP
                 )
               : interpolate(
                   scrollDummyY.value,
                   [0, 100],
-                  [120, 10],
+                  [150, 50],
                   Extrapolation.CLAMP
                 ),
         },
@@ -258,7 +278,7 @@ const Search = () => {
   return (
     <View
       style={{
-        paddingTop: 50,
+        paddingTop: 20,
         flex: 1,
         zIndex: 100,
         backgroundColor: theme.main_background,
@@ -281,12 +301,18 @@ const Search = () => {
         onContentSizeChange={(width, height) => {
           setScrollViewHeight(height);
         }}
-        style={{
-          paddingTop: 50,
-        }}
+        style={{ paddingTop: 80 }}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         indicatorStyle="white"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={["white"]}
+            tintColor={"white"}
+          />
+        }
       >
         <View>
           <Text style={styles.textInput_duplicate}></Text>

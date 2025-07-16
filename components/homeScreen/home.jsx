@@ -6,6 +6,7 @@ import {
   ScrollView,
   Pressable,
   Modal,
+  RefreshControl,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -57,93 +58,111 @@ const Home = () => {
   const [storiesData, setStoriesData] = useState({});
   const [storiesLoading, setStoriesLoading] = useState(false);
 
+  const [refreshing, setRefreshing] = useState(false);
+
   useFocusEffect(
     useCallback(() => {
       setRefreshValue((prev) => prev + 1);
     }, [])
   );
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
+  //fetches recent posts
+  const fetchPosts = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
 
-        if (!token) {
-          console.error("No token found");
-          return;
-        }
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
 
-        setPostsLoading(true);
+      setPostsLoading(true);
 
-        const response = await axios.get(`http://${address}/user/posts`, {
+      const response = await axios.get(`http://${address}/user/posts`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setPosts(response.data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setPostsLoading(false);
+    }
+  };
+
+  //fetches pattern insights
+  const fetchPatternInsights = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      setPatternLoading(true);
+
+      const response = await axios.get(
+        `http://${address}/nlp/pattern-insights`,
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        });
-        setPosts(response.data);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      } finally {
-        setPostsLoading(false);
-      }
-    };
+        }
+      );
+      setPatternInsights(response.data);
+    } catch (error) {
+      console.error("Error fetching the pattern insights of posts", error);
+    } finally {
+      setPatternLoading(false);
+    }
+  };
 
+  //fetches theme threads
+  const fetchThemeThreads = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      const response = await axios.get(`http://${address}/nlp/topThemePosts`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setThemeThreads(response.data);
+    } catch (error) {
+      console.error("Error fetching the theme threads", error);
+    }
+  };
+
+  //on refresh what to fetch
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      fetchPosts();
+      //fetchPatternInsights();
+      fetchThemeThreads();
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  //calls fetchPosts
+  useEffect(() => {
     fetchPosts();
   }, [refreshValue, createVisible]);
 
+  //calls fetchPatterInsights
   useEffect(() => {
-    const fetchPatternInsights = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-
-        if (!token) {
-          console.error("No token found");
-          return;
-        }
-
-        setPatternLoading(true);
-
-        const response = await axios.get(
-          `http://${address}/nlp/pattern-insights`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setPatternInsights(response.data);
-      } catch (error) {
-        console.error("Error fetching the pattern insights of posts", error);
-      } finally {
-        setPatternLoading(false);
-      }
-    };
     fetchPatternInsights();
   }, []);
 
+  //calls fetchThemeThreads
   useEffect(() => {
-    const fetchThemeThreads = async () => {
-      try {
-        const token = await AsyncStorage.getItem("token");
-
-        if (!token) {
-          console.error("No token found");
-          return;
-        }
-
-        const response = await axios.get(
-          `http://${address}/nlp/topThemePosts`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setThemeThreads(response.data);
-      } catch (error) {
-        console.error("Error fetching the theme threads", error);
-      }
-    };
     fetchThemeThreads();
   }, []);
 
@@ -210,7 +229,16 @@ const Home = () => {
           backgroundColor: theme.main_background,
         }}
       >
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["white"]}
+              tintColor="white"
+            />
+          }
+        >
           <Header headerText={"Recently Made"} headerIcon={"recentlyMade"} />
 
           <ScrollableSection gap={18}>
