@@ -15,7 +15,7 @@ const ContentBottomSheet = ({ isContentOpen, setIsContentOpen }) => {
 
   return (
     <RootBottomSheet
-      snapHeight="90%"
+      snapHeight="88%"
       isBottomSheetOpen={isContentOpen}
       setIsBottomSheetOpen={setIsContentOpen}
       enablePanDownToClose={true}

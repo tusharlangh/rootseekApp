@@ -10,7 +10,7 @@ const { height, width } = Dimensions.get("window");
 
 const RootBottomSheet = ({
   children,
-  snapHeight = "90%",
+  snapHeight = "88%",
   isBottomSheetOpen,
   setIsBottomSheetOpen,
   enablePanDownToClose,

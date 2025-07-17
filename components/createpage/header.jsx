@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     marginRight: 10,
     backgroundColor: theme.create_screen.header.create_button_container,
-    zIndex: 1050,
+    zIndex: 10,
   },
   createButton: {
     padding: 6,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.create_screen.header.close_button,
     padding: 6,
     borderRadius: 50,
-    zIndex: 1050,
+    zIndex: 10,
   },
 });
 

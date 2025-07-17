@@ -20,7 +20,7 @@ const TagsBottomSheet = ({ isTagsOpen, setIsTagsOpen }) => {
 
   return (
     <RootBottomSheet
-      snapHeight="90%"
+      snapHeight="88%"
       isBottomSheetOpen={isTagsOpen}
       setIsBottomSheetOpen={setIsTagsOpen}
       enablePanDownToClose={true}

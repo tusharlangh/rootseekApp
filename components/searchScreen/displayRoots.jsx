@@ -16,6 +16,7 @@ const DisplayRoots = ({
   setViewPostVisible,
   setCurrentIndex,
   flatPosts,
+  setSearch,
 }) => {
   const getHashTags = (hashTags) => {
     const ht = hashTags.split("#").filter((h) => h.length > 0);

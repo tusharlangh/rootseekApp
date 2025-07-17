@@ -8,6 +8,7 @@ import {
   ScrollView,
   Pressable,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import {
   PlayIcon,
@@ -22,6 +23,8 @@ import { PhoneContext } from "../../../App";
 import { RootCreationContext } from "../create";
 import RootBottomSheet from "../../rootBottomSheet";
 import { theme } from "../../../theme";
+
+const { height, width } = Dimensions.get("window");
 
 const TrackBottomSheet = ({ isTrackOpen, setIsTrackOpen }) => {
   const { usePhone } = useContext(PhoneContext);
@@ -138,7 +141,7 @@ const TrackBottomSheet = ({ isTrackOpen, setIsTrackOpen }) => {
 
   return (
     <RootBottomSheet
-      snapHeight="90%"
+      snapHeight="88%"
       isBottomSheetOpen={isTrackOpen}
       setIsBottomSheetOpen={setIsTrackOpen}
       enablePanDownToClose={true}
@@ -162,13 +165,18 @@ const TrackBottomSheet = ({ isTrackOpen, setIsTrackOpen }) => {
           />
         </View>
 
-        <View style={{ marginTop: 10, flex: 1 }}>
-          <ScrollView style={{ paddingBottom: 200 }}>
+        <View style={{ marginTop: 10 }}>
+          <ScrollView
+            style={{ height: height * 0.75 }}
+            contentContainerStyle={{}}
+          >
             {results.map((song) => (
               <TouchableOpacity
                 style={[
                   styles.individualSongContainer,
-                  { backgroundColor: selectedSongId === song.id ? songBg : "" },
+                  {
+                    backgroundColor: selectedSongId === song.id ? songBg : "",
+                  },
                 ]}
                 key={song.id}
                 onPress={() => {
@@ -264,7 +272,6 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "row",
-
     borderRadius: 6,
     padding: 10,
     alignItems: "center",

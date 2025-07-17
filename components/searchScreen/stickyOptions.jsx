@@ -90,6 +90,9 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 20,
     backgroundColor: theme.sticky_search.sticky_options.singular_option_bg,
+    shadowColor: "rgba(14, 14, 14, 1)",
+    shadowRadius: 8,
+    shadowOpacity: 1,
   },
 });
 

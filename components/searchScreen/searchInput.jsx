@@ -5,7 +5,7 @@ import { theme } from "../../theme";
 
 const SearchInput = ({ stickyStyle, stickyShadow, search, setSearch }) => {
   return (
-    <Animated.View style={[styles.stickySearchBar, stickyStyle]}>
+    <Animated.View style={[styles.stickySearchBar, stickyStyle, stickyShadow]}>
       <View style={styles.searchIcon}>
         <SearchIconOutline
           color={theme.sticky_search.search_input.search_text}
@@ -33,6 +33,8 @@ const styles = StyleSheet.create({
     left: 10,
     right: 10,
     zIndex: 1000,
+    shadowColor: "white",
+    shadowRadius: 200,
   },
   searchIcon: {
     position: "absolute",

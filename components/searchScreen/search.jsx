@@ -339,6 +339,7 @@ const Search = () => {
               setViewPostVisible={setViewPostVisible}
               setCurrentIndex={setCurrentIndex}
               flatPosts={flatPosts}
+              setSearch={setSearch}
             />
           )}
         </View>
