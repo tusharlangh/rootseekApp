@@ -83,7 +83,6 @@ const TrackBottomSheet = ({ isTrackOpen, setIsTrackOpen }) => {
 
   const playSound = async () => {
     if (!song) return;
-    console.log(song);
 
     try {
       await stopPreviousSound();
