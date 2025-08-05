@@ -86,7 +86,9 @@ const DisplayRoots = ({
                   style={styles.rootImage}
                 />
                 <View>
-                  <Text style={styles.rootTrackName}>{post.trackName}</Text>
+                  <Text style={styles.rootTrackName} numberOfLines={1}>
+                    {post.trackName}
+                  </Text>
                   <Text style={styles.rootTrackArtist}>{post.trackArtist}</Text>
                 </View>
               </View>
@@ -157,6 +159,7 @@ const styles = StyleSheet.create({
     color: theme.constants.root_track,
     fontSize: 12,
     fontWeight: "600",
+    paddingRight: 45,
   },
   rootTrackArtist: {
     color: theme.constants.root_track,
