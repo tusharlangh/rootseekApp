@@ -4,10 +4,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import ViewRoot from "../rootScreen/viewRoot";
 
-const RecentlyMadePosts = ({ posts }) => {
-  //const [viewPostVisible, setViewPostVisible] = useState(false);
-  //const [currentIndex, setCurrentIndex] = useState(0);
-
+const RecentlyMadePosts = ({ posts, setCurrentIndex, setViewPostVisible }) => {
   if (!posts || posts.length === 0) {
     return (
       <View
@@ -35,12 +32,16 @@ const RecentlyMadePosts = ({ posts }) => {
   };
 
   return posts.map((post, index) => (
-    <View
+    <Pressable
       key={index}
       style={[
         styles.postContainer,
         { borderRightWidth: index !== posts.length - 1 ? 1 : 0 },
       ]}
+      onPress={() => {
+        setViewPostVisible(true);
+        setCurrentIndex(index);
+      }}
     >
       <View style={styles.root_title_and_date_container}>
         <Text style={styles.rootTitle} numberOfLines={1}>
@@ -51,7 +52,7 @@ const RecentlyMadePosts = ({ posts }) => {
       <Text style={styles.rootContent} numberOfLines={3}>
         {post.content}
       </Text>
-    </View>
+    </Pressable>
   ));
 };
 
