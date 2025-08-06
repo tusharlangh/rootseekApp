@@ -120,11 +120,15 @@ const ViewRoot = ({
     }
   };
 
-  useEffect(() => {
+  {
+    /*
+    useEffect(() => {
     if (song) {
       playSound();
     }
   }, [song]);
+  */
+  }
 
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 90 };
 

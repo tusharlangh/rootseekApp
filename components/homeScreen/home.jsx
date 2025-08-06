@@ -28,6 +28,7 @@ import { theme } from "../../theme";
 import StoryView from "../storyViewer/storyView";
 import GrowthTrace from "../createpage/growthTrace/growthTrace";
 import HomeLoading from "../loadingScreen/homeLoading";
+import ViewRoot from "../rootScreen/viewRoot";
 
 const Home = () => {
   const { usePhone } = useContext(PhoneContext);
@@ -51,7 +52,7 @@ const Home = () => {
   const [selectedThemeText, setSelectedThemeText] = useState("");
   const [selectedTheme, setSelectedTheme] = useState([]);
 
-  const [viewPostVisible, setViewPostVisible] = useState(false);
+  const [viewStoryVisible, setViewStoryVisible] = useState(false);
 
   const themesArray = Object.entries(themeThreads);
 
@@ -59,6 +60,9 @@ const Home = () => {
   const [storiesLoading, setStoriesLoading] = useState(false);
 
   const [refreshing, setRefreshing] = useState(false);
+
+  const [viewPostVisible, setViewPostVisible] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useFocusEffect(
     useCallback(() => {
@@ -197,7 +201,7 @@ const Home = () => {
 
   useEffect(() => {
     if (storiesLoading === false && Object.entries(storiesData).length > 0) {
-      setViewPostVisible(true);
+      setViewStoryVisible(true);
     }
   }, [storiesLoading]);
 
@@ -242,7 +246,11 @@ const Home = () => {
           <Header headerText={"Recently Made"} headerIcon={"recentlyMade"} />
 
           <ScrollableSection gap={18}>
-            <RecentlyMadePosts posts={posts} />
+            <RecentlyMadePosts
+              posts={posts}
+              setCurrentIndex={setCurrentIndex}
+              setViewPostVisible={setViewPostVisible}
+            />
           </ScrollableSection>
 
           <Header
@@ -269,17 +277,18 @@ const Home = () => {
           </ScrollableSection>
         </ScrollView>
 
+        {/*below is story view*/}
         <Modal
           animationType="fade"
-          visible={viewPostVisible}
+          visible={viewStoryVisible}
           transparent={false}
-          onRequestClose={() => setViewPostVisible(false)}
+          onRequestClose={() => setViewStoryVisible(false)}
         >
           {storiesLoading === false &&
           Object.entries(storiesData).length > 0 ? (
             <StoryView
               storiesData={storiesData}
-              setViewPostVisible={setViewPostVisible}
+              setViewPostVisible={setViewStoryVisible}
             />
           ) : (
             <View
@@ -293,6 +302,21 @@ const Home = () => {
               <ActivityIndicator size="large" color="black" />
             </View>
           )}
+        </Modal>
+
+        {/*below is single root view*/}
+        <Modal
+          animationType="fade"
+          visible={viewPostVisible}
+          transparent={true}
+          onRequestClose={() => setViewPostVisible(false)}
+        >
+          <ViewRoot
+            currentIndex={currentIndex}
+            posts={posts}
+            setViewPostVisible={setViewPostVisible}
+            viewPostVisible={viewPostVisible}
+          />
         </Modal>
       </View>
     </>

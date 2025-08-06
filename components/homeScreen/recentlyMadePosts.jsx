@@ -1,7 +1,10 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { theme } from "../../theme";
+import moment from "moment";
+import { useEffect, useState } from "react";
+import ViewRoot from "../rootScreen/viewRoot";
 
-const RecentlyMadePosts = ({ posts }) => {
+const RecentlyMadePosts = ({ posts, setCurrentIndex, setViewPostVisible }) => {
   if (!posts || posts.length === 0) {
     return (
       <View
@@ -16,24 +19,40 @@ const RecentlyMadePosts = ({ posts }) => {
     );
   }
 
+  const getTime = (post) => {
+    const date = moment(post.date).toDate();
+
+    const diff = moment().diff(date, "hours");
+
+    if (diff <= 0) {
+      return moment().diff(date, "minutes") + " min ago";
+    }
+
+    return diff === 1 ? diff + " hour ago" : diff + " hours ago";
+  };
+
   return posts.map((post, index) => (
-    <View
+    <Pressable
       key={index}
       style={[
         styles.postContainer,
         { borderRightWidth: index !== posts.length - 1 ? 1 : 0 },
       ]}
+      onPress={() => {
+        setViewPostVisible(true);
+        setCurrentIndex(index);
+      }}
     >
       <View style={styles.root_title_and_date_container}>
         <Text style={styles.rootTitle} numberOfLines={1}>
           {post.title}
         </Text>
-        <Text style={[styles.rootDate]}>8h</Text>
+        <Text style={[styles.rootDate]}>{getTime(post)}</Text>
       </View>
       <Text style={styles.rootContent} numberOfLines={3}>
         {post.content}
       </Text>
-    </View>
+    </Pressable>
   ));
 };
 
@@ -65,6 +84,7 @@ const styles = StyleSheet.create({
   },
   rootDate: {
     color: theme.constants.root_date,
+    fontSize: 12,
   },
 });
 
