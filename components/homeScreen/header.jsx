@@ -22,12 +22,6 @@ const Header = ({ headerText, headerIcon }) => {
         <View>{icons[headerIcon]}</View>
         <Text style={stylesheet.headerText}>{headerText}</Text>
       </View>
-
-      <View style={stylesheet.RightArrowContainer}>
-        <View style={{ marginLeft: 1 }}>
-          <RightArrow color={defaultColor} size={16} strokeWidth={5} />
-        </View>
-      </View>
     </View>
   );
 };
@@ -49,12 +43,6 @@ const stylesheet = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-  },
-  RightArrowContainer: {
-    marginRight: 10,
-    backgroundColor: theme.home_screen.header.right_arrow_container,
-    padding: 5,
-    borderRadius: 20,
   },
 });
 
