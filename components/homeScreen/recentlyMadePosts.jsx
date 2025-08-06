@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { theme } from "../../theme";
 import moment from "moment";
-import { useEffect, useState } from "react";
-import ViewRoot from "../rootScreen/viewRoot";
 
 const RecentlyMadePosts = ({ posts, setCurrentIndex, setViewPostVisible }) => {
   if (!posts || posts.length === 0) {
