@@ -5,7 +5,6 @@ import { useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { PhoneContext } from "../../../App";
-import HighlightedText from "./highlightedText";
 import ThreeDotLoader from "../../loadingScreen/threeDotLoading";
 
 const GrowthTrace = () => {
@@ -33,6 +32,7 @@ const GrowthTrace = () => {
       }
     };
     fetchTraces();
+    ``;
   }, []);
 
   return (
@@ -44,7 +44,7 @@ const GrowthTrace = () => {
           </Text>
 
           {result ? (
-            <HighlightedText content={result.trace} />
+            <Text style={styles.traceText}>{result.trace}</Text>
           ) : (
             <View style={styles.threeDotLoadingContainer}>
               <ThreeDotLoader />
@@ -79,6 +79,12 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: "center",
     alignItems: "center",
+  },
+  traceText: {
+    fontSize: 14,
+    marginTop: 6,
+    opacity: 0.9,
+    color: theme.create_screen.growth_trace.trace_text,
   },
 });
 

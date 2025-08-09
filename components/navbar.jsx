@@ -25,7 +25,7 @@ export const GrowthTraceContext = createContext();
 const Navbar = () => {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
-  const [growthTrace, setGrowthTrace] = useState(false);
+  const [growthTrace, setGrowthTrace] = useState(true);
 
   const textColor = "white";
 
