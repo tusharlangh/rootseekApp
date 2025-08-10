@@ -32,19 +32,24 @@ const GrowthTrace = () => {
       }
     };
     fetchTraces();
-    ``;
   }, []);
 
   return (
     <Backdrop>
       <View style={styles.container}>
         <View style={styles.growthTraceDimension}>
-          <Text style={styles.headerText}>
-            Has something about you have changed? Lets figure out
-          </Text>
+          <Text style={styles.headerText}>Whats your emotional growth?</Text>
 
           {result ? (
-            <Text style={styles.traceText}>{result.trace}</Text>
+            <View>
+              <Text
+                style={[styles.traceText, { fontSize: 16, fontWeight: "bold" }]}
+              >
+                {result.growth_type[0].toUpperCase() +
+                  result.growth_type.slice(1)}
+              </Text>
+              <Text style={styles.traceText}>{result.insight}</Text>
+            </View>
           ) : (
             <View style={styles.threeDotLoadingContainer}>
               <ThreeDotLoader />
