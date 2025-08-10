@@ -5,7 +5,6 @@ import { useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { PhoneContext } from "../../../App";
-import HighlightedText from "./highlightedText";
 import ThreeDotLoader from "../../loadingScreen/threeDotLoading";
 
 const GrowthTrace = () => {
@@ -39,12 +38,18 @@ const GrowthTrace = () => {
     <Backdrop>
       <View style={styles.container}>
         <View style={styles.growthTraceDimension}>
-          <Text style={styles.headerText}>
-            Has something about you have changed? Lets figure out
-          </Text>
+          <Text style={styles.headerText}>Whats your emotional growth?</Text>
 
           {result ? (
-            <HighlightedText content={result.trace} />
+            <View>
+              <Text
+                style={[styles.traceText, { fontSize: 16, fontWeight: "bold" }]}
+              >
+                {result.growth_type[0].toUpperCase() +
+                  result.growth_type.slice(1)}
+              </Text>
+              <Text style={styles.traceText}>{result.insight}</Text>
+            </View>
           ) : (
             <View style={styles.threeDotLoadingContainer}>
               <ThreeDotLoader />
@@ -79,6 +84,12 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: "center",
     alignItems: "center",
+  },
+  traceText: {
+    fontSize: 14,
+    marginTop: 6,
+    opacity: 0.9,
+    color: theme.create_screen.growth_trace.trace_text,
   },
 });
 
