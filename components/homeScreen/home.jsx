@@ -29,6 +29,7 @@ import StoryView from "../storyViewer/storyView";
 import GrowthTrace from "../createpage/growthTrace/growthTrace";
 import HomeLoading from "../loadingScreen/homeLoading";
 import ViewRoot from "../rootScreen/viewRoot";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Home = ({ navigation }) => {
   const { usePhone } = useContext(PhoneContext);
@@ -232,10 +233,10 @@ const Home = ({ navigation }) => {
     <>
       {growthTrace && <GrowthTrace />}
 
-      <View
+      <SafeAreaView
+        edges={["top", "left", "right"]}
         style={{
           flex: 1,
-          paddingTop: 50,
           backgroundColor: theme.main_background,
         }}
       >
@@ -331,7 +332,7 @@ const Home = ({ navigation }) => {
             viewPostVisible={viewPostVisible}
           />
         </Modal>
-      </View>
+      </SafeAreaView>
     </>
   );
 };
