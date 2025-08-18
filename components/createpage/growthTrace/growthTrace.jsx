@@ -19,7 +19,7 @@ const GrowthTrace = () => {
         const token = await AsyncStorage.getItem("token");
 
         const response = await axios.get(
-          `http://${address}/posts/growth-trace`,
+          `http://${address}/me/identify/growth-trace`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

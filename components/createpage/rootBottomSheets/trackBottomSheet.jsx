@@ -48,7 +48,7 @@ const TrackBottomSheet = ({ isTrackOpen, setIsTrackOpen }) => {
     const fetchSongs = async () => {
       try {
         const respone = await axios.get(
-          `http://${address}/deezer-proxy?q=${query}&limit=15`
+          `http://${address}/search-deezer/deezer-proxy?q=${query}&limit=15`
         );
         setResults(respone.data.data);
       } catch (error) {
@@ -62,7 +62,7 @@ const TrackBottomSheet = ({ isTrackOpen, setIsTrackOpen }) => {
     const fetchSong = async () => {
       try {
         const response = await axios.get(
-          `http://${address}/deezer-search-song?trackId=${selectedSongId}`
+          `http://${address}/single-deezer/deezer-search-song?trackId=${selectedSongId}`
         );
         setSong(response.data);
       } catch (error) {

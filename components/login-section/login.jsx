@@ -53,7 +53,7 @@ const LoginPage = ({ navigation }) => {
     };
 
     axios
-      .post(`http://${address}/user/login`, DataToSend)
+      .post(`http://${address}/user-login/login`, DataToSend)
       .then((response) => {
         if (response.data && response.data.token) {
           AsyncStorage.setItem("token", response.data.token);

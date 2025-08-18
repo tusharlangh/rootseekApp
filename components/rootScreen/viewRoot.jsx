@@ -76,7 +76,7 @@ const ViewRoot = ({
       }
       try {
         const response = await axios.get(
-          `http://${address}/deezer-search-song?trackId=${posts[currIndex].trackId}`
+          `http://${address}/single-deezer/deezer-search-song?trackId=${posts[currIndex].trackId}`
         );
         setSong(response.data);
       } catch (error) {
