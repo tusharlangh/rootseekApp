@@ -24,7 +24,7 @@ const VerifPage = ({ route, navigation }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5002/user/verify",
+        "http://localhost:5002/user-verify/verify",
         DataToSend
       );
       setTimeout(() => navigation.navigate("Login"), 2000);

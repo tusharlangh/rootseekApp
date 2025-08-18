@@ -62,7 +62,7 @@ const SigninPage = ({ navigation }) => {
       };
 
       const response = await axios.post(
-        `http://${address}/user/signin`,
+        `http://${address}/user-signin/signin`,
         DataToSend
       );
       navigation.navigate("Verify", { extrEmail: email });

@@ -30,7 +30,7 @@ import GrowthTrace from "../createpage/growthTrace/growthTrace";
 import HomeLoading from "../loadingScreen/homeLoading";
 import ViewRoot from "../rootScreen/viewRoot";
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const { usePhone } = useContext(PhoneContext);
 
   const { growthTrace, setGrowthTrace } = useContext(GrowthTraceContext);
@@ -82,11 +82,14 @@ const Home = () => {
 
       setPostsLoading(true);
 
-      const response = await axios.get(`http://${address}/user/posts`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `http://${address}/24-hours/twenty-four-h-posts`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setPosts(response.data);
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -108,7 +111,7 @@ const Home = () => {
       setPatternLoading(true);
 
       const response = await axios.get(
-        `http://${address}/nlp/pattern-insights`,
+        `http://${address}/nlp/collect/pattern-insights`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -133,11 +136,14 @@ const Home = () => {
         return;
       }
 
-      const response = await axios.get(`http://${address}/nlp/topThemePosts`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `http://${address}/nlp/theme-thread-toptheme/topThemePosts`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setThemeThreads(response.data);
     } catch (error) {
       console.error("Error fetching the theme threads", error);
@@ -181,7 +187,7 @@ const Home = () => {
       }
 
       const response = await axios.post(
-        `http://${address}/nlp/stories`,
+        `http://${address}/nlp/theme-thread-stories/stories`,
         { posts: posts, theme: theme },
         {
           headers: {
@@ -267,6 +273,7 @@ const Home = () => {
             headerIcon={"themeThreadView"}
           />
 
+          {/*
           <ScrollableSection>
             <ThemeThreadPosts
               posts={themesArray}
@@ -275,6 +282,12 @@ const Home = () => {
               getStoriesRaw={getStoriesRaw}
             />
           </ScrollableSection>
+          */}
+          <View>
+            <Pressable onPress={() => navigation.navigate("mockup")}>
+              <Text style={{ color: "white" }}>Click</Text>
+            </Pressable>
+          </View>
         </ScrollView>
 
         {/*below is story view*/}

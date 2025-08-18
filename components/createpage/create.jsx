@@ -87,7 +87,7 @@ const Create = ({ isBottomSheetOpen, onClose }) => {
     try {
       const token = await AsyncStorage.getItem("token");
       const response = await axios.post(
-        `http://${address}/user/create`,
+        `http://${address}/root/create`,
         formData,
         {
           headers: {
