@@ -17,6 +17,7 @@ import { Box, useColorModeValue, useColorMode } from "native-base";
 import { LinearGradient } from "expo-linear-gradient";
 import { PhoneContext } from "../../App";
 import { theme } from "../../theme";
+import { CommonActions } from "@react-navigation/native";
 
 const LoginPage = ({ navigation }) => {
   const { usePhone } = useContext(PhoneContext);
@@ -57,7 +58,12 @@ const LoginPage = ({ navigation }) => {
       .then((response) => {
         if (response.data && response.data.token) {
           AsyncStorage.setItem("token", response.data.token);
-          navigation.navigate("Navbar");
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: "Navbar" }],
+            })
+          );
         } else {
           console.log("Invalid response from server");
         }

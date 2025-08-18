@@ -16,6 +16,7 @@ import Create from "./createpage/create";
 import Home from "./homeScreen/home";
 import Search from "./searchScreen/search";
 import RootBottomSheet from "./rootBottomSheet";
+import HomeNavbar from "./homeScreen/homeNavbar";
 
 const Tab = createBottomTabNavigator();
 
@@ -95,7 +96,7 @@ const Navbar = () => {
           >
             <Tab.Screen
               name="Home"
-              component={Home}
+              component={HomeNavbar}
               options={{
                 tabBarIcon: ({ focused }) =>
                   focused ? (

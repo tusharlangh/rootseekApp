@@ -30,7 +30,7 @@ import GrowthTrace from "../createpage/growthTrace/growthTrace";
 import HomeLoading from "../loadingScreen/homeLoading";
 import ViewRoot from "../rootScreen/viewRoot";
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const { usePhone } = useContext(PhoneContext);
 
   const { growthTrace, setGrowthTrace } = useContext(GrowthTraceContext);
@@ -273,6 +273,7 @@ const Home = () => {
             headerIcon={"themeThreadView"}
           />
 
+          {/*
           <ScrollableSection>
             <ThemeThreadPosts
               posts={themesArray}
@@ -281,6 +282,12 @@ const Home = () => {
               getStoriesRaw={getStoriesRaw}
             />
           </ScrollableSection>
+          */}
+          <View>
+            <Pressable onPress={() => navigation.navigate("mockup")}>
+              <Text style={{ color: "white" }}>Click</Text>
+            </Pressable>
+          </View>
         </ScrollView>
 
         {/*below is story view*/}
