@@ -285,7 +285,7 @@ const Home = ({ navigation }) => {
           </ScrollableSection>
           */}
           <View>
-            <Pressable onPress={() => navigation.navigate("mockup")}>
+            <Pressable onPress={() => navigation.navigate("theme_thread")}>
               <Text style={{ color: "white" }}>Click</Text>
             </Pressable>
           </View>

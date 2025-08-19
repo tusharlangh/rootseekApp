@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./home";
-import MockUp from "./themeThread/mockup";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import ThemeThread from "./themeThread/themeThread";
 
 const HomeNavbar = () => {
   const Stack = createNativeStackNavigator();
@@ -13,7 +13,7 @@ const HomeNavbar = () => {
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="home" component={Home} />
-        <Stack.Screen name="mockup" component={MockUp} />
+        <Stack.Screen name="theme_thread" component={ThemeThread} />
       </Stack.Navigator>
     </SafeAreaProvider>
   );
