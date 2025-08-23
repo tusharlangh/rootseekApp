@@ -48,29 +48,22 @@ const Home = ({ navigation }) => {
   const [patternInsights, setPatternInsights] = useState([]);
   const [patternLoading, setPatternLoading] = useState(false);
 
-  const [themeThreads, setThemeThreads] = useState({});
-
-  const [selectedThemeText, setSelectedThemeText] = useState("");
-  const [selectedTheme, setSelectedTheme] = useState([]);
-
-  const [viewStoryVisible, setViewStoryVisible] = useState(false);
-
-  const themesArray = Object.entries(themeThreads);
-
-  const [storiesData, setStoriesData] = useState({});
-  const [storiesLoading, setStoriesLoading] = useState(false);
+  const [themeThreads, setThemeThreads] = useState([]);
 
   const [refreshing, setRefreshing] = useState(false);
 
   const [viewPostVisible, setViewPostVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  useFocusEffect(
+  {
+    /*
+    useFocusEffect(
     useCallback(() => {
       setRefreshValue((prev) => prev + 1);
     }, [])
   );
-
+    */
+  }
   //fetches recent posts
   const fetchPosts = async () => {
     try {
@@ -145,11 +138,40 @@ const Home = ({ navigation }) => {
           },
         }
       );
+      console.log(response.data);
       setThemeThreads(response.data);
     } catch (error) {
       console.error("Error fetching the theme threads", error);
     }
   };
+
+  const fetchThemeProgression = useCallback(async (theme, themeColor) => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      const response = await axios.get(
+        `http://${address}/nlp/progression/themeProgression`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: { theme },
+        }
+      );
+      navigation.navigate("theme_thread", {
+        _theme: theme,
+        _theme_color: themeColor,
+        _progression: response.data,
+      });
+    } catch (error) {
+      console.error("Error fetching theme progressions", error);
+    }
+  });
 
   //on refresh what to fetch
   const onRefresh = useCallback(() => {
@@ -176,41 +198,6 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     fetchThemeThreads();
   }, []);
-
-  const getStoriesRaw = useCallback(async (posts, theme) => {
-    try {
-      setStoriesLoading(true);
-      const token = await AsyncStorage.getItem("token");
-
-      if (!token) {
-        console.error("No token found");
-        return;
-      }
-
-      const response = await axios.post(
-        `http://${address}/nlp/theme-thread-stories/stories`,
-        { posts: posts, theme: theme },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setSelectedThemeText("");
-      setSelectedTheme([]);
-      setStoriesData(response.data);
-    } catch (error) {
-      console.error(error?.response?.data || error.message);
-    } finally {
-      setStoriesLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (storiesLoading === false && Object.entries(storiesData).length > 0) {
-      setViewStoryVisible(true);
-    }
-  }, [storiesLoading]);
 
   const flatListData = [
     {
@@ -274,49 +261,13 @@ const Home = ({ navigation }) => {
             headerIcon={"themeThreadView"}
           />
 
-          {/*
           <ScrollableSection>
             <ThemeThreadPosts
-              posts={themesArray}
-              setSelectedTheme={setSelectedTheme}
-              setSelectedThemeText={setSelectedTheme}
-              getStoriesRaw={getStoriesRaw}
+              themeThreads={themeThreads}
+              fetchThemeProgression={fetchThemeProgression}
             />
           </ScrollableSection>
-          */}
-          <View>
-            <Pressable onPress={() => navigation.navigate("theme_thread")}>
-              <Text style={{ color: "white" }}>Click</Text>
-            </Pressable>
-          </View>
         </ScrollView>
-
-        {/*below is story view*/}
-        <Modal
-          animationType="fade"
-          visible={viewStoryVisible}
-          transparent={false}
-          onRequestClose={() => setViewStoryVisible(false)}
-        >
-          {storiesLoading === false &&
-          Object.entries(storiesData).length > 0 ? (
-            <StoryView
-              storiesData={storiesData}
-              setViewPostVisible={setViewStoryVisible}
-            />
-          ) : (
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-                width: "100%",
-              }}
-            >
-              <ActivityIndicator size="large" color="black" />
-            </View>
-          )}
-        </Modal>
 
         {/*below is single root view*/}
         <Modal

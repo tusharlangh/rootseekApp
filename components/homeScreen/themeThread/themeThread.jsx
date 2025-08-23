@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { theme } from "../../../theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -17,8 +17,14 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const ThemeThread = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  let { _theme, _theme_color, _progression } = route.params;
+  _theme = _theme[0].toUpperCase() + _theme.slice(1);
+
   const scrollY = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
@@ -57,11 +63,7 @@ const ThemeThread = () => {
 
   return (
     <LinearGradient
-      colors={[
-        "rgba(240, 69, 69, 1)",
-        theme.main_background,
-        theme.main_background,
-      ]}
+      colors={[_theme_color, theme.main_background, theme.main_background]}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       style={{ flex: 1 }}
@@ -77,7 +79,10 @@ const ThemeThread = () => {
             justifyContent: "space-between",
           }}
         >
-          <LeftArrowIcon color={"white"} size={18} />
+          <Pressable onPress={() => navigation.goBack()}>
+            <LeftArrowIcon color={"white"} size={18} />
+          </Pressable>
+
           <Animated.Text
             style={[
               fadeInTextStyle,
@@ -89,7 +94,7 @@ const ThemeThread = () => {
               },
             ]}
           >
-            Technology
+            {_theme}
           </Animated.Text>
           <Text></Text>
         </View>
@@ -116,7 +121,7 @@ const ThemeThread = () => {
                 fontWeight: "bold",
               }}
             >
-              Technology
+              {_theme}
             </Text>
             <Text
               style={{
@@ -126,7 +131,7 @@ const ThemeThread = () => {
                 opacity: 0.8,
               }}
             >
-              15 roots
+              {_progression["growth_role"].length} roots
             </Text>
           </Animated.View>
           <Animated.View
@@ -188,14 +193,15 @@ const ThemeThread = () => {
           </Animated.View>
 
           <View style={{ paddingHorizontal: 16 }}>
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+            {_progression["growth_role"].map((_, index) => (
+              <View key={index}>
+                <Card
+                  summary={_progression["summary"][index]}
+                  date={_progression["dates"][index]}
+                  growth_role={_progression["growth_role"][index]}
+                />
+              </View>
+            ))}
           </View>
         </Animated.ScrollView>
       </SafeAreaView>

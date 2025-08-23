@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
+import moment from "moment";
 
-const Card = () => {
+const Card = ({ summary, date, growth_role }) => {
   return (
     <View style={{ marginTop: 30 }}>
       <View
@@ -26,8 +27,7 @@ const Card = () => {
                 fontWeight: "600",
               }}
             >
-              Thought about using a spinner but chose an easier method instead,
-              showing practical thinking.
+              {summary}
             </Text>
 
             <View
@@ -45,7 +45,7 @@ const Card = () => {
                   opacity: 0.9,
                 }}
               >
-                You mentioned faith 10 times for this theme
+                {growth_role}
               </Text>
               <Text
                 style={{
@@ -55,7 +55,7 @@ const Card = () => {
                   fontWeight: "500",
                 }}
               >
-                Aug 17, 2025
+                {moment(date).format("MMMM DD, YYYY")}
               </Text>
             </View>
           </View>
