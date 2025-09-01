@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View, Dimensions } from "react-native";
 import { theme } from "../../../theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,6 +18,9 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+
+const { width, height } = Dimensions.get("window");
 
 const ThemeThread = () => {
   const navigation = useNavigation();
@@ -99,7 +102,10 @@ const ThemeThread = () => {
           <Text></Text>
         </View>
 
-        <Animated.ScrollView onScroll={scrollHandler}>
+        <Animated.ScrollView
+          onScroll={scrollHandler}
+          contentContainerStyle={{ paddingBottom: 200 }}
+        >
           <Animated.View
             style={[
               fadeStyle,
@@ -199,6 +205,7 @@ const ThemeThread = () => {
                   summary={_progression["summary"][index]}
                   date={_progression["dates"][index]}
                   growth_role={_progression["growth_role"][index]}
+                  emoji={_progression["emoji"][index]}
                 />
               </View>
             ))}

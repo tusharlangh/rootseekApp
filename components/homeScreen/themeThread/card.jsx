@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import moment from "moment";
 
-const Card = ({ summary, date, growth_role }) => {
+const Card = ({ summary, date, growth_role, emoji }) => {
   return (
     <View style={{ marginTop: 30 }}>
       <View
@@ -15,7 +15,7 @@ const Card = ({ summary, date, growth_role }) => {
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-          <Text style={{ fontSize: 32, marginRight: 12 }}>😊</Text>
+          <Text style={{ fontSize: 32, marginRight: 12 }}>{emoji}</Text>
 
           <View style={{ flex: 1 }}>
             <Text
@@ -27,7 +27,7 @@ const Card = ({ summary, date, growth_role }) => {
                 fontWeight: "600",
               }}
             >
-              {summary}
+              {summary.trim()}
             </Text>
 
             <View
@@ -45,19 +45,20 @@ const Card = ({ summary, date, growth_role }) => {
                   opacity: 0.9,
                 }}
               >
-                {growth_role}
-              </Text>
-              <Text
-                style={{
-                  color: "white",
-                  fontSize: 12,
-                  marginLeft: 10,
-                  fontWeight: "500",
-                }}
-              >
-                {moment(date).format("MMMM DD, YYYY")}
+                {growth_role.trim()}
               </Text>
             </View>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 12,
+                marginTop: 10,
+                fontWeight: "500",
+                alignSelf: "flex-end",
+              }}
+            >
+              {moment(date).format("MMMM DD, YYYY")}
+            </Text>
           </View>
         </View>
       </View>
