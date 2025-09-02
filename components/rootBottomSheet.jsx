@@ -3,10 +3,7 @@ import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { Dimensions, View } from "react-native";
 import { theme } from "../theme";
-
-const { height, width } = Dimensions.get("window");
 
 const RootBottomSheet = ({
   children,
@@ -15,6 +12,7 @@ const RootBottomSheet = ({
   setIsBottomSheetOpen,
   enablePanDownToClose,
   ifHandleComponent = false,
+  showHandleIndicator = true,
 }) => {
   const bottomPageRef = useRef(null);
   const snapPoints = useMemo(() => [snapHeight], []);
@@ -48,13 +46,23 @@ const RootBottomSheet = ({
         },
       ]}
       handleComponent={ifHandleComponent ? () => null : undefined}
-      handleIndicatorStyle={{ backgroundColor: !ifHandleComponent && "white" }}
+      handleIndicatorStyle={{
+        backgroundColor: !ifHandleComponent && "white",
+        display: showHandleIndicator ? undefined : "none",
+      }}
       backdropComponent={renderBackdrop}
       enablePanDownToClose={enablePanDownToClose}
       enableContentPanningGesture={enablePanDownToClose}
       enableHandlePanningGesture={enablePanDownToClose}
       enableDynamicSizing={false}
-      onClose={() => setIsBottomSheetOpen(false)}
+      onAnimate={(fromIndex, toIndex) => {
+        //this tells you as you start closing or opening bottom sheet
+        if (toIndex === -1) {
+          setIsBottomSheetOpen(false);
+        } else {
+          setIsBottomSheetOpen(true);
+        }
+      }}
     >
       <BottomSheetView
         style={{ flex: 1, marginTop: ifHandleComponent && -10, paddingTop: 0 }}

@@ -676,3 +676,15 @@ export const SortIcon = ({ color = "black", size = 24 }) => (
     <Path d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z" />
   </Svg>
 );
+
+export const CheckIcon = ({ color = "black", size = 24 }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    height={size}
+    viewBox="0 -960 960 960"
+    width={size}
+    fill={color}
+  >
+    <Path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+  </Svg>
+);

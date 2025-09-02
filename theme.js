@@ -44,6 +44,15 @@ export const theme = {
     recently_made: {
       root_sepearating_border_color: "rgb(24,24,24)",
     },
+
+    themeThread: {
+      sort: {
+        sort_text: "white",
+        sort_container_shadow: "rgba(0, 0, 0, 0.2)",
+        option_text: "rgba(255, 255, 255, 0.9)",
+        option_text_shadow: "rgba(0, 0, 0, 0.6)",
+      },
+    },
   },
   create_screen: {
     content_bottomsheet: {

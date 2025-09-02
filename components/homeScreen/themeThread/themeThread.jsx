@@ -1,14 +1,8 @@
-import { Pressable, ScrollView, Text, View, Dimensions } from "react-native";
+import { Pressable, Text, View, TouchableOpacity } from "react-native";
 import { theme } from "../../../theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  FilterIcon,
-  LeftArrowIcon,
-  SortIcon,
-  SpikeIcon,
-  StreakIcon,
-} from "../../icons";
+import { LeftArrowIcon, SortIcon, StreakIcon } from "../../icons";
 import Card from "./card";
 import Animated, {
   Extrapolation,
@@ -18,11 +12,14 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { useEffect, useState } from "react";
-
-const { width, height } = Dimensions.get("window");
+import { useState, useContext, useEffect } from "react";
+import Sort from "./sort";
+import { HideTabBar } from "../../navbar";
 
 const ThemeThread = () => {
+  const [isSortBottomSheetOpen, setIsSortBottomSheetOpen] = useState(false);
+  const { setHideTabBar } = useContext(HideTabBar);
+
   const navigation = useNavigation();
   const route = useRoute();
   let { _theme, _theme_color, _progression } = route.params;
@@ -63,6 +60,10 @@ const ThemeThread = () => {
       ],
     };
   });
+
+  useEffect(() => {
+    setHideTabBar(isSortBottomSheetOpen);
+  }, [isSortBottomSheetOpen]);
 
   return (
     <LinearGradient
@@ -181,7 +182,10 @@ const ThemeThread = () => {
               },
             ]}
           >
-            <SortIcon color="rgba(255,255,255,0.8)" />
+            <TouchableOpacity onPress={() => setIsSortBottomSheetOpen(true)}>
+              <SortIcon color="rgba(255,255,255,0.8)" />
+            </TouchableOpacity>
+
             <View
               style={{
                 flexDirection: "row",
@@ -212,6 +216,10 @@ const ThemeThread = () => {
           </View>
         </Animated.ScrollView>
       </SafeAreaView>
+      <Sort
+        setIsSortBottomSheetOpen={setIsSortBottomSheetOpen}
+        isSortBottomSheetOpen={isSortBottomSheetOpen}
+      />
     </LinearGradient>
   );
 };
