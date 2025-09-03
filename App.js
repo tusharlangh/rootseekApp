@@ -16,7 +16,7 @@ export default function App() {
     mode: "light",
   });
 
-  const [usePhone, setUsePhone] = useState(true);
+  const [usePhone, setUsePhone] = useState(false);
 
   const nativeBaseTheme = extendTheme({
     config: { initialColorMode: theme.mode },

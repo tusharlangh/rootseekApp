@@ -8,11 +8,12 @@ import {
 } from "react-native";
 import RootBottomSheet from "../../rootBottomSheet";
 import { CheckIcon } from "../../icons";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { theme } from "../../../theme";
+import { SelectedContext } from "./themeThread";
 
 const Sort = ({ isSortBottomSheetOpen, setIsSortBottomSheetOpen }) => {
-  const [selected, setSelected] = useState(0);
+  const { selectedSort, setSelectedSort } = useContext(SelectedContext);
 
   return (
     <RootBottomSheet
@@ -29,34 +30,38 @@ const Sort = ({ isSortBottomSheetOpen, setIsSortBottomSheetOpen }) => {
           showsVerticalScrollIndicator={true}
         >
           <TouchableOpacity
-            onPress={() => setSelected(0)}
+            onPress={() => setSelectedSort(0)}
             style={[
               styles.sortContainer,
               {
-                shadowOpacity: selected === 0 ? 0.9 : 0,
+                shadowOpacity: selectedSort === 0 ? 0.9 : 0,
                 backgroundColor:
-                  selected === 0 ? "rgba(98, 160, 149, 0.3)" : "transparent",
+                  selectedSort === 0
+                    ? "rgba(98, 160, 149, 0.3)"
+                    : "transparent",
               },
             ]}
           >
             <Text style={[styles.optionText]}>Recent First</Text>
-            {selected === 0 && (
+            {selectedSort === 0 && (
               <CheckIcon color="rgba(255, 255, 255, 0.9)" size={18} />
             )}
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => setSelected(1)}
+            onPress={() => setSelectedSort(1)}
             style={[
               styles.sortContainer,
               {
-                shadowOpacity: selected === 1 ? 0.9 : 0,
+                shadowOpacity: selectedSort === 1 ? 0.9 : 0,
                 backgroundColor:
-                  selected === 1 ? "rgba(98, 160, 149, 0.3)" : "transparent",
+                  selectedSort === 1
+                    ? "rgba(98, 160, 149, 0.3)"
+                    : "transparent",
               },
             ]}
           >
             <Text style={[styles.optionText]}>Oldest First</Text>
-            {selected === 1 && (
+            {selectedSort === 1 && (
               <CheckIcon color="rgba(255, 255, 255, 0.9)" size={18} />
             )}
           </TouchableOpacity>
