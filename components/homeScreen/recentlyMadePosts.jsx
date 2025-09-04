@@ -11,7 +11,14 @@ const RecentlyMadePosts = ({ posts, setCurrentIndex, setViewPostVisible }) => {
         }}
       >
         <Text style={{ color: "white" }}>
-          No recent activity. Have something in your mind, write a root...
+          No recent activity. Have something in your mind,{" "}
+          <Text
+            style={{
+              fontWeight: "600",
+            }}
+          >
+            write a root...
+          </Text>
         </Text>
       </View>
     );
@@ -21,8 +28,11 @@ const RecentlyMadePosts = ({ posts, setCurrentIndex, setViewPostVisible }) => {
     const date = moment(post.date).toDate();
 
     const diff = moment().diff(date, "hours");
+    if (diff === 0) {
+      return "few sec ago";
+    }
 
-    if (diff <= 0) {
+    if (diff < 0) {
       return moment().diff(date, "minutes") + " min ago";
     }
 

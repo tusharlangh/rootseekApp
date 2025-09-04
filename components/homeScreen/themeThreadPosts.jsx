@@ -1,12 +1,7 @@
 import { Pressable, Text, View, StyleSheet } from "react-native";
 
-const ThemeThreadPosts = ({
-  posts,
-  setSelectedTheme,
-  setSelectedThemeText,
-  getStoriesRaw,
-}) => {
-  if (!posts || posts.length === 0) {
+const ThemeThreadPosts = ({ themeThreads, fetchThemeProgression }) => {
+  if (!themeThreads || themeThreads.length === 0) {
     return (
       <View
         style={{
@@ -20,46 +15,28 @@ const ThemeThreadPosts = ({
     );
   }
 
-  return posts.map(([theme, value], index) => (
+  return themeThreads.map((theme, index) => (
     <View
       key={index}
       style={[
         styles.postContainer,
         {
-          backgroundColor:
-            index === 0
-              ? "rgb(14, 24, 11)"
-              : index === 1
-              ? "rgb(24, 23, 11)"
-              : index === 2
-              ? "rgb(18, 26, 40)"
-              : "rgb(30, 18, 40)",
+          backgroundColor: theme._theme_color,
         },
       ]}
     >
       <Pressable
-        onPress={() => {
-          setSelectedTheme(value);
-          setSelectedThemeText(theme);
-          getStoriesRaw(value, theme);
-        }}
+        onPress={() => fetchThemeProgression(theme._theme, theme._theme_color)}
       >
         <Text
           style={[
             styles.postTheme,
             {
-              color:
-                index === 0
-                  ? "rgb(156, 175, 150)"
-                  : index === 1
-                  ? "rgb(156, 152, 114)"
-                  : index === 2
-                  ? "rgb(105, 135, 188)"
-                  : "rgb(138, 102, 168)",
+              color: "rgba(255,255,255,0.9)",
             },
           ]}
         >
-          {theme}
+          {theme._theme}
         </Text>
       </Pressable>
     </View>

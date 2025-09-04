@@ -627,11 +627,64 @@ export const SearchIcon = ({ color = "rgba(255,255,255,0.5)", size = 20 }) => (
 export const FilterIcon = ({ color = "black", size = 24 }) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 -960 960 960"
+    height={size}
+    width={size}
+    fill={color}
+  >
+    <Path d="M320-400q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm160 0q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm160 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z" />
+  </Svg>
+);
+
+export const StreakIcon = ({ color = "black", size = 24, opacity = 0.8 }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    height={size}
+    width={size}
+    fill={color}
+    opacity={opacity}
+  >
+    <Path
+      fillRule="evenodd"
+      d="M12.963 2.286a.75.75 0 0 0-1.071-.136 9.742 9.742 0 0 0-3.539 6.176 7.547 7.547 0 0 1-1.705-1.715.75.75 0 0 0-1.152-.082A9 9 0 1 0 15.68 4.534a7.46 7.46 0 0 1-2.717-2.248ZM15.75 14.25a3.75 3.75 0 1 1-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 0 1 1.925-3.546 3.75 3.75 0 0 1 3.255 3.718Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+);
+
+export const SpikeIcon = ({ color = "black", size = 24 }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
     height={size}
     viewBox="0 -960 960 960"
     width={size}
     fill={color}
   >
-    <Path d="M320-400q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm160 0q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm160 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z" />
+    <Path d="m140-220-60-60 300-300 160 160 284-320 56 56-340 384-160-160-240 240Z" />
+  </Svg>
+);
+
+export const SortIcon = ({ color = "black", size = 24 }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    height={size}
+    viewBox="0 -960 960 960"
+    width={size}
+    fill={color}
+  >
+    <Path d="M120-240v-80h240v80H120Zm0-200v-80h480v80H120Zm0-200v-80h720v80H120Z" />
+  </Svg>
+);
+
+export const CheckIcon = ({ color = "black", size = 24 }) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    height={size}
+    viewBox="0 -960 960 960"
+    width={size}
+    fill={color}
+  >
+    <Path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
   </Svg>
 );
