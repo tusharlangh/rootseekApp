@@ -64,11 +64,6 @@ const ThemeThread = () => {
     };
   });
 
-  const originalSummary = _progression["summary"];
-  const originalDates = _progression["dates"];
-  const originalGrowthRole = _progression["growth_role"];
-  const originalEmojis = _progression["emoji"];
-
   const sorted = [
     {
       summary: [..._progression["summary"]].reverse(),

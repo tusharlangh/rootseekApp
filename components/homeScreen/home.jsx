@@ -225,6 +225,7 @@ const Home = ({ navigation }) => {
         style={{
           flex: 1,
           backgroundColor: theme.main_background,
+          paddingTop: 10,
         }}
       >
         <ScrollView
